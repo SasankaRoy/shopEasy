@@ -177,7 +177,7 @@ const Login = () => {
             hover:text-[#f8f7f5] transition-all duration-100 ease-in"
           >
             {" "}
-            Don't have an account yet ?
+            Don&apos;t have an account yet ?
           </Link>
           <Link
             href="/"
