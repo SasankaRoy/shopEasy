@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@100&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Satisfy:regular");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html,
+body {
+  padding: 0;
+  margin: 0;
+  /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
+  font-family: "Urbanist", system-ui, -apple-system;
+
+  scroll-behavior: smooth;
+  background-color: #fdfffc;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+/* .icon:hover.input {
+  background-color: red;
+} */
+.ImageDiv:hover .main__div {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.main__div:hover .icon {
+  opacity: 1;
+}
+.RightWidget,
+.LeftWidget,
+.chart,
+.box1,
+.side,
+.main {
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+}
+.icons {
+  visibility: hidden;
+}
+.main__div:hover .icons {
+  visibility: visible;
+}
+.icons__btn:hover .icon {
+  transform: scale(1.4);
+}
+.search__div__shadow {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.hoverEffects {
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.hoverEffects:hover .image {
+  transform: scale(1.1);
+}
+
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: linear-gradient(
+    220deg,
+    rgba(170, 5, 134, 1) 47%,
+    rgba(33, 42, 47, 1) 100%
+  );
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+}
+
+#nprogress .peg {
+  display: block;
+  width: 100%;
+  height: 5px;
+
+  background: linear-gradient(
+    220deg,
+    rgba(170, 5, 134, 1) 47%,
+    rgba(33, 42, 47, 1) 100%
+  );
+  animation: nprogress-animate 400ms linear infinite;
+}
