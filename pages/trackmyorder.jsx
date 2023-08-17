@@ -16,12 +16,12 @@ const Trackmyorder = () => {
   return (
     <>
       <Head>
-        <title>shopEasee - Track order's</title>
+        <title>shopEasee - Track order&apos;s</title>
       </Head>
       <div className="h-screen flex flex-col lg:flex-row justify-start items-start space-y-3 lg:space-y-0 lg:space-x-3 p-2">
         <div className="h-[70%] lg:h-full lg:w-[70%] w-full  py-3 px-2 overflow-y-auto scroll-smooth">
           <h1 className="text-xl font-semibold tracking-wider capitalize">
-            my order's
+            my order&apos;s
           </h1>
           {["1", "2"].map((cur, id) => (
             <div

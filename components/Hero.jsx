@@ -47,8 +47,8 @@ export const Hero = () => {
               .
             </h1>
             <p className="lg:text-xl text-sm capitalize my-3 font-semibold tacking-wider text-[#fff]">
-              discover exclusive offers on top brand's products and stay on the
-              top of the latest fashions !
+              discover exclusive offers on top brand&apos;s products and stay on
+              the top of the latest fashions !
             </p>
 
             <div className="flex justify-evenly items-center w-[95%] lg:w-[50%] mt-4">
