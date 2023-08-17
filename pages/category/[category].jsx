@@ -41,7 +41,7 @@ const Category = ({ products }) => {
         className="relative flex flex-col lg:flex-row justify-between items-start lg:items-center w-[90%] mx-auto my-5 space-y-2 lg:space-y-0"
       >
         <h1 className="text-xl m-0 font-semibold tracking-wider text-center capitalize">
-          All result of '{query.category}'
+          All result of &apos;{query.category}&apos;
         </h1>
 
         <div className="w-full lg:w-[50%]  flex justify-between items-center space-x-5">
