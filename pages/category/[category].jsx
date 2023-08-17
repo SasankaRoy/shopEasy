@@ -10,7 +10,7 @@ import axios from "axios";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
-const category = ({ products }) => {
+const Category = ({ products }) => {
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
   const { query } = router;
@@ -76,7 +76,7 @@ const category = ({ products }) => {
     </>
   );
 };
-export default category;
+export default Category;
 
 const FilterModel = ({ setShowFilters }) => {
   return (

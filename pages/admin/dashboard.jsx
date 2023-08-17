@@ -8,7 +8,7 @@ import { Sidebar } from "../components/Sidebar";
 import { Todos } from "../components/Todos";
 import { NavBar } from "../components/NavBar";
 
-const dashboard = () => {
+const Dashboard = () => {
   return (
     <>
       <Head>
@@ -43,4 +43,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;

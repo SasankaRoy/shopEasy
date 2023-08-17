@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
-const trackmyorder = () => {
+const Trackmyorder = () => {
   const userInfo = useSelector((state) => state.user);
   // if (typeof window !== "undefined") {
   //   if (window.location.reload) {
@@ -116,4 +116,4 @@ const trackmyorder = () => {
     </>
   );
 };
-export default trackmyorder;
+export default Trackmyorder;

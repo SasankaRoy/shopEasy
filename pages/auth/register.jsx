@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import { singinValidation } from "../../utils/formValidation";
 import { handleError } from "../../utils/Error&SuccessHandler";
 
-const login = () => {
+const Register = () => {
   const router = useRouter();
   const { handleSubmit, values, touched, handleChange, errors, handleBlur } =
     useFormik({
@@ -237,4 +237,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Register;

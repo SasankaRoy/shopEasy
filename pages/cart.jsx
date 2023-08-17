@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Icon } from "semantic-ui-react";
 import { motion } from "framer-motion";
 
-const cart = () => {
+const Cart = () => {
   return (
     <>
       <NavBar />
@@ -190,4 +190,4 @@ const cart = () => {
   );
 };
 
-export default cart;
+export default Cart;

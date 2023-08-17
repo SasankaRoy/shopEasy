@@ -23,7 +23,7 @@ const ProductModel = dynamic(() => import("../../components/ProductModel"));
 const initialValuesForImages = {
   userProfileImage: "",
 };
-const account = () => {
+const Account = () => {
   const user = useSelector((state) => state.user);
   const isLoading = useSelector((state) => state.loading);
   const [newProduct, setNewProduct] = useState(false);
@@ -328,4 +328,4 @@ const account = () => {
   );
 };
 
-export default account;
+export default Account;

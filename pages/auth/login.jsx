@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 import { loginValidation } from "../../utils/formValidation";
 import { handleError } from "../../utils/Error&SuccessHandler";
 
-const login = () => {
+const Login = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { values, handleSubmit, handleBlur, handleChange, errors, touched } =
@@ -199,4 +199,4 @@ const login = () => {
     </>
   );
 };
-export default login;
+export default Login;
