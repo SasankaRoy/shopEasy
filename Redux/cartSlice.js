@@ -19,8 +19,10 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     userHasCart: (state, action) => {
-      state.cart.push(...action.payload);
-      state.subTotal = findSubTotal(state.cart);
+      if (state.cart.length === 0) {
+        state.cart.push(...action.payload);
+        state.subTotal = findSubTotal(state.cart);
+      }
     },
     addItemsQuantity: (state, action) => {
       // add items quantity to the user cart...

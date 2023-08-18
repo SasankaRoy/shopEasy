@@ -30,6 +30,8 @@ const NavBar = ({ user }) => {
   });
 
   const cart = useSelector((state) => state.cart);
+  const User = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -42,18 +44,19 @@ const NavBar = ({ user }) => {
   };
 
   useEffect(() => {
-    if (user) fetchUserCart();
-  }, []);
-
-  useEffect(() => {
-    if (user) dispatch(loginSuccess(user));
-    // if (user) fetchUserCart();
     if (!user) {
       const isProtectedRoute = router.pathname === "/account/[userid]";
       if (isProtectedRoute) {
         router.push("/");
         toast.warn("session expired! Please login again");
       }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(loginSuccess(user));
+      fetchUserCart();
     }
   }, [router.pathname]);
 
@@ -127,10 +130,12 @@ const NavBar = ({ user }) => {
             className="text-4xl lg:hidden cursor-pointer hover:rotate-90 transition-all duration-200 ease-in-out"
           />
         ) : (
-          <MenuIcon
-            onClick={() => setShowNavBar(true)}
-            className="text-4xl cursor-pointer inline-flex lg:hidden"
-          />
+          <div className="inline-flex lg:hidden">
+            <MenuIcon
+              onClick={() => setShowNavBar(true)}
+              className="text-4xl cursor-pointer inline-flex lg:hidden"
+            />
+          </div>
         )}
         {/* logo */}
         <Link href="/" prefetch={false} className="px-3">
@@ -155,7 +160,7 @@ const NavBar = ({ user }) => {
           >
             <Person2OutlinedIcon className="text-4xl " />
             <span className="text-2xl capitalize font-bold tracking-wide">
-              {!user ? "Log In" : user?.userName}
+              {!User.userInfo ? "Log In" : User.userInfo?.userName}
             </span>
           </Link>
           {/* ) : (

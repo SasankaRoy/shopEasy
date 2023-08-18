@@ -69,9 +69,11 @@ function MyApp({ Component, pageProps }) {
 MyApp.getInitialProps = async ({ Component, ctx }) => {
   let pageProps = {};
   const { userToken } = parseCookies(ctx);
+
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
   }
+
   if (userToken) {
     try {
       if (ctx.req.headers.host === "localhost:3000") {
@@ -80,6 +82,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
           { userToken }
         );
         const user = checkUserExits.data.user;
+
         pageProps.user = user;
       } else {
         const checkUserExits = await axios.post(

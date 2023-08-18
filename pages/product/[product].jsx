@@ -24,7 +24,6 @@ const ProductImageView = dynamic(() =>
 const ProductModel = dynamic(() => import("../../components/ProductModel"));
 
 const Product = ({ product, error }) => {
-  console.log(error);
   const [handleImageShowHide, setHandleImageShowHide] = useState({
     state: false,
     curImage: "",
@@ -63,7 +62,7 @@ const Product = ({ product, error }) => {
       }
     } catch (error) {
       handleError(error);
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -220,6 +219,7 @@ const Product = ({ product, error }) => {
                     productImage: product?.productInfo.mediaURL[0],
                     size: selectedSizeAndColor?.size,
                     color: selectedSizeAndColor?.color.code,
+                    total: product?.productInfo.price,
                   })
                 }
                 className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border shadow-md bg-[#212a2f] disabled:cursor-not-allowed disabled:opacity-40 text-[#ffffff] hover:text-[#212a2f] hover:border-[#212a2f] hover:bg-[#ffffff] transition-all duration-150 ease-in"
@@ -274,7 +274,7 @@ export const getServerSideProps = async (context) => {
   const { pid } = context.query;
 
   try {
-    if (context.req.headers.hostname === "localhost:3000") {
+    if (context.req.headers.host === "localhost:3000") {
       const getProductList = await axios.get(
         `http://localhost:3000/api/products?pid=${pid}`
       );
