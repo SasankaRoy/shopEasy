@@ -244,15 +244,28 @@ const FilterModel = ({ setShowFilters }) => {
 export const getServerSideProps = async (context) => {
   const { category } = context.query;
   try {
-    const getProductList = await axios.get(
-      `http://localhost:3000/api/products?category=${category}`
-    );
-    console.log(getProductList?.data);
-    return {
-      props: {
-        products: getProductList?.data,
-      },
-    };
+    // change the url in production
+    if (context.req.headers.host === "localhost:3000") {
+      const getProductList = await axios.get(
+        `http://localhost:3000/api/products?category=${category}`
+      );
+
+      return {
+        props: {
+          products: getProductList?.data,
+        },
+      };
+    } else {
+      const getProductList = await axios.get(
+        `https://shop-easee.vercel.app/api/products?category=${category}`
+      );
+
+      return {
+        props: {
+          products: getProductList?.data,
+        },
+      };
+    }
   } catch (error) {
     return {
       props: {
