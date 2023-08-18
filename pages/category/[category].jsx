@@ -244,7 +244,6 @@ const FilterModel = ({ setShowFilters }) => {
 export const getServerSideProps = async (context) => {
   const { category } = context.query;
   try {
-    // change the url in production
     if (context.req.headers.host === "localhost:3000") {
       const getProductList = await axios.get(
         `http://localhost:3000/api/products?category=${category}`

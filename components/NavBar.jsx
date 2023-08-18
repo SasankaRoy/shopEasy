@@ -129,7 +129,7 @@ const NavBar = ({ user }) => {
         ) : (
           <MenuIcon
             onClick={() => setShowNavBar(true)}
-            className="text-4xl cursor-pointer lg:hidden"
+            className="text-4xl cursor-pointer inline-flex lg:hidden"
           />
         )}
         {/* logo */}
@@ -211,28 +211,3 @@ const NavBar = ({ user }) => {
   );
 };
 export default NavBar;
-
-// export const getServerSideProps = async ({ req }) => {
-//   try {
-//     const userToken = req.cookies;
-//     console.log(userToken);
-//     const resp = await axios.post(
-//       "http://localhost:3000/api/auth/login",
-//       userToken
-//     );
-//     console.log(resp.data);
-//     return {
-//       props: {
-//         user: resp?.data.user,
-//         error: "",
-//       },
-//     };
-//   } catch (error) {
-//     return {
-//       props: {
-//         user: "",
-//         error: error.response.data.error,
-//       },
-//     };
-//   }
-// };

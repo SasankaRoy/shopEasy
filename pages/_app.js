@@ -74,7 +74,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   }
   if (userToken) {
     try {
-      // change thr url in the production build
       if (ctx.req.headers.host === "localhost:3000") {
         const checkUserExits = await axios.post(
           "http://localhost:3000/api/auth/login",

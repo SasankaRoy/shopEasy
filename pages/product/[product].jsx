@@ -274,15 +274,27 @@ export const getServerSideProps = async (context) => {
   const { pid } = context.query;
 
   try {
-    const getProductList = await axios.get(
-      `http://localhost:3000/api/products?pid=${pid}`
-    );
+    if (context.req.headers.hostname === "localhost:3000") {
+      const getProductList = await axios.get(
+        `http://localhost:3000/api/products?pid=${pid}`
+      );
 
-    return {
-      props: {
-        product: getProductList?.data,
-      },
-    };
+      return {
+        props: {
+          product: getProductList?.data,
+        },
+      };
+    } else {
+      const getProductList = await axios.get(
+        `https://shop-easee.vercel.app/api/products?pid=${pid}`
+      );
+
+      return {
+        props: {
+          product: getProductList?.data,
+        },
+      };
+    }
   } catch (error) {
     const serializedError = {
       message: error.message,
