@@ -1,12 +1,5 @@
 import Head from "next/head";
-// import { Boxes } from "../components/Boxes";
-// import { Charts } from "../components/Charts";
-// import { LeftWidget } from "../components/LeftWidget";
-
-// import { RightWidget } from "../components/RightWidget";
-// import { Sidebar } from "../components/Sidebar";
-import Todos from "../components/Todos";
-// import { NavBar } from "../components/NavBar";
+import Todos from "../../components/Todos";
 
 const Dashboard = () => {
   return (
@@ -31,9 +24,7 @@ const Dashboard = () => {
                 <RightWidget /> */}
               </div>
             </div>
-            <div className="flex-1 p-5">
-              <Todos />
-            </div>
+            <div className="flex-1 p-5">{/* <Todos /> */}</div>
           </div>
         </div>
       </div>
