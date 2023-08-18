@@ -21,7 +21,7 @@ const Cart = dynamic(() => import("./Cart"), { ssr: false });
 const NavBarOnSmallScreen = dynamic(() => import("./NavBarOnSmallScreen"));
 const FilterModel = dynamic(() => import("./FilterModel"));
 
-export const NavBar = ({ user }) => {
+const NavBar = ({ user }) => {
   const [showCart, setShowCart] = useState(false);
   const [showNavBar, setShowNavBar] = useState(false);
   const [showFilters, setShowFilters] = useState({
@@ -210,6 +210,7 @@ export const NavBar = ({ user }) => {
     </>
   );
 };
+export default NavBar;
 
 // export const getServerSideProps = async ({ req }) => {
 //   try {

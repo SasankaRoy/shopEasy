@@ -14,7 +14,7 @@ const getItems = () => {
     return [];
   }
 };
-export const Todos = () => {
+const Todos = () => {
   const [todo, setTodo] = useState("");
   const [localItems, setLocalItems] = useState([]);
 
@@ -104,3 +104,4 @@ export const Todos = () => {
     </div>
   );
 };
+export default Todos;

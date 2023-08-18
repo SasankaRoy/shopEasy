@@ -5,8 +5,8 @@ import Head from "next/head";
 
 // import { RightWidget } from "../components/RightWidget";
 // import { Sidebar } from "../components/Sidebar";
-import { Todos } from "../components/Todos";
-import { NavBar } from "../components/NavBar";
+import Todos from "../components/Todos";
+// import { NavBar } from "../components/NavBar";
 
 const Dashboard = () => {
   return (
@@ -17,7 +17,7 @@ const Dashboard = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="h-screen  w-screen ">
-        <NavBar />
+        {/* <NavBar /> */}
         <div className="h-[93.5vh] flex justify-center items-center space-x-1 overflow-hidden">
           <div className="side h-full w-auto p-2 md:w-[15%] hidden md:inline    sticky  top-0  overflow-hidden">
             {/* <Sidebar /> */}
