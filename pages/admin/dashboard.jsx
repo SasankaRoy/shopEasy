@@ -1,10 +1,10 @@
 import Head from "next/head";
-import { Boxes } from "../components/Boxes";
-import { Charts } from "../components/Charts";
-import { LeftWidget } from "../components/LeftWidget";
+// import { Boxes } from "../components/Boxes";
+// import { Charts } from "../components/Charts";
+// import { LeftWidget } from "../components/LeftWidget";
 
-import { RightWidget } from "../components/RightWidget";
-import { Sidebar } from "../components/Sidebar";
+// import { RightWidget } from "../components/RightWidget";
+// import { Sidebar } from "../components/Sidebar";
 import { Todos } from "../components/Todos";
 import { NavBar } from "../components/NavBar";
 
