@@ -154,7 +154,7 @@ const NavBar = ({ user }) => {
           </div>
           {/* {user.userInfo ? ( */}
           <Link
-            href={!user ? "/auth/login" : `/account/${user?._id}`}
+            href={!user ? "/auth/login" : `/account/${User.userInfo?._id}`}
             prefetch={false}
             className=" flex justify-center items-center list-none text-[#212a2f] hover:text-[#212a2f] transition-all duration-150 ease-in"
           >
