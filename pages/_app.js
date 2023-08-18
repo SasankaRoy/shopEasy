@@ -6,13 +6,14 @@ import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Announcement } from "../components/Announcement";
-import { NavBar } from "../components/NavBar";
+
 import Store from "../Redux/Store";
 import { useEffect } from "react";
 import NProgress from "nprogress";
 import Router from "next/router";
 import { parseCookies } from "nookies";
 import axios from "axios";
+import NavBar from "../components/NavBar";
 
 const Footer = dynamic(() => import("../components/Footer"));
 const NewsLetter = dynamic(() => import("../components/NewsLetter"));
