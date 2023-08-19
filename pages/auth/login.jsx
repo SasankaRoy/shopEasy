@@ -33,7 +33,10 @@ const Login = () => {
             // Cookies.set method works only in the client-side and to prevent
             // to achive that I have to delay the code execution, I did useing this
 
-            Cookies.set("userToken", res?.data.userToken, { expires: 1 });
+            Cookies.set("userToken", res?.data.userToken, {
+              expires: 1,
+              path: "/",
+            });
           }, 0);
 
           dispatch(loginSuccess(res?.data.user));

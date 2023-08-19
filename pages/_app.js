@@ -82,7 +82,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
           { userToken }
         );
         const user = checkUserExits.data.user;
-
+        console.log("the _app.js file is running every reload");
         pageProps.user = user;
       } else {
         const checkUserExits = await axios.post(
@@ -93,7 +93,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
         pageProps.user = user;
       }
     } catch (err) {
-      console.log(err);
+      console.log("the error block is running");
     }
   }
   return { pageProps };

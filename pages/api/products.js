@@ -8,31 +8,68 @@ const handleGetProduct = async (req, res) => {
   try {
     const { pid, category } = req.query;
 
+    // find product on the base on (for) which is "men","women"...
     if (category) {
       const findProductsByCategory = await Products.find({
         productFor: category,
       });
-      if (findProductsByCategory) {
+
+      if (findProductsByCategory.length > 0) {
         res.status(200).json({ filteredProducts: findProductsByCategory });
+        return; // Exit the function to prevent further responses.
       } else {
         res.status(404).json({ error: "Products not found" });
+        return; // Exit the function.
       }
     }
-
+    // find singleProduct by product _id and the query {pid} = _id.
     if (pid) {
       const singleProductInfo = await Products.findById(pid);
+
       if (singleProductInfo) {
         res.status(200).json({ productInfo: singleProductInfo });
+        return; // Exit the function.
       } else {
         res.status(404).json({ error: "Product not found" });
+        return; // Exit the function.
       }
     }
+    // all product.
     const findProduct = await Products.find();
-
     res.status(200).json({ allProducts: findProduct });
   } catch (error) {
-    res.status(500).json({ error });
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
   }
+  // try {
+  //   const { pid, category } = req.query;
+
+  //   if (category) {
+  //     const findProductsByCategory = await Products.find({
+  //       productFor: category,
+  //     });
+  //     if (findProductsByCategory) {
+  //       res.status(200).json({ filteredProducts: findProductsByCategory });
+  //     } else {
+  //       res.status(404).json({ error: "Products not found" });
+  //     }
+  //   }
+
+  //   if (pid) {
+  //     const singleProductInfo = await Products.findById(pid);
+  //     if (singleProductInfo) {
+  //       res.status(200).json({ productInfo: singleProductInfo });
+  //     } else {
+  //       res.status(404).json({ error: "Product not found" });
+  //     }
+  //   }
+  //   const findProduct = await Products.find();
+
+  //   res.status(200).json({ allProducts: findProduct });
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(500).json({ error });
+  // }
 };
 
 // post or create route
