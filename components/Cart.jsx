@@ -199,7 +199,7 @@ const Cart = ({ setShowCart }) => {
                   </div>
                   <div className="flex justify-between items-center w-full my-2">
                     <h2 className="text-xl font-semibold tracking-wide m-0 p-0">
-                      Shipping
+                      Shipping & Taxes
                     </h2>
                     <span className="font-semibold text-lg tracking-wide">
                       <CurrencyRupeeIcon />
