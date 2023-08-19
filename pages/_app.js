@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import "../styles/globals.css";
 import { Provider } from "react-redux";
 
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Announcement } from "../components/Announcement";
 
@@ -20,8 +20,18 @@ const NewsLetter = dynamic(() => import("../components/NewsLetter"));
 
 function MyApp({ Component, pageProps }) {
   const { pathname } = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
+    if (pageProps.user) {
+      if (
+        router.pathname === "/auth/login" ||
+        router.pathname === "/auth/register"
+      ) {
+        router.push("/");
+        toast.warn("Your are already logged in now !");
+      }
+    }
     const handleRouteChange = (url) => {
       NProgress.start();
     };

@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 
 import { loginValidation } from "../../utils/formValidation";
 import { handleError } from "../../utils/Error&SuccessHandler";
+import { useEffect } from "react";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,18 @@ const Login = () => {
         }
       },
     });
+
+  // useEffect(() => {
+  //   if (user.userInfo) {
+  //     if (
+  //       router.pathname === "/auth/login" ||
+  //       router.pathname === "/auth/register"
+  //     ) {
+  //       router.push("/");
+  //       toast.warn("Your are logged in now !");
+  //     }
+  //   }
+  // }, []);
 
   return (
     <>
