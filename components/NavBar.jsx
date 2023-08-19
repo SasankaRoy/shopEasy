@@ -36,10 +36,18 @@ const NavBar = ({ user }) => {
   const router = useRouter();
 
   const fetchUserCart = () => {
-    const userCart = localStorage.getItem("userCart");
-    const cartData = JSON.parse(userCart);
-    if (userCart) {
-      dispatch(userHasCart(cartData));
+    // console.log("Fetching user cart running", user, User.userInfo);
+    if (User.userInfo || user) {
+      console.log(
+        "Fetching user cart running inside user condition",
+        User.userInfo
+      );
+      const userCart = localStorage.getItem("userCart");
+      const cartData = JSON.parse(userCart);
+      if (userCart) {
+        dispatch(userHasCart(cartData));
+      }
+      return;
     }
   };
 
@@ -50,6 +58,8 @@ const NavBar = ({ user }) => {
   }, [router.pathname]);
 
   useEffect(() => {
+    fetchUserCart();
+    // setTimeout(() => fetchUserCart(), 4000);
     if (!user) {
       const isProtectedRoute = router.pathname === "/account/[userid]";
       if (isProtectedRoute) {
@@ -57,7 +67,6 @@ const NavBar = ({ user }) => {
         toast.warn("session expired! Please login again");
       }
     }
-    if (User.userInfo) fetchUserCart();
   }, []);
 
   const handleShowCart = () => {
