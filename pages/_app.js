@@ -93,7 +93,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
         pageProps.user = user;
       }
     } catch (err) {
-      console.log("the error block is running");
+      console.log("the error block is running", err);
     }
   }
   return { pageProps };

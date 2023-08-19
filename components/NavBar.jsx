@@ -44,6 +44,12 @@ const NavBar = ({ user }) => {
   };
 
   useEffect(() => {
+    if (user) {
+      dispatch(loginSuccess(user));
+    }
+  }, [router.pathname]);
+
+  useEffect(() => {
     if (!user) {
       const isProtectedRoute = router.pathname === "/account/[userid]";
       if (isProtectedRoute) {
@@ -51,14 +57,8 @@ const NavBar = ({ user }) => {
         toast.warn("session expired! Please login again");
       }
     }
+    if (User.userInfo) fetchUserCart();
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      dispatch(loginSuccess(user));
-      fetchUserCart();
-    }
-  }, [router.pathname]);
 
   const handleShowCart = () => {
     setShowCart(true);
