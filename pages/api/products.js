@@ -1,13 +1,10 @@
 import Products from "../../Models/Products";
 import connectDB from "../../utils/connectDb";
 
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
 // get route
 const handleGetProduct = async (req, res) => {
   try {
     const { pid, category } = req.query;
-
     // find product on the base on (for) which is "men","women"...
     if (category) {
       const findProductsByCategory = await Products.find({
@@ -16,10 +13,10 @@ const handleGetProduct = async (req, res) => {
 
       if (findProductsByCategory.length > 0) {
         res.status(200).json({ filteredProducts: findProductsByCategory });
-        return; // Exit the function to prevent further responses.
+        return;
       } else {
         res.status(404).json({ error: "Products not found" });
-        return; // Exit the function.
+        return;
       }
     }
     // find singleProduct by product _id and the query {pid} = _id.
@@ -28,10 +25,10 @@ const handleGetProduct = async (req, res) => {
 
       if (singleProductInfo) {
         res.status(200).json({ productInfo: singleProductInfo });
-        return; // Exit the function.
+        return;
       } else {
         res.status(404).json({ error: "Product not found" });
-        return; // Exit the function.
+        return;
       }
     }
     // all product.
@@ -41,35 +38,6 @@ const handleGetProduct = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
-  // try {
-  //   const { pid, category } = req.query;
-
-  //   if (category) {
-  //     const findProductsByCategory = await Products.find({
-  //       productFor: category,
-  //     });
-  //     if (findProductsByCategory) {
-  //       res.status(200).json({ filteredProducts: findProductsByCategory });
-  //     } else {
-  //       res.status(404).json({ error: "Products not found" });
-  //     }
-  //   }
-
-  //   if (pid) {
-  //     const singleProductInfo = await Products.findById(pid);
-  //     if (singleProductInfo) {
-  //       res.status(200).json({ productInfo: singleProductInfo });
-  //     } else {
-  //       res.status(404).json({ error: "Product not found" });
-  //     }
-  //   }
-  //   const findProduct = await Products.find();
-
-  //   res.status(200).json({ allProducts: findProduct });
-  // } catch (error) {
-  //   console.log(error);
-  //   res.status(500).json({ error });
-  // }
 };
 
 // post or create route
@@ -120,6 +88,7 @@ const handlePutProduct = async (req, res) => {
   try {
     const { id } = req.body;
     const {
+      brand,
       productName,
       productFor,
       category,
@@ -135,6 +104,7 @@ const handlePutProduct = async (req, res) => {
 
     const update = {
       $set: {
+        brand,
         productName,
         productFor,
         category,
@@ -155,7 +125,7 @@ const handlePutProduct = async (req, res) => {
       returnOriginal: false,
     });
     if (!updateProduct) {
-      res.status(406).json({ message: "updation failed" });
+      return res.status(406).json({ message: "updation failed" });
     } else {
       res.status(202).json({
         message: "updation successfully",

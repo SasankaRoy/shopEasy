@@ -8,9 +8,15 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import { singinValidation } from "../../utils/formValidation";
 import { handleError } from "../../utils/Error&SuccessHandler";
+import { useDispatch, useSelector } from "react-redux";
+import { loadingComplete, loadingStart } from "../../Redux/loadingSlice";
+
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Register = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.loading);
   const { handleSubmit, values, touched, handleChange, errors, handleBlur } =
     useFormik({
       initialValues: {
@@ -23,8 +29,17 @@ const Register = () => {
       validationSchema: singinValidation,
       onSubmit: async (values) => {
         try {
+          dispatch(
+            loadingStart({
+              message: {
+                currentMessage: "Saving...",
+                forWhichPorpose: "Register",
+              },
+            })
+          );
           const response = await axios.post("/api/auth/register", values);
           toast.success(response.data.success);
+          dispatch(loadingComplete());
           router.push("/auth/login");
         } catch (err) {
           handleError(err);
@@ -208,13 +223,25 @@ const Register = () => {
           </div>
           <div className="flex flex-col items-center justify-evenly space-y-2 mt-2 w-[50%] mx-auto">
             <button
+              disabled={
+                (isLoading.state && isLoading.forWhichPorpose === "Register") ||
+                !Object.keys(values).every((key) => {
+                  return Boolean(values[key]);
+                })
+              }
               type="submit"
-              className="bg-[#212a2f] border border-[#212a2f]
-              w-full text-white py-2 text-2xl rounded-md font-semibold
-              tracking-wide hover:tracking-wider hover:text-[#212a2f]
-            hover:bg-white transition-all duration-200 ease-linear"
+              className="bg-[#212a2f] flex justify-evenly items-center border border-[#212a2f] w-full text-white py-2 text-2xl rounded-md font-semibold tracking-wide hover:tracking-wider hover:text-[#212a2f] hover:bg-white transition-all duration-200 ease-linear disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Create
+              {isLoading.state && isLoading.forWhichPorpose === "Register" ? (
+                <>
+                  <CircularProgress className="text-sm" />
+                  <span className="text-2xl font-semibold">
+                    {isLoading.currentMessage}
+                  </span>
+                </>
+              ) : (
+                "Create"
+              )}
             </button>
             <h3 className="m-0 text-white text-xl">Or</h3>
 
@@ -229,7 +256,7 @@ const Register = () => {
           </div>
         </motion.form>
         <span className="text-base z-50 opacity-80 tracking-wide text-white absolute bottom-1">
-          e-Comm. <span className="text-[#F7AB0A]">by - sasanka</span> @all
+          shopEasee. <span className="text-[#F7AB0A]">by - sasanka</span> @all
           copyright are reserved @2023.
         </span>
       </div>

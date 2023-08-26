@@ -32,10 +32,40 @@ const handleGetUser = async (req, res) => {
 
 const handlePostUser = async (req, res) => {
   try {
-    const { userName, profasion, DOB, email, address, number, mediaUrl } =
-      res.body;
+    const { uid } = req.query;
+
+    const { userName, profasion, Dod, email, address, number } =
+      req.body.userInfo;
+    const mediaUrl = req.body.mediaUrl;
+    if (uid) {
+      const updationToBeDone = {
+        $set: {
+          userName,
+          profasion,
+          DOB: Dod,
+          email,
+          address,
+          number,
+          profilePicture: mediaUrl,
+        },
+      };
+      const checkUserExistence = await User.findByIdAndUpdate(
+        { _id: uid },
+        updationToBeDone,
+        {
+          returnOriginal: false,
+        }
+      );
+
+      if (checkUserExistence) {
+        return res.status(200).json({ message: checkUserExistence });
+      } else {
+        return res.status(404).json({ error: "User not found" });
+      }
+    }
   } catch (error) {
-    res.status(404).json({ error });
+    res.status(500).json({ error });
+    console.log(error);
   }
 };
 

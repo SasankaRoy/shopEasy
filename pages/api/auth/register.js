@@ -22,7 +22,7 @@ const registerHandler = async (req, res) => {
 
     const newUser = await new User({
       userName,
-      lastName,
+      // lastName,
       email,
       password: hashPassword,
     });

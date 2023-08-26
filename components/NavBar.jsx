@@ -54,7 +54,7 @@ const NavBar = ({ user }) => {
 
   useEffect(() => {
     setTimeout(() => fetchUserCart(), 3000);
-    if (!user || !User.userInfo) {
+    if (!user) {
       const isProtectedRoute = router.pathname === "/account/[userid]";
       if (isProtectedRoute) {
         router.push("/");

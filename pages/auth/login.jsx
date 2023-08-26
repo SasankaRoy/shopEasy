@@ -6,17 +6,21 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { loginSuccess } from "../../Redux/userSlice";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loadingComplete, loadingStart } from "../../Redux/loadingSlice";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 import { loginValidation } from "../../utils/formValidation";
 import { handleError } from "../../utils/Error&SuccessHandler";
-import { useEffect } from "react";
+
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Login = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const isLoading = useSelector((state) => state.loading);
   const { values, handleSubmit, handleBlur, handleChange, errors, touched } =
     useFormik({
       initialValues: {
@@ -25,7 +29,14 @@ const Login = () => {
       },
       validationSchema: loginValidation,
       onSubmit: async (values) => {
-        // dispatch(loginStart());
+        dispatch(
+          loadingStart({
+            message: {
+              currentMessage: "Verifying...",
+              forWhichPorpose: "Login",
+            },
+          })
+        );
         try {
           const res = await axios.post("/api/auth/login", values);
           toast.success(`welcome back ${res?.data.user.userName}`);
@@ -41,6 +52,7 @@ const Login = () => {
           }, 0);
 
           dispatch(loginSuccess(res?.data.user));
+          dispatch(loadingComplete());
           router.push("/");
         } catch (err) {
           // dispatch(loginError());
@@ -178,13 +190,27 @@ const Login = () => {
 
           <div className="flex items-center justify-evenly w-[50%] mt-3 mx-auto">
             <button
+              disabled={
+                (isLoading.state && isLoading.forWhichPorpose === "Login") ||
+                !Object.keys(values).every((key) => {
+                  return Boolean(values[key]);
+                })
+              }
               type="submit"
-              className="bg-[#212a2f] border border-[#212a2f]
-              w-full text-white py-2 text-2xl rounded-md font-semibold
-              tracking-wide hover:tracking-wider hover:text-[#212a2f]
-            hover:bg-white transition-all duration-200 ease-linear"
+              className="bg-[#212a2f] border border-[#212a2f] flex justify-evenly items-center w-full text-white py-2  rounded-md font-semibold tracking-wide hover:tracking-wider hover:text-[#212a2f] hover:bg-white transition-all duration-200 ease-linear disabled:cursor-not-allowed disabled:opacity-40"
             >
-              LogIn
+              {isLoading.state && isLoading.forWhichPorpose === "Login" ? (
+                <>
+                  <CircularProgress className="text-sm" />
+                  <span className="text-2xl font-semibold">
+                    {isLoading.currentMessage}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="text-2xl font-semibold">LogIn</span>
+                </>
+              )}
             </button>
           </div>
           <Link
@@ -208,7 +234,7 @@ const Login = () => {
           className="text-base z-50 opacity-80 tracking-wide
         text-white absolute bottom-1 px-2"
         >
-          e-Comm. <span className="text-[#F7AB0A]">by - sasanka</span> @all
+          shopEasee. <span className="text-[#F7AB0A]">by - sasanka</span> @all
           copyright are reserved @2023.
         </span>
       </div>
