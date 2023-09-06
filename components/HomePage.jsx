@@ -20,11 +20,11 @@ export const HomePage = () => {
       <Hero />
       <Favorites />
       <Banner image="/bg1.jpg" title="Premium Products For Men's." />
-      <Productes />
+      <Productes category="men" />
       <Banner image="/bg2.jpg" title="Premium Products For Women's." />
-      <Productes />
+      <Productes category="women" />
       <Banner image="/photo4.jpg" title="Premium Products For Kid's." />
-      <Productes />
+      <Productes category="kid" />
     </>
   );
 };

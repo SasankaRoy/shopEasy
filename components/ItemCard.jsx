@@ -7,8 +7,8 @@ import { motion } from "framer-motion";
 export const ItemCard = ({ data }) => {
   const router = useRouter();
 
-  const handleOnclick = (id) => {
-    router.push(`/product/${id}`);
+  const handleOnclick = (id, productName) => {
+    router.push(`/product/${productName}?pid=${id}`);
   };
   return (
     <>
@@ -22,7 +22,7 @@ export const ItemCard = ({ data }) => {
       >
         <div className="w-full h-[65%] lg:h-[70%] relative overflow-hidden ImageDiv rounded-t-md">
           <Image
-            src="/bg2.jpg"
+            src={data.mediaURL && data.mediaURL[0]}
             fill
             priority
             className="object-cover object-center image rounded-t-md transition-all duration-150 delay-100 ease-linear"
@@ -30,7 +30,7 @@ export const ItemCard = ({ data }) => {
 
           <div className="main__div flex justify-center items-center w-full h-full z-50 absolute top-0 transition-all duration-150 delay-100 ease-linear">
             <button
-              onClick={() => handleOnclick(data?.productName)}
+              onClick={() => handleOnclick(data?._id, data?.productName)}
               className="uppercase icons font-medium tracking-wider text-xl px-6 py-3 rounded text-[#212a2f] bg-[#ffffff] hover:bg-[#212a2f] hover:text-[#ffffff] transition-all duration-150 ease-in"
             >
               Shop Now

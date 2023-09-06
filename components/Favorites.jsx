@@ -3,20 +3,28 @@ import { useEffect, useState } from "react";
 import { ItemCard } from "./ItemCard";
 import { motion } from "framer-motion";
 import { fakeData } from "../FakeData";
+import axios from "axios";
 
 // bg-[#003459]
 const Favorites = () => {
-  const [filters, setFilters] = useState("For Everyday");
+  const [filters, setFilters] = useState("Men");
   const [filterArr, setFilterArr] = useState([]);
 
   const handleClick = (e) => {
     setFilters(e.target.innerHTML);
   };
+  const fetchProducts = async () => {
+    try {
+      const products = await axios.get(
+        `api/products?category=${filters.toLocaleLowerCase()}`
+      );
+      setFilterArr(products.data.filteredProducts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const filteredData = fakeData.filter(
-      (data) => data.type == filters.toLocaleLowerCase()
-    );
-    setFilterArr(filteredData);
+    fetchProducts();
   }, [filters]);
 
   return (
@@ -32,7 +40,7 @@ const Favorites = () => {
         </h1>
         <div className=" w-full lg:w-[80%] mx-auto mt-6 ">
           <div className="relative flex justify-center items-center py-2  space-x-5">
-            {["For Everyday", "For Party", "For Travel"].map((cur, id) => (
+            {["Men", "Women", "Kid"].map((cur, id) => (
               <button
                 key={id}
                 onClick={handleClick}

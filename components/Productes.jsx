@@ -1,8 +1,19 @@
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ItemCard } from "./ItemCard";
+import axios from "axios";
 
-const Productes = () => {
+const Productes = ({ category }) => {
+  const [showCaseProduct, setShowCaseProduct] = useState([]);
+  const fetchProductsByCategory = async () => {
+    const getDataByCategory = await axios.get(
+      `http://localhost:3000/api/products?category=${category}`
+    );
+    setShowCaseProduct([...getDataByCategory.data.filteredProducts]);
+  };
+  useEffect(() => {
+    fetchProductsByCategory();
+  }, []);
   return (
     <>
       <motion.div
@@ -18,30 +29,9 @@ const Productes = () => {
             Best Seller
           </h1>
           <div className="grid  grid-flow-col gap-5 px-7 py-5 auto-cols-[96.5%] lg:auto-cols-[35%] w-full overflow-x-auto overscroll-x-contain snap-x  snap-mandatory scroll-smooth">
-            <ItemCard
-              data={{
-                productName: "the name of product",
-                dec: "the product description here",
-              }}
-            />
-            <ItemCard
-              data={{
-                productName: "the name of product",
-                dec: "the product description here",
-              }}
-            />
-            <ItemCard
-              data={{
-                productName: "the name of product",
-                dec: "the product description here",
-              }}
-            />
-            <ItemCard
-              data={{
-                productName: "the name of product",
-                dec: "the product description here",
-              }}
-            />
+            {showCaseProduct.map((cur, id) => (
+              <ItemCard data={cur} key={id} />
+            ))}
           </div>
         </div>
       </motion.div>
