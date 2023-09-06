@@ -7,7 +7,7 @@ const Productes = ({ category }) => {
   const [showCaseProduct, setShowCaseProduct] = useState([]);
   const fetchProductsByCategory = async () => {
     const getDataByCategory = await axios.get(
-      `http://localhost:3000/api/products?category=${category}`
+      `/api/products?category=${category}`
     );
     setShowCaseProduct([...getDataByCategory.data.filteredProducts]);
   };
