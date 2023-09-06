@@ -10,7 +10,7 @@ export default function Home() {
           name="description"
           content="It is a shopping app that provides best quality products at a affodable price at your door step."
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/icon2.png" />
       </Head>
       <div>
         <HomePage />

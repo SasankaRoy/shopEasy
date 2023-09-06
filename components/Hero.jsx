@@ -28,7 +28,7 @@ export const Hero = () => {
           className="w-full h-full  relative z-0 transition-all duration-150 ease-linear"
         >
           <Image
-            src="/bg1.jpg"
+            src="/hero.jpg"
             fill
             alt="coverPic"
             priority
