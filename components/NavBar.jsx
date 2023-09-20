@@ -103,7 +103,7 @@ const NavBar = ({ user }) => {
             }}
             className="list-none text-lg tracking-wide font-semibold text-[#212a2f] hover:text-[#212a2f]  hover:underline hover:underline-offset-8 decoration-pink-600  transition-all duration-150 ease-in"
           >
-            Kids
+            Kid
           </button>
           <button
             onClick={(e) => {

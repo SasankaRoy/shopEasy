@@ -4,20 +4,46 @@ import connectDB from "../../utils/connectDb";
 // get route
 const handleGetProduct = async (req, res) => {
   try {
-    const { pid, category } = req.query;
+    const { pid, category, sub } = req.query;
+
     // find product on the base on (for) which is "men","women"...
     if (category) {
+      if (sub) {
+        Products.aggregate([
+          {
+            $match: {
+              productFor: category,
+              subcategory: sub,
+            },
+          },
+          // {
+          //   $match: {
+          //     subcategory: sub,
+          //   },
+          // },
+        ]).exec((error, products) => {
+          if (error) {
+            console.log(error);
+            res.status(404).json({ error: error });
+            return;
+          }
+          res.status(200).json({ filteredProducts: products });
+          return;
+        });
+        console.log("the log is outside the block");
+      }
+
       const findProductsByCategory = await Products.find({
         productFor: category,
       });
-
       if (findProductsByCategory.length > 0) {
         res.status(200).json({ filteredProducts: findProductsByCategory });
         return;
-      } else {
-        res.status(404).json({ error: "Products not found" });
-        return;
       }
+      // else {
+      res.status(404).json({ error: "Products not found" });
+      return;
+      // }
     }
     // find singleProduct by product _id and the query {pid} = _id.
     if (pid) {
@@ -35,7 +61,7 @@ const handleGetProduct = async (req, res) => {
     const findProduct = await Products.find();
     res.status(200).json({ allProducts: findProduct });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -48,6 +74,7 @@ const handlePostProduct = async (req, res) => {
       productName,
       productFor,
       category,
+      subcategory,
       size,
       color,
       price,
@@ -63,6 +90,7 @@ const handlePostProduct = async (req, res) => {
       productName,
       productFor,
       category,
+      subcategory,
       price,
       size,
       color,
@@ -92,6 +120,7 @@ const handlePutProduct = async (req, res) => {
       productName,
       productFor,
       category,
+      subcategory,
       size,
       color,
       price,
@@ -108,6 +137,7 @@ const handlePutProduct = async (req, res) => {
         productName,
         productFor,
         category,
+        subcategory,
         price,
         size,
         color,

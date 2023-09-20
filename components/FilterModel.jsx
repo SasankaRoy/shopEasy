@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const forMen = [
@@ -64,7 +65,7 @@ const forWomen = [
     subFilters: [
       "Dresses",
       "Tops",
-      "Tshirts",
+      "T-shirts",
       "Jeans",
       "Trousers & Capris",
       "Shorts & Skrits",
@@ -118,7 +119,7 @@ const forKids = [
     subFilters: [
       "Dresses",
       "Tops",
-      "Tshirts",
+      "T-shirts",
       "Clothing sets",
       "Lehenga choli",
       "Party wears",
@@ -184,6 +185,7 @@ const Gadgets = [
 ];
 const FilterModel = ({ showFilter, setShowFilter }) => {
   const [FiltersFor, setFiltersFor] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     switch (showFilter.type) {
@@ -223,6 +225,12 @@ const FilterModel = ({ showFilter, setShowFilter }) => {
                 {cur.subFilters?.map((cur, id) => (
                   <motion.li
                     key={id}
+                    onClick={() => {
+                      router.push(
+                        `/category/${showFilter.type.toLowerCase()}?sub=${cur.toLowerCase()}`
+                      );
+                      setShowFilter(false);
+                    }}
                     initial={{ scale: 1 }}
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.2, ease: "easeIn" }}

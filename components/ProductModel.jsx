@@ -35,6 +35,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
     brand: ProductDetails?.productInfo.brand,
     productName: ProductDetails?.productInfo.productName,
     productFor: ProductDetails?.productInfo.productFor,
+    subcategory: ProductDetails?.productInfo.subcategory,
     category: ProductDetails?.productInfo.category,
     size: ProductDetails?.productInfo.size
       ? ProductDetails?.productInfo?.size
@@ -665,6 +666,24 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
                   outline-none focus:ring-0 "
                   />
                 </div>
+              </div>
+              <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
+                <label
+                  htmlFor="subcategory"
+                  className="text-base lg:text-lg font-semibold tracking-wide capitalize"
+                >
+                  subcategory
+                </label>
+                <input
+                  type="text"
+                  name="subcategory"
+                  onChange={handleChange}
+                  value={newproductInfo.subcategory}
+                  placeholder="shirts / t-shirts..."
+                  className="w-full text-lg lg:text-xl p-2 bg-white text-[#212a2f]
+                  font-semibold tracking-wider border-b-2 border-[#212a2f]
+                  outline-none focus:ring-0 "
+                />
               </div>
               <div className="flex w-[90%] mx-auto my-5 justify-center space-x-5 items-center  ">
                 <div className=" w-[90%] mx-auto flex flex-col justify-start items-start space-y-2">

@@ -242,12 +242,17 @@ const FilterModel = ({
  * @returns The function `getServerSideProps` returns an object with the following structure:
  */
 export const getServerSideProps = async (context) => {
-  const { category } = context.query;
+  const { category, sub } = context.query;
+  console.log(sub);
+
   try {
     if (context.req.headers.host === "localhost:3000") {
       const getProductList = await axios.get(
-        `http://localhost:3000/api/products?category=${category}`
+        sub
+          ? `http://localhost:3000/api/products?category=${category}&sub=${sub}`
+          : `http://localhost:3000/api/products?category=${category}`
       );
+      console.log(getProductList?.data, "the category page");
 
       return {
         props: {
@@ -256,7 +261,9 @@ export const getServerSideProps = async (context) => {
       };
     } else {
       const getProductList = await axios.get(
-        `https://shop-easee.vercel.app/api/products?category=${category}`
+        sub
+          ? `https://shop-easee.vercel.app/api/products?category=${category}&sub=${sub}`
+          : `https://shop-easee.vercel.app/api/products?category=${category}`
       );
 
       return {
@@ -266,6 +273,7 @@ export const getServerSideProps = async (context) => {
       };
     }
   } catch (error) {
+    console.log(error);
     return {
       props: {
         error,
