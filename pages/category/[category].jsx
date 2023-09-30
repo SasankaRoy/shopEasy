@@ -261,8 +261,8 @@ export const getServerSideProps = async (context) => {
     } else {
       const getProductList = await axios.get(
         sub
-          ? `${process.env.PRODUCTION_DOMAIN}/api/products?category=${category}&sub=${sub}`
-          : `${process.env.PRODUCTION_DOMAIN}/api/products?category=${category}`
+          ? `https://shop-easee.vercel.app/api/products?category=${category}&sub=${sub}`
+          : `https://shop-easee.vercel.app/api/products?category=${category}`
       );
 
       return {
