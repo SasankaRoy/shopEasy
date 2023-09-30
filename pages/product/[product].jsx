@@ -277,7 +277,7 @@ export const getServerSideProps = async (context) => {
   try {
     if (context.req.headers.host === "localhost:3000") {
       const getProductList = await axios.get(
-        `http://localhost:3000/api/products?pid=${pid}`
+        `${process.env.DEVELOPMENT_DOMAIN}/api/products?pid=${pid}`
       );
 
       return {
@@ -287,7 +287,7 @@ export const getServerSideProps = async (context) => {
       };
     } else {
       const getProductList = await axios.get(
-        `https://shop-easee.vercel.app/api/products?pid=${pid}`
+        `${process.env.PRODUCTION_DOMAIN}/api/products?pid=${pid}`
       );
 
       return {

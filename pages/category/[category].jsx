@@ -249,10 +249,9 @@ export const getServerSideProps = async (context) => {
     if (context.req.headers.host === "localhost:3000") {
       const getProductList = await axios.get(
         sub
-          ? `http://localhost:3000/api/products?category=${category}&sub=${sub}`
-          : `http://localhost:3000/api/products?category=${category}`
+          ? `${process.env.DEVELOPMENT_DOMAIN}/api/products?category=${category}&sub=${sub}`
+          : `${process.env.DEVELOPMENT_DOMAIN}/api/products?category=${category}`
       );
-      console.log(getProductList?.data, "the category page");
 
       return {
         props: {
@@ -262,8 +261,8 @@ export const getServerSideProps = async (context) => {
     } else {
       const getProductList = await axios.get(
         sub
-          ? `https://shop-easee.vercel.app/api/products?category=${category}&sub=${sub}`
-          : `https://shop-easee.vercel.app/api/products?category=${category}`
+          ? `${process.env.PRODUCTION_DOMAIN}/api/products?category=${category}&sub=${sub}`
+          : `${process.env.PRODUCTION_DOMAIN}/api/products?category=${category}`
       );
 
       return {
