@@ -2,66 +2,40 @@ import Products from "../../Models/Products";
 import connectDB from "../../utils/connectDb";
 
 // get route
+
 const handleGetProduct = async (req, res) => {
   try {
     const { pid, category, sub } = req.query;
+    let products;
 
-    // find product on the base on (for) which is "men","women"...
     if (category) {
+      // this block filter product based on category or subcategory...
       if (sub) {
-        Products.aggregate([
+        products = await Products.aggregate([
           {
             $match: {
               productFor: category,
               subcategory: sub,
             },
           },
-          // {
-          //   $match: {
-          //     subcategory: sub,
-          //   },
-          // },
-        ]).exec((error, products) => {
-          if (error) {
-            console.log(error);
-            res.status(404).json({ error: error });
-            return;
-          }
-          res.status(200).json({ filteredProducts: products });
-          return;
-        });
-        console.log("the log is outside the block");
-      }
-
-      const findProductsByCategory = await Products.find({
-        productFor: category,
-      });
-      if (findProductsByCategory.length > 0) {
-        res.status(200).json({ filteredProducts: findProductsByCategory });
-        return;
-      }
-      // else {
-      res.status(404).json({ error: "Products not found" });
-      return;
-      // }
-    }
-    // find singleProduct by product _id and the query {pid} = _id.
-    if (pid) {
-      const singleProductInfo = await Products.findById(pid);
-
-      if (singleProductInfo) {
-        res.status(200).json({ productInfo: singleProductInfo });
-        return;
+        ]);
       } else {
-        res.status(404).json({ error: "Product not found" });
-        return;
+        products = await Products.find({ productFor: category });
       }
+    } else if (pid) {
+      // this filter the product by Id..
+      products = await Products.findById(pid);
+    } else {
+      products = await Products.find(); // gives all the products..
     }
-    // all product.
-    const findProduct = await Products.find();
-    res.status(200).json({ allProducts: findProduct });
+
+    if (!products || (Array.isArray(products) && products.length === 0)) {
+      res.status(404).json({ error: "Products not found" });
+    } else {
+      res.status(200).json({ filteredProducts: products });
+    }
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     res.status(500).json({ error: "Server error" });
   }
 };

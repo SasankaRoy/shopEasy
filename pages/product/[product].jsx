@@ -47,7 +47,8 @@ const Product = ({ product, error }) => {
   };
 
   // expecting an array here...
-  const hexCodes = colorCodes(product?.productInfo.color);
+  console.log(product, "the product page");
+  const hexCodes = colorCodes(product?.color);
 
   // addtoCart function...
 
@@ -83,7 +84,7 @@ const Product = ({ product, error }) => {
         className="flex flex-col md:flex-row space-y-3 lg:space-x-3 lg:space-y-0  h-[88vh] w-screen px-2 lg:px-8 py-4"
       >
         <div className="grid lg:grid-cols-2 lg:grid-flow-row grid-flow-col auto-cols-[93.3%] lg:auto-cols-[40%] gap-5 overflow-x-auto h-[40%] lg:flex-1 lg:h-full  px-3 lg:py-3 overscroll-x-contain snap-x  snap-mandatory scroll-smooth">
-          {product?.productInfo.mediaURL.map((img, id) => (
+          {product?.mediaURL.map((img, id) => (
             <div
               key={id}
               className="relative snap-center
@@ -108,15 +109,15 @@ const Product = ({ product, error }) => {
         </div>
         <div className="lg:w-[30%] flex-1 py-3 px-1">
           <h2 className="text-lg font-semibold tracking-wider capitalize">
-            {product?.productInfo.brand}
+            {product?.brand}
           </h2>
           <div className="flex justify-between items-center ">
             <h1 className=" font-normal text-3xl lg:text-4xl tracking-wide m-0">
-              {product?.productInfo.productName}
+              {product?.productName}
             </h1>
             <h2 className="flex justify-center items-center font-semobold text-2xl lg:text-3xl tracking-wide m-0">
               <CurrencyRupeeIcon />
-              {product?.productInfo.price}
+              {product?.price}
             </h2>
           </div>
           <h3 className="text-base tracking-wider uppercase font-medium mt-5">
@@ -146,7 +147,7 @@ const Product = ({ product, error }) => {
             Select Size
           </h3>
           <div className="flex flex-wrap justify-start items-start gap-3">
-            {product?.productInfo.size.map((cur, id) => (
+            {product?.size.map((cur, id) => (
               <div
                 key={id}
                 onClick={() => {
@@ -182,14 +183,14 @@ const Product = ({ product, error }) => {
                   }
                   onClick={() =>
                     addToCart({
-                      id: product?.productInfo._id,
-                      productName: product?.productInfo.productName,
-                      price: product?.productInfo.price,
+                      id: product?._id,
+                      productName: product?.productName,
+                      price: product?.price,
                       quantity: 1,
-                      productImage: product?.productInfo.mediaURL[0],
+                      productImage: product?.mediaURL[0],
                       size: selectedSizeAndColor?.size,
                       color: selectedSizeAndColor?.color.code,
-                      total: product?.productInfo.price,
+                      total: product?.price,
                     })
                   }
                   className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border shadow-md bg-[#212a2f] disabled:cursor-not-allowed disabled:opacity-40 text-[#ffffff] hover:text-[#212a2f] hover:border-[#212a2f] hover:bg-[#ffffff] transition-all duration-150 ease-in"
@@ -212,14 +213,14 @@ const Product = ({ product, error }) => {
                 }
                 onClick={() =>
                   addToCart({
-                    id: product?.productInfo._id,
-                    productName: product?.productInfo.productName,
-                    price: product?.productInfo.price,
+                    id: product?._id,
+                    productName: product?.productName,
+                    price: product?.price,
                     quantity: 1,
-                    productImage: product?.productInfo.mediaURL[0],
+                    productImage: product?.mediaURL[0],
                     size: selectedSizeAndColor?.size,
                     color: selectedSizeAndColor?.color.code,
-                    total: product?.productInfo.price,
+                    total: product?.price,
                   })
                 }
                 className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border shadow-md bg-[#212a2f] disabled:cursor-not-allowed disabled:opacity-40 text-[#ffffff] hover:text-[#212a2f] hover:border-[#212a2f] hover:bg-[#ffffff] transition-all duration-150 ease-in"
@@ -241,7 +242,7 @@ const Product = ({ product, error }) => {
                 4.5 <span className="text-sm font-medium">rattings</span>
               </h2>
             </div>
-            {product.productInfo.price > 1000 && (
+            {product.price > 1000 && (
               <span className="py-2 px-4 capitalize italic bg-gray-200 rounded text-lg tracking-wider shadow-md font-medium">
                 Free shipping
               </span>
@@ -249,7 +250,7 @@ const Product = ({ product, error }) => {
           </div>
         </div>
       </motion.div>
-      <ProductDetails pDescribtion={product?.productInfo.describtion} />
+      <ProductDetails pDescribtion={product?.describtion} />
       <FAQ />
       {handleImageShowHide.state && (
         <ProductImageView
@@ -281,7 +282,7 @@ export const getServerSideProps = async (context) => {
 
       return {
         props: {
-          product: getProductList?.data,
+          product: getProductList?.data.filteredProducts,
         },
       };
     } else {
@@ -291,7 +292,7 @@ export const getServerSideProps = async (context) => {
 
       return {
         props: {
-          product: getProductList?.data,
+          product: getProductList?.data.filteredProducts,
         },
       };
     }
