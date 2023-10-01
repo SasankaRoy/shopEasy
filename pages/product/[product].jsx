@@ -287,7 +287,7 @@ export const getServerSideProps = async (context) => {
       };
     } else {
       const getProductList = await axios.get(
-        `https://shop-easee.vercel.app/api/products?pid=${pid}`
+        `${process.env.PRODUCTION_DOMAIN}/api/products?pid=${pid}`
       );
 
       return {
