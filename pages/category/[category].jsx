@@ -263,8 +263,8 @@ export const getServerSideProps = async (context) => {
       console.log(process.env.DEVELOPMENT_DOMAIN, "the categozy");
       const getProductList = await axios.get(
         sub
-          ? `https://shop-easee.vercel.app/api/products?category=${category}&sub=${sub}`
-          : `https://shop-easee.vercel.app/api/products?category=${category}`
+          ? `${process.env.PRODUCTION_DOMAIN}/api/products?category=${category}&sub=${sub}`
+          : `${process.env.PRODUCTION_DOMAIN}/api/products?category=${category}`
       );
 
       return {
