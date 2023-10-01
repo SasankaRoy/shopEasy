@@ -6,7 +6,7 @@ const nextConfig = {
     domains: ["res.cloudinary.com"],
   },
   env: {
-    NEXT_PUBLIC_MONGO_URI: process.env.NEXT_PUBLIC_MONGO_URI,
+    //NEXT_PUBLIC_MONGO_URI: process.env.NEXT_PUBLIC_MONGO_URI,
     //   SECRET_KEY:
     //     "THESECRETISVERYSECRETandITCANNOTbeSHAREDwithOTHER-_2PERSONS__ORBEpublic",
     //   MEDIA_TO_MEDIAURL_CONVERTER:

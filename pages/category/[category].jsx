@@ -247,6 +247,7 @@ export const getServerSideProps = async (context) => {
 
   try {
     if (context.req.headers.host === "localhost:3000") {
+      console.log(process.env.PRODUCTION_DOMAIN, "the categozy");
       const getProductList = await axios.get(
         sub
           ? `${process.env.DEVELOPMENT_DOMAIN}/api/products?category=${category}&sub=${sub}`
@@ -259,6 +260,7 @@ export const getServerSideProps = async (context) => {
         },
       };
     } else {
+      console.log(process.env.DEVELOPMENT_DOMAIN, "the categozy");
       const getProductList = await axios.get(
         sub
           ? `https://shop-easee.vercel.app/api/products?category=${category}&sub=${sub}`
