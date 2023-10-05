@@ -32,7 +32,7 @@ export const Product = ({ pData }) => {
         </div>
         {/* text */}
         <div className="text h-[20%] w-[95%]  mx-auto mt-2 px-1">
-          <h2 className="text-lg tracking-wider font-medium capitalize m-0 p-1 cursor-pointer">
+          <h2 className="text-lg tracking-wider font-[600] capitalize m-0 p-1 cursor-pointer">
             {pData?.productName}
           </h2>
           <hr className="bg-[#212a2f] " />
@@ -41,7 +41,7 @@ export const Product = ({ pData }) => {
             <span className="text-md  font-extralight tracking-wider">
               ratings: 2/5 <StarBorderTwoToneIcon className="text-sm" />
             </span>
-            <span className="text-lg  font-bold tracking-wider">
+            <span className="text-lg  font-[800] tracking-wider">
               <CurrencyRupeeIcon className="text-sm" />
               {pData?.price}
             </span>

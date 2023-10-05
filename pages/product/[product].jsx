@@ -47,7 +47,7 @@ const Product = ({ product, error }) => {
   };
 
   // expecting an array here...
-  console.log(product, "the product page");
+
   const hexCodes = colorCodes(product?.color);
 
   // addtoCart function...
@@ -81,7 +81,7 @@ const Product = ({ product, error }) => {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
-        className="flex flex-col md:flex-row space-y-3 lg:space-x-3 lg:space-y-0  h-[88vh] w-screen px-2 lg:px-8 py-4"
+        className="flex flex-col lg:flex-row space-y-3 lg:space-x-3 lg:space-y-0  h-[88vh] w-screen px-2 lg:px-8 py-4"
       >
         <div className="grid lg:grid-cols-2 lg:grid-flow-row grid-flow-col auto-cols-[93.3%] lg:auto-cols-[40%] gap-5 overflow-x-auto h-[40%] lg:flex-1 lg:h-full  px-3 lg:py-3 overscroll-x-contain snap-x  snap-mandatory scroll-smooth">
           {product?.mediaURL.map((img, id) => (
@@ -112,10 +112,10 @@ const Product = ({ product, error }) => {
             {product?.brand}
           </h2>
           <div className="flex justify-between items-center ">
-            <h1 className=" font-normal text-3xl lg:text-4xl tracking-wide m-0">
+            <h1 className="text-3xl lg:text-4xl tracking-wide m-0 font-[600]">
               {product?.productName}
             </h1>
-            <h2 className="flex justify-center items-center font-semobold text-2xl lg:text-3xl tracking-wide m-0">
+            <h2 className="flex justify-center items-center font-[800] text-2xl lg:text-3xl tracking-wide m-0">
               <CurrencyRupeeIcon />
               {product?.price}
             </h2>

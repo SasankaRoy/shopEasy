@@ -23,6 +23,7 @@ const initialValuesForImages = {
 const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
   const isLoading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
+  console.log(ProductDetails);
 
   // for getting the media URL of the images...
   const [rawFiles, setRawFiles] = useState(initialValuesForImages);
@@ -32,22 +33,18 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
 
   //for form or the entire product info object...
   const [newproductInfo, setNewProductInfo] = useState({
-    brand: ProductDetails?.productInfo.brand,
-    productName: ProductDetails?.productInfo.productName,
-    productFor: ProductDetails?.productInfo.productFor,
-    subcategory: ProductDetails?.productInfo.subcategory,
-    category: ProductDetails?.productInfo.category,
-    size: ProductDetails?.productInfo.size
-      ? ProductDetails?.productInfo?.size
-      : [],
-    color: ProductDetails?.productInfo.color
-      ? ProductDetails?.productInfo?.color
-      : [],
-    price: ProductDetails?.productInfo.price,
-    description1: ProductDetails?.productInfo.describtion[0].description,
-    description2: ProductDetails?.productInfo.describtion[1].description,
-    description3: ProductDetails?.productInfo.describtion[2].description,
-    description4: ProductDetails?.productInfo.describtion[3].description,
+    brand: ProductDetails?.brand,
+    productName: ProductDetails?.productName,
+    productFor: ProductDetails?.productFor,
+    subcategory: ProductDetails?.subcategory,
+    category: ProductDetails?.category,
+    size: ProductDetails?.size ? ProductDetails?.size : [],
+    color: ProductDetails?.color ? ProductDetails?.color : [],
+    price: ProductDetails?.price,
+    description1: ProductDetails?.describtion[0].description,
+    description2: ProductDetails?.describtion[1].description,
+    description3: ProductDetails?.describtion[2].description,
+    description4: ProductDetails?.describtion[3].description,
   });
 
   const imageRef1 = useRef(null); // for product image1...
@@ -106,12 +103,13 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
 
   // in this func genrating the mediaUrl of the images and
   // sending the newproductInfo object to the server...
+
   const handleSubmit = async (e, methodChecker) => {
     e.preventDefault();
 
     const imgData = new FormData();
-    imgData.append("cloud_name", process.env.CLOUD_NAME);
-    imgData.append("upload_preset", process.env.UPLOAD_PRESET);
+    imgData.append("cloud_name", process.env.NEXT_PUBLIC_CLOUD_NAME);
+    imgData.append("upload_preset", process.env.NEXT_PUBLIC_UPLOAD_PRESET);
     try {
       let allUrl = [];
       if (rawFiles.image1) {
@@ -125,14 +123,14 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
         );
         imgData.append("file", rawFiles.image1);
         const GetMediaUrlForImg1 = await axios.post(
-          process.env.MEDIA_TO_MEDIAURL_CONVERTER,
+          `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData
         );
         allUrl.push(GetMediaUrlForImg1.data?.secure_url);
         dispatch(loadingComplete());
       } else {
-        if (ProductDetails.productInfo.mediaURL[0]) {
-          allUrl.push(ProductDetails.productInfo.mediaURL[0]);
+        if (ProductDetails.mediaURL[0]) {
+          allUrl.push(ProductDetails.mediaURL[0]);
         }
       }
       if (rawFiles.image2) {
@@ -146,15 +144,15 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
         );
         imgData.append("file", rawFiles.image2);
         const GetMediaUrlForImg2 = await axios.post(
-          process.env.MEDIA_TO_MEDIAURL_CONVERTER,
+          process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER,
           imgData
         );
         allUrl.push(GetMediaUrlForImg2.data?.secure_url);
 
         dispatch(loadingComplete());
       } else {
-        if (ProductDetails.productInfo.mediaURL[1]) {
-          allUrl.push(ProductDetails.productInfo.mediaURL[1]);
+        if (ProductDetails.mediaURL[1]) {
+          allUrl.push(ProductDetails.mediaURL[1]);
         }
       }
       if (rawFiles.image3) {
@@ -168,14 +166,14 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
         );
         imgData.append("file", rawFiles.image3);
         const GetMediaUrlForImg3 = await axios.post(
-          process.env.MEDIA_TO_MEDIAURL_CONVERTER,
+          `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData
         );
         allUrl.push(GetMediaUrlForImg3.data?.secure_url);
         dispatch(loadingComplete());
       } else {
-        if (ProductDetails.productInfo.mediaURL[2]) {
-          allUrl.push(ProductDetails.productInfo.mediaURL[2]);
+        if (ProductDetails.mediaURL[2]) {
+          allUrl.push(ProductDetails.mediaURL[2]);
         }
       }
       if (rawFiles.image4) {
@@ -189,14 +187,14 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
         );
         imgData.append("file", rawFiles.image4);
         const GetMediaUrlForImg4 = await axios.post(
-          process.env.MEDIA_TO_MEDIAURL_CONVERTER,
+          `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData
         );
         allUrl.push(GetMediaUrlForImg4.data?.secure_url);
         dispatch(loadingComplete());
       } else {
-        if (ProductDetails.productInfo.mediaURL[3]) {
-          allUrl.push(ProductDetails.productInfo.mediaURL[3]);
+        if (ProductDetails.mediaURL[3]) {
+          allUrl.push(ProductDetails.mediaURL[3]);
         }
       }
 
@@ -224,7 +222,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
       } else if (methodChecker === "update_Product") {
         try {
           const update_Product = await axios.put("/api/products", {
-            id: ProductDetails.productInfo?._id,
+            id: ProductDetails?._id,
             newproductInfo,
             imageURLs: allUrl,
           });
@@ -259,7 +257,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
       </div>
 
       <div
-        className=" bg-[#ffffff] w-[99%] lg:w-[90%]
+        className="bg-[#ffffff] w-[99%] lg:w-[90%]
       h-[83%] lg:h-[80%] shadow-xl rounded-lg p-1
       overflow-y-auto scroll-smooth"
       >
@@ -271,8 +269,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
           {/* the image */}
           <div className="w-full md:w-full lg:w-[40%] grid grid-cols-2 gap-4 h-full">
             <div className=" rounded-md  relative">
-              {selectedFiles.image1 ||
-              ProductDetails?.productInfo.mediaURL[0] ? (
+              {selectedFiles.image1 || ProductDetails?.mediaURL[0] ? (
                 <>
                   {isLoading.state && isLoading.forWhichPorpose === "image1" ? (
                     <div className="w-full h-full flex flex-col justify-center items-center space-y-3">
@@ -287,7 +284,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
                         src={
                           selectedFiles.image1
                             ? selectedFiles.image1
-                            : ProductDetails?.productInfo.mediaURL[0]
+                            : ProductDetails?.mediaURL[0]
                         }
                         alt="productImage"
                         fill
@@ -349,8 +346,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
               )}
             </div>
             <div className=" rounded-md  relative">
-              {selectedFiles.image2 ||
-              ProductDetails?.productInfo.mediaURL[1] ? (
+              {selectedFiles.image2 || ProductDetails?.mediaURL[1] ? (
                 <>
                   {isLoading.state && isLoading.forWhichPorpose === "image2" ? (
                     <div className="w-full h-full flex flex-col justify-center items-center space-y-3">
@@ -365,7 +361,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
                         src={
                           selectedFiles.image2
                             ? selectedFiles.image2
-                            : ProductDetails?.productInfo.mediaURL[1]
+                            : ProductDetails?.mediaURL[1]
                         }
                         alt="productImage"
                         fill
@@ -427,8 +423,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
               )}
             </div>
             <div className=" rounded-md  relative">
-              {selectedFiles.image3 ||
-              ProductDetails?.productInfo.mediaURL[2] ? (
+              {selectedFiles.image3 || ProductDetails?.mediaURL[2] ? (
                 <>
                   {isLoading.state && isLoading.forWhichPorpose === "image3" ? (
                     <div className="w-full h-full flex flex-col justify-center items-center space-y-3">
@@ -443,7 +438,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
                         src={
                           selectedFiles.image3
                             ? selectedFiles.image3
-                            : ProductDetails?.productInfo.mediaURL[2]
+                            : ProductDetails?.mediaURL[2]
                         }
                         alt="productImage"
                         fill
@@ -505,8 +500,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
               )}
             </div>
             <div className=" rounded-md  relative">
-              {selectedFiles.image4 ||
-              ProductDetails?.productInfo?.mediaURL[3] ? (
+              {selectedFiles.image4 || ProductDetails?.mediaURL[3] ? (
                 <>
                   {isLoading.state && isLoading.forWhichPorpose === "image4" ? (
                     <div className="w-full h-full flex flex-col justify-center items-center space-y-3">
@@ -521,7 +515,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
                         src={
                           selectedFiles.image4
                             ? selectedFiles.image4
-                            : ProductDetails?.productInfo?.mediaURL[3]
+                            : ProductDetails?.mediaURL[3]
                         }
                         alt="productImage"
                         fill

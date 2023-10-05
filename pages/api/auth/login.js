@@ -18,7 +18,7 @@ const loginHandler = loginMiddleware(async (req, res) => {
 
     // check user exists or not
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email: email }).select("+password");
     if (!user) return res.status(404).json({ error: "User not found" });
 
     // then decrypted the hasded password in the db

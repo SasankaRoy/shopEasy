@@ -260,7 +260,6 @@ export const getServerSideProps = async (context) => {
         },
       };
     } else {
-      console.log(process.env.DEVELOPMENT_DOMAIN, "the categozy");
       const getProductList = await axios.get(
         sub
           ? `${process.env.PRODUCTION_DOMAIN}/api/products?category=${category}&sub=${sub}`
