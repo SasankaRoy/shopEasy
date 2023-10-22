@@ -6,9 +6,12 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { loginSuccess } from "../../Redux/userSlice";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadingComplete, loadingStart } from "../../Redux/loadingSlice";
+import {
+  loadingComplete,
+  loadingStart,
+  loadingError,
+} from "../../Redux/loadingSlice";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
@@ -55,7 +58,16 @@ const Login = () => {
           dispatch(loadingComplete());
           router.push("/");
         } catch (err) {
-          // dispatch(loginError());
+          console.log(err);
+
+          dispatch(
+            loadingError({
+              message: {
+                currentMessage: err.response.data.error,
+                forWhichPorpose: "Login faild",
+              },
+            })
+          );
           handleError(err);
         }
       },
@@ -210,7 +222,7 @@ const Login = () => {
                 <>
                   <span className="text-2xl font-semibold">LogIn</span>
                 </>
-              )}
+              )}              
             </button>
           </div>
           <Link

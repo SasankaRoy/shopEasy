@@ -3,6 +3,8 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+
 
 export const ItemCard = ({ data }) => {
   const router = useRouter();
@@ -43,7 +45,11 @@ export const ItemCard = ({ data }) => {
           </h1>
           <hr className="bg-gray-400 my-2" />
           <p className="text-[#212a2f] font-normal text-lg tracking-wide truncate">
-            {data?.dec}
+            Price -{" "}
+            <span className="font-extrabold text-2xl">
+              <CurrencyRupeeIcon />
+              {data?.price}.0
+            </span>
           </p>
         </div>
       </motion.div>

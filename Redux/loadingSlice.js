@@ -18,8 +18,14 @@ export const loadingSlice = createSlice({
       state.forWhichPorpose = "";
       state.currentMessage = "";
     },
+    loadingError: (state, action) => {
+      state.state = false;
+      state.forWhichPorpose = action.payload?.message.forWhichPorpose;
+      state.currentMessage = action.payload?.message.currentMessage;
+    },
   },
 });
 
-export const { loadingStart, loadingComplete } = loadingSlice.actions;
+export const { loadingStart, loadingComplete, loadingError } =
+  loadingSlice.actions;
 export default loadingSlice.reducer;

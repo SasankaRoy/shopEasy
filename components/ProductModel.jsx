@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
-`import { loadingComplete, loadingStart } from "../Redux/loadingSlice";`;
 import { handleError } from "../utils/Error&SuccessHandler";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -261,11 +260,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
       h-[83%] lg:h-[80%] shadow-xl rounded-lg p-1
       overflow-y-auto scroll-smooth"
       >
-        <div
-          className="flex flex-col md:flex-col
-        lg:flex-row justify-center items-center space-y-3
-        lg:space-y-0 lg:space-x-3 w-full h-full p-1"
-        >
+        <div className="flex flex-col md:flex-col lg:flex-row justify-center items-center space-y-3 lg:space-y-0 lg:space-x-3 w-full h-full p-1">
           {/* the image */}
           <div className="w-full md:w-full lg:w-[40%] grid grid-cols-2 gap-4 h-full">
             <div className=" rounded-md  relative">

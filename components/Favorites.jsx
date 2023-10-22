@@ -2,23 +2,37 @@
 import { useEffect, useState } from "react";
 import { ItemCard } from "./ItemCard";
 import { motion } from "framer-motion";
-import { fakeData } from "../FakeData";
+import { loadingComplete, loadingStart } from "../Redux/loadingSlice";
 import axios from "axios";
+import { SkeletonLoading } from "./SkeletonLoading";
+import { useDispatch, useSelector } from "react-redux";
 
 // bg-[#003459]
 const Favorites = () => {
   const [filters, setFilters] = useState("Men");
   const [filterArr, setFilterArr] = useState([]);
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.loading);
 
   const handleClick = (e) => {
     setFilters(e.target.innerHTML);
   };
   const fetchProducts = async () => {
     try {
+      dispatch(
+        loadingStart({
+          message: {
+            currentMessage: "RetrevingData...",
+            forWhichPorpose: "Favorites",
+          },
+        })
+      );
       const products = await axios.get(
         `api/products?category=${filters.toLocaleLowerCase()}`
       );
       setFilterArr(products.data.filteredProducts);
+
+      setTimeout(()=>dispatch(loadingComplete()),6000);
     } catch (error) {
       console.log(error);
     }
@@ -55,9 +69,15 @@ const Favorites = () => {
         </div>
         <div className="w-full relative lg:w-[84%]  mx-auto h-full  items-center  mt-5 ">
           <div className="grid  grid-flow-col gap-5 px-4 py-5 auto-cols-[96.5%] lg:auto-cols-[35%] w-full overflow-x-auto overscroll-x-contain snap-x  snap-mandatory scroll-smooth">
-            {filterArr.map((data, id) => (
-              <ItemCard data={data} key={id} />
-            ))}
+            {isLoading.state && isLoading.forWhichPorpose === "Favorites" ? (
+              <SkeletonLoading />
+            ) : (
+              <>
+                {filterArr.map((data, id) => (
+                  <ItemCard data={data} key={id} />
+                ))}
+              </>
+            )}
           </div>
         </div>
       </motion.div>

@@ -96,3 +96,13 @@ a {
   );
   animation: nprogress-animate 400ms linear infinite;
 }
+
+.animationEffects {
+  animation: skeleton 1s ease infinite alternate-reverse;
+}
+@keyframes skeleton {
+  to {
+    opacity: .6;
+  }
+
+}
