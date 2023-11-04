@@ -102,7 +102,14 @@ a {
 }
 @keyframes skeleton {
   to {
-    opacity: .6;
+    opacity: 0.6;
   }
-
 }
+
+/* .logIn__glassStyle {
+  background: rgba(33, 42, 47, 0.25);
+  box-shadow: 0 1px 12px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 10px;
+} */

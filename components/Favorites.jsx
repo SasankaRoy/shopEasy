@@ -32,9 +32,9 @@ const Favorites = () => {
       );
       setFilterArr(products.data.filteredProducts);
 
-      setTimeout(()=>dispatch(loadingComplete()),6000);
+       dispatch(loadingComplete())
     } catch (error) {
-      console.log(error);
+      console.log(error, "the error");
     }
   };
   useEffect(() => {

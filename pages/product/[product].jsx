@@ -251,7 +251,7 @@ const Product = ({ product, error }) => {
         </div>
       </motion.div>
       <ProductDetails pDescribtion={product?.describtion} />
-      <FAQ />
+      <FAQ productID={product._id}/>
       {handleImageShowHide.state && (
         <ProductImageView
           productIamge={handleImageShowHide?.curImage}

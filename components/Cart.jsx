@@ -29,6 +29,13 @@ const Cart = ({ setShowCart }) => {
   const removeItems = (productInfo) => {
     dispatch(removeItemsQuantity(productInfo));
   };
+  let widthCal = () => {
+    let widthInPer = (cart.subTotal / 1000) * 100;
+    if (widthInPer > 100) {
+      return (widthInPer = 100);
+    }
+    return widthInPer;
+  };
 
   return (
     <div className="h-screen w-screen flex justify-end items-end fixed z-50 bg-black/20 top-0">
@@ -61,13 +68,22 @@ const Cart = ({ setShowCart }) => {
               </span>{" "}
               away from free shipping!
             </p>
-            <span className="absolute text-[13px] font-extrabold text-[#000] flex justify-center items-center top-[8.5px] right-[49%] z-20">
+            {/* <span className="absolute text-[13px] font-extrabold text-[#000] flex justify-center items-center top-[8.5px] right-[49%] z-20">
               {cart.cart.length}
-            </span>
+            </span> */}
           </div>
         </div>
         {/* bg-[#b8d1dc]  */}
-        <div className="h-2 w-[95%] mt-2 mx-auto bg-[#f5f5f5] " />
+        <div className="h-2 w-[95%] mt-2 mx-auto bg-[#f5f5f5] ">
+          <div
+            className={
+              "bg-[#b8d1dc] h-full transition-all duration-200 ease-linear"
+            }
+            style={{
+              width: `${widthCal()}%`,
+            }}
+          ></div>
+        </div>
         {user.userInfo ? (
           <>
             {cart.cart.length === 0 ? (

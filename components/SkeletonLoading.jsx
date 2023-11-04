@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const SkeletonLoading = () => {
-    const counter = 4;
+    const counter = 3;
 
     const Skeleton = () => {
         return (

@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import "../styles/globals.css";
 import { Provider } from "react-redux";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Announcement } from "../components/Announcement";

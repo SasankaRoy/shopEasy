@@ -222,7 +222,7 @@ const Login = () => {
                 <>
                   <span className="text-2xl font-semibold">LogIn</span>
                 </>
-              )}              
+              )}
             </button>
           </div>
           <Link
