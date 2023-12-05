@@ -11,6 +11,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { loadingComplete, loadingStart } from "../Redux/loadingSlice";
+import events, { Events } from "../utils/events";
 
 const initialValuesForImages = {
   image1: "",
@@ -19,10 +20,15 @@ const initialValuesForImages = {
   image4: "",
 };
 
-const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
+const ProductModel = ({
+  setNewProduct,
+  ProductDetails,
+  activeFor,
+  setProducts,
+  oldProduct,
+}) => {
   const isLoading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
-  console.log(ProductDetails);
 
   // for getting the media URL of the images...
   const [rawFiles, setRawFiles] = useState(initialValuesForImages);
@@ -44,6 +50,10 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
     description2: ProductDetails?.describtion[1].description,
     description3: ProductDetails?.describtion[2].description,
     description4: ProductDetails?.describtion[3].description,
+    heading1: ProductDetails?.describtion[0].heading,
+    heading2: ProductDetails?.describtion[1].heading,
+    heading3: ProductDetails?.describtion[2].heading,
+    heading4: ProductDetails?.describtion[3].heading,
   });
 
   const imageRef1 = useRef(null); // for product image1...
@@ -228,13 +238,16 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
           if (update_Product.status === 202) {
             setNewProduct(false);
             toast.success(update_Product.data.message);
-            toast.warn("reload the page to see the changes!");
             dispatch(loadingComplete());
+            if (update_Product.data.updatedProduct) {
+              setProducts(update_Product.data.updatedProduct);
+            }else{
+              setProducts(oldProduct);
+            }
           } else {
             toast.success(update_Product.data.message);
             dispatch(loadingComplete());
           }
-          console.log(update_Product);
         } catch (err) {
           console.log(err);
           handleError(err);
@@ -760,6 +773,23 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
               </div>
               <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
                 <label
+                  htmlFor="heading1"
+                  className="text-base lg:text-lg font-semibold tracking-wide capitalize"
+                >
+                  heanding
+                </label>
+                <input
+                  name="heading1"
+                  onChange={handleChange}
+                  value={newproductInfo.heading1}
+                  placeholder="heading..."
+                  className="w-full text-lg lg:text-xl p-2 bg-white text-[#212a2f]
+                  font-semibold tracking-wider border-b-2 border-[#212a2f]
+                  outline-none focus:ring-0 "
+                />
+              </div>
+              <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
+                <label
                   htmlFor="describtion1"
                   className="text-base lg:text-lg font-semibold tracking-wide capitalize"
                 >
@@ -775,6 +805,23 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
                   font-semibold tracking-wider border-b-2 border-[#212a2f]
                   outline-none focus:ring-0 "
                   rows="5"
+                />
+              </div>
+              <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
+                <label
+                  htmlFor="heading1"
+                  className="text-base lg:text-lg font-semibold tracking-wide capitalize"
+                >
+                  heanding
+                </label>
+                <input
+                  onChange={handleChange}
+                  value={newproductInfo.heading2}
+                  name="heading2"
+                  placeholder="heading..."
+                  className="w-full text-lg lg:text-xl p-2 bg-white text-[#212a2f]
+                  font-semibold tracking-wider border-b-2 border-[#212a2f]
+                  outline-none focus:ring-0 "
                 />
               </div>
               <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
@@ -798,10 +845,27 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
               </div>
               <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
                 <label
+                  htmlFor="heading1"
+                  className="text-base lg:text-lg font-semibold tracking-wide capitalize"
+                >
+                  heanding
+                </label>
+                <input
+                  onChange={handleChange}
+                  value={newproductInfo.heading3}
+                  name="heading3"
+                  placeholder="heading..."
+                  className="w-full text-lg lg:text-xl p-2 bg-white text-[#212a2f]
+                  font-semibold tracking-wider border-b-2 border-[#212a2f]
+                  outline-none focus:ring-0 "
+                />
+              </div>
+              <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
+                <label
                   className="text-base lg:text-lg font-semibold tracking-wide capitalize"
                   htmlFor="describtion3"
                 >
-                  describtion 3
+                  describtion
                 </label>
                 <textarea
                   type="text"
@@ -813,6 +877,23 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
                   font-semibold tracking-wider border-b-2 border-[#212a2f]
                   outline-none focus:ring-0 "
                   rows="5"
+                />
+              </div>
+              <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">
+                <label
+                  htmlFor="heading1"
+                  className="text-base lg:text-lg font-semibold tracking-wide capitalize"
+                >
+                  heanding
+                </label>
+                <input
+                  onChange={handleChange}
+                  value={newproductInfo.heading4}
+                  name="heading4"
+                  placeholder="heading..."
+                  className="w-full text-lg lg:text-xl p-2 bg-white text-[#212a2f]
+                  font-semibold tracking-wider border-b-2 border-[#212a2f]
+                  outline-none focus:ring-0 "
                 />
               </div>
               <div className=" w-[90%] mx-auto my-5 flex flex-col justify-start items-start space-y-2">

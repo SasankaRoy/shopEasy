@@ -16,7 +16,8 @@ import FAQ from "../../components/FAQ";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CircularProgress from "@mui/material/CircularProgress";
+import  { Events } from "../../utils/events";
+// import CircularProgress from "@mui/material/CircularProgress";
 
 const ProductImageView = dynamic(() =>
   import("../../components/ProductImageView")
@@ -24,6 +25,43 @@ const ProductImageView = dynamic(() =>
 const ProductModel = dynamic(() => import("../../components/ProductModel"));
 
 const Product = ({ product, error }) => {
+
+  const [Products, setProducts] = useState(product);
+  const [didDataUpdate,setDidDataUpdate] = useState(false);
+  // useEffect(()=>{
+  //   if(myState === 'hello'){
+  //     setProducts('hello')
+  //   }
+  // },[didDataUpdate])
+
+  // const reFetchProduct = async () => {
+  //   // setMyState(()=>'hello world')
+  //   const response = await axios.get(`/api/products?pid=${query.pid}`);
+  //   if (response.status === 200) {
+  //     // setProducts(()=>response.data.filteredProducts);
+  //     setMyState(()=>response.data.filteredProducts);
+  //     // setMyState(()=>'hello world')
+  //     console.log(response.data.filteredProducts)
+  //     return
+  //   }
+  //   // setProducts(product);
+  // }
+
+
+
+
+    // because the "reFetch__Product" was running more than one time...
+    const listeners = Events.listeners('reFetch__Product');
+    if (listeners.length === 0) {
+      Events.on('reFetch__Product', () => {
+        setMyState('the event is fired immediately');
+        console.log('the event is fired immediately',Products)
+        // reFetchProduct();
+      })
+    }
+
+ 
+
   const [handleImageShowHide, setHandleImageShowHide] = useState({
     state: false,
     curImage: "",
@@ -39,6 +77,7 @@ const Product = ({ product, error }) => {
   const router = useRouter();
   const { query } = router;
 
+
   const handleOnClick = (curImage) => {
     setHandleImageShowHide({
       state: true,
@@ -48,7 +87,7 @@ const Product = ({ product, error }) => {
 
   // expecting an array here...
 
-  const hexCodes = colorCodes(product?.color);
+  const hexCodes = colorCodes(Products?.color);
 
   // addtoCart function...
 
@@ -67,6 +106,9 @@ const Product = ({ product, error }) => {
     }
   };
 
+
+
+
   return (
     <>
       <Head>
@@ -84,7 +126,7 @@ const Product = ({ product, error }) => {
         className="flex flex-col lg:flex-row space-y-3 lg:space-x-3 lg:space-y-0  h-[88vh] w-screen px-2 lg:px-8 py-4"
       >
         <div className="grid lg:grid-cols-2 lg:grid-flow-row grid-flow-col auto-cols-[93.3%] lg:auto-cols-[40%] gap-5 overflow-x-auto h-[40%] lg:flex-1 lg:h-full  px-3 lg:py-3 overscroll-x-contain snap-x  snap-mandatory scroll-smooth">
-          {product?.mediaURL.map((img, id) => (
+          {Products?.mediaURL.map((img, id) => (
             <div
               key={id}
               className="relative snap-center
@@ -109,15 +151,15 @@ const Product = ({ product, error }) => {
         </div>
         <div className="lg:w-[30%] flex-1 py-3 px-1">
           <h2 className="text-lg font-semibold tracking-wider capitalize">
-            {product?.brand}
+            {Products?.brand}
           </h2>
           <div className="flex justify-between items-center ">
             <h1 className="text-3xl lg:text-4xl tracking-wide m-0 font-[600]">
-              {product?.productName}
+              {Products?.productName}
             </h1>
             <h2 className="flex justify-center items-center font-[800] text-2xl lg:text-3xl tracking-wide m-0">
               <CurrencyRupeeIcon />
-              {product?.price}
+              {Products?.price}
             </h2>
           </div>
           <h3 className="text-base tracking-wider uppercase font-medium mt-5">
@@ -147,7 +189,7 @@ const Product = ({ product, error }) => {
             Select Size
           </h3>
           <div className="flex flex-wrap justify-start items-start gap-3">
-            {product?.size.map((cur, id) => (
+            {Products?.size.map((cur, id) => (
               <div
                 key={id}
                 onClick={() => {
@@ -165,15 +207,14 @@ const Product = ({ product, error }) => {
             ))}
           </div>
           <div
-            className={`mt-5 flex justify-center items-center ${
-              user.userInfo?.role === "admin" ||
+            className={`mt-5 flex justify-center items-center ${user.userInfo?.role === "admin" ||
               user.userInfo?.role === "manager"
-                ? "space-x-3"
-                : "space-x-0"
-            }`}
+              ? "space-x-3"
+              : "space-x-0"
+              }`}
           >
             {user.userInfo?.role === "admin" ||
-            user.userInfo?.role === "manager" ? (
+              user.userInfo?.role === "manager" ? (
               <>
                 <button
                   disabled={
@@ -183,14 +224,14 @@ const Product = ({ product, error }) => {
                   }
                   onClick={() =>
                     addToCart({
-                      id: product?._id,
-                      productName: product?.productName,
-                      price: product?.price,
+                      id: Products?._id,
+                      productName: Products?.productName,
+                      price: Products?.price,
                       quantity: 1,
-                      productImage: product?.mediaURL[0],
+                      productImage: Products?.mediaURL[0],
                       size: selectedSizeAndColor?.size,
                       color: selectedSizeAndColor?.color.code,
-                      total: product?.price,
+                      total: Products?.price,
                     })
                   }
                   className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border shadow-md bg-[#212a2f] disabled:cursor-not-allowed disabled:opacity-40 text-[#ffffff] hover:text-[#212a2f] hover:border-[#212a2f] hover:bg-[#ffffff] transition-all duration-150 ease-in"
@@ -198,7 +239,8 @@ const Product = ({ product, error }) => {
                   Add To Cart.
                 </button>
                 <button
-                  onClick={() => setUpdateProduct(true)}
+                  onClick={() =>{ setUpdateProduct(true)
+                    }}
                   className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border border-[#212a2f] shadow-md text-[#212a2f] bg-[#ffffff] hover:bg-[#212a2f] hover:border-[#212a2f] hover:text-[#ffffff] transition-all duration-150 ease-in"
                 >
                   Update Product.
@@ -213,14 +255,14 @@ const Product = ({ product, error }) => {
                 }
                 onClick={() =>
                   addToCart({
-                    id: product?._id,
-                    productName: product?.productName,
-                    price: product?.price,
+                    id: Products?._id,
+                    productName: Products?.productName,
+                    price: Products?.price,
                     quantity: 1,
-                    productImage: product?.mediaURL[0],
+                    productImage: Products?.mediaURL[0],
                     size: selectedSizeAndColor?.size,
                     color: selectedSizeAndColor?.color.code,
-                    total: product?.price,
+                    total: Products?.price,
                   })
                 }
                 className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border shadow-md bg-[#212a2f] disabled:cursor-not-allowed disabled:opacity-40 text-[#ffffff] hover:text-[#212a2f] hover:border-[#212a2f] hover:bg-[#ffffff] transition-all duration-150 ease-in"
@@ -229,9 +271,9 @@ const Product = ({ product, error }) => {
               </button>
             )}
           </div>
-          <div className="lg:flex justify-evenly items-start hidden mt-7">
-            <div className="relative flex justify-center items-center space-x-2">
-              <CircularProgress
+          <div className="lg:flex justify-evenly items-start hidden mt-10">
+            <div className="relative flex  justify-center items-center space-x-2">
+              {/* <CircularProgress
                 variant="determinate"
                 value={85}
                 size={"10rem"}
@@ -240,18 +282,21 @@ const Product = ({ product, error }) => {
               />
               <h2 className="text-3xl font-extrabold text-[#212a2f] tracking-wide absolute">
                 4.5 <span className="text-sm font-medium">rattings</span>
-              </h2>
+              </h2> */}
+              <ol className="flex flex-col justify-start items-start space-y-3 px-4">
+                {
+                  Products?.describtion.map((cur, id) => (
+                    <li className="list-decimal font-semibold text-lg">{cur?.heading}</li>
+                  ))
+                }
+              </ol>
             </div>
-            {product.price > 1000 && (
-              <span className="py-2 px-4 capitalize italic bg-gray-200 rounded text-lg tracking-wider shadow-md font-medium">
-                Free shipping
-              </span>
-            )}
+
           </div>
         </div>
       </motion.div>
-      <ProductDetails pDescribtion={product?.describtion} />
-      <FAQ productID={product._id}/>
+      <ProductDetails   pDescribtion={Products?.describtion} />
+      <FAQ productID={Products._id} />
       {handleImageShowHide.state && (
         <ProductImageView
           productIamge={handleImageShowHide?.curImage}
@@ -261,8 +306,10 @@ const Product = ({ product, error }) => {
       {updateProduct && (
         <ProductModel
           setNewProduct={setUpdateProduct}
-          ProductDetails={product}
+          ProductDetails={Products}
           activeFor="Update_A_Product"
+          setProducts={setProducts}
+          oldProduct={product}
         />
       )}
     </>
@@ -273,6 +320,8 @@ export default Product;
 
 export const getServerSideProps = async (context) => {
   const { pid } = context.query;
+
+
 
   try {
     if (context.req.headers.host === "localhost:3000") {

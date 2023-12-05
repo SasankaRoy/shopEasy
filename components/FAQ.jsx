@@ -134,12 +134,7 @@ const FAQ = ({ productID }) => {
                   <span className="text-base text-[#212a2f] font-bold tracking-wide capitalize">
                     {cur.user}
                   </span>
-                  {/* <Moment
-                    date={cur.updatedAt}
-                    className="text-[12px] font-semibold tracking-wide text-[212a2f]"
-                  >
-                    {moment(cur.updatedAt).format("YYYY-MM-DD")}
-                  </Moment> */}
+
                   <span className="text-[12px] font-semibold tracking-wide text-[212a2f]">
                     {moment(cur.updatedAt).fromNow()}
                   </span>

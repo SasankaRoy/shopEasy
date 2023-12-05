@@ -65,12 +65,13 @@ function MyApp({ Component, pageProps }) {
         {pathname !== "/auth/login" && pathname !== "/auth/register" && (
           <>
             <NewsLetter />
-            <Footer />
+            <Footer />    
           </>
         )}
 
         <ToastContainer position="bottom-left" />
       </Provider>
+      
     </>
   );
 }

@@ -247,11 +247,11 @@ const Account = () => {
                         htmlFor="productTitle"
                         className="text-lg tracking-wider font-semibold capitalize text-[#212a2f]"
                       >
-                        profasion
+                        profession
                       </label>
                       <input
                         type="text"
-                        placeholder=" profasion..."
+                        placeholder=" profession..."
                         onChange={handleInputs}
                         name="profasion"
                         value={userInfo.profasion}

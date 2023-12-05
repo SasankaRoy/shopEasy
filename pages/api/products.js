@@ -56,6 +56,10 @@ const handlePostProduct = async (req, res) => {
       description2,
       description3,
       description4,
+      heading1,
+      heading2,
+      heading3,
+      heading4,
     } = req.body?.newproductInfo;
     const imageURLs = req.body?.imageURLs;
 
@@ -69,10 +73,10 @@ const handlePostProduct = async (req, res) => {
       size,
       color,
       describtion: [
-        { imageurl: imageURLs[0], description: description1 },
-        { imageurl: imageURLs[1], description: description2 },
-        { imageurl: imageURLs[2], description: description3 },
-        { imageurl: imageURLs[3], description: description4 },
+        { imageurl: imageURLs[0], description: description1,heading:heading1 },
+        { imageurl: imageURLs[1], description: description2,heading:heading2 },
+        { imageurl: imageURLs[2], description: description3 ,heading:heading3 },
+        { imageurl: imageURLs[3], description: description4,heading:heading4 },
       ],
       mediaURL: imageURLs,
     });
@@ -102,6 +106,10 @@ const handlePutProduct = async (req, res) => {
       description2,
       description3,
       description4,
+      heading1,
+      heading2,
+      heading3,
+      heading4,
     } = req.body?.newproductInfo;
     const imageURLs = req.body?.imageURLs;
 
@@ -116,10 +124,10 @@ const handlePutProduct = async (req, res) => {
         size,
         color,
         describtion: [
-          { imageurl: imageURLs[0], description: description1 },
-          { imageurl: imageURLs[1], description: description2 },
-          { imageurl: imageURLs[2], description: description3 },
-          { imageurl: imageURLs[3], description: description4 },
+          { imageurl: imageURLs[0], description: description1,heading:heading1 },
+          { imageurl: imageURLs[1], description: description2,heading:heading2 },
+          { imageurl: imageURLs[2], description: description3,heading:heading3 },
+          { imageurl: imageURLs[3], description: description4,heading:heading4 },
         ],
         mediaURL: imageURLs,
       },

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 const ProductDetails = ({ pDescribtion }) => {
+
   return (
     <>
       <div className="mt-5 h-[92vh] overflow-y-auto scroll-smooth snap-y snap-mandatory">
@@ -31,10 +32,10 @@ const ProductDetails = ({ pDescribtion }) => {
                 </motion.div>
               )}
               <div className="w-full h-[40%] lg:h-full overflow-y-auto">
-                <h2 className="text-2xl lg:text-4xl tracking-wider font-semibold capitalize">
-                  description
+                <h2 className="text-xl lg:text-2xl tracking-wider font-semibold capitalize">
+                  {cur?.heading}
                 </h2>
-                <p className="text-md lg:text-lg mt-5 font-normal tracking-wider capitalize">
+                <p className="text-md lg:text-lg mt-5 font-normal tracking-wide capitalize">
                   {cur?.description}
                 </p>
               </div>
