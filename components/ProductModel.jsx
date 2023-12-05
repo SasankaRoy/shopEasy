@@ -11,7 +11,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { loadingComplete, loadingStart } from "../Redux/loadingSlice";
-import events, { Events } from "../utils/events";
+// import events, { Events } from "../utils/events";
 
 const initialValuesForImages = {
   image1: "",

@@ -16,7 +16,7 @@ import FAQ from "../../components/FAQ";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import  { Events } from "../../utils/events";
+// import  { Events } from "../../utils/events";
 // import CircularProgress from "@mui/material/CircularProgress";
 
 const ProductImageView = dynamic(() =>
