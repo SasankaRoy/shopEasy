@@ -51,14 +51,14 @@ const Product = ({ product, error }) => {
 
 
     // because the "reFetch__Product" was running more than one time...
-    const listeners = Events.listeners('reFetch__Product');
-    if (listeners.length === 0) {
-      Events.on('reFetch__Product', () => {
-        setMyState('the event is fired immediately');
-        console.log('the event is fired immediately',Products)
+    // const listeners = Events.listeners('reFetch__Product');
+    // if (listeners.length === 0) {
+    //   Events.on('reFetch__Product', () => {
+    //     setMyState('the event is fired immediately');
+    //     console.log('the event is fired immediately',Products)
         // reFetchProduct();
-      })
-    }
+    //   })
+    // }
 
  
 
