@@ -40,14 +40,15 @@ const Todos = () => {
   }, [localItems]);
 
   // getting the data from localStorage...
-  useEffect(() => {
-    const items = localStorage.getItem("todo");
-    if (items) {
-      setLocalItems(JSON.parse(items));
-    } else {
-      setLocalItems([]);
-    }
-  }, []);
+  
+  // useEffect(() => {
+  //   const items = localStorage.getItem("todo");
+  //   if (items) {
+  //     setLocalItems(JSON.parse(items));
+  //   } else {
+  //     setLocalItems([]);
+  //   }
+  // }, []);
 
   // removing data...
 
