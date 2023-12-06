@@ -16,41 +16,41 @@
 //     console.log(error);
 //   }
 // }
-// import { Server } from "socket.io";
+import { Server } from "socket.io";
 
 // Create a shared io instance outside the handler
-// const io = new Server();
+const io = new Server();
 
-// export default async function handler(req, res) {
-  // try {
+export default async function handler(req, res) {
+  try {
   //   // Attach io to the socket server
   //   // if (!res.socket.server.io) {
-  //       const io = new Server(res.socket.server);
-  //     res.socket.server.io = io;
+        const io = new Server(res.socket.server);
+      res.socket.server.io = io;
 
-  //     io.on("connection", (socket) => {
-  //       console.log("Connection");
-  //       socket.on("test__SocketServer", (data) => {
+      io.on("connection", (socket) => {
+        console.log("Connection");
+        socket.on("test__SocketServer", (data) => {
   //           // console.log(data, "in the server");
-  //           io.emit("test__SocketServer", data);            
-  //       });
-  //     });
+            io.emit("test__SocketServer", data);            
+        });
+      });
 
 
-    // }
+    
 
-    // console.log("hello");
+    console.log("hello");
 
     // Continue with your handler logic
 
-    // console.log("hello2");
+    console.log("hello2");
 
-//     res.end();
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// }
+    res.end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
 
 
 

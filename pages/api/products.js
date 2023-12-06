@@ -75,7 +75,7 @@ const handlePostProduct = async (req, res) => {
       describtion: [
         { imageurl: imageURLs[0], description: description1,heading:heading1 },
         { imageurl: imageURLs[1], description: description2,heading:heading2 },
-        { imageurl: imageURLs[2], description: description3 ,heading:heading3 },
+        { imageurl: imageURLs[2], description: description3,heading:heading3 },
         { imageurl: imageURLs[3], description: description4,heading:heading4 },
       ],
       mediaURL: imageURLs,

@@ -27,7 +27,9 @@ const ProductModel = dynamic(() => import("../../components/ProductModel"));
 const Product = ({ product, error }) => {
 
   const [Products, setProducts] = useState(product);
-  const [didDataUpdate,setDidDataUpdate] = useState(false);
+  // const [didDataUpdate,setDidDataUpdate] = useState(false);
+
+  console.log(Products);
   // useEffect(()=>{
   //   if(myState === 'hello'){
   //     setProducts('hello')
