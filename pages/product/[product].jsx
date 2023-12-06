@@ -137,6 +137,7 @@ const Product = ({ product, error }) => {
                 src={img}
                 className="object-cover rounded-md"
                 loading="lazy"
+                alt="productImgs"
               />
               <div className="w-full h-full absolute flex justify-center items-center z-40 top-0 left-0 bg-black/20 icons transition-all duration-200 ease-in">
                 <div
@@ -286,7 +287,7 @@ const Product = ({ product, error }) => {
               <ol className="flex flex-col justify-start items-start space-y-3 px-4">
                 {
                   Products?.describtion.map((cur, id) => (
-                    <li className="list-decimal font-semibold text-lg">{cur?.heading}</li>
+                    <li key={id} className="list-decimal font-semibold text-lg">{cur?.heading}</li>
                   ))
                 }
               </ol>

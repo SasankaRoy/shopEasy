@@ -27,6 +27,7 @@ export const ItemCard = ({ data }) => {
             src={data.mediaURL && data.mediaURL[0]}
             fill
             priority
+            alt="itemsImg"
             className="object-cover object-center image rounded-t-md transition-all duration-150 delay-100 ease-linear"
           />
 

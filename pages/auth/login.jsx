@@ -128,6 +128,7 @@ const Login = () => {
             src="/photo4.jpg"
             fill
             priority
+            alt="backgroundImg"
             className="object-cover opacity-40 z-20"
           />
         </motion.div>

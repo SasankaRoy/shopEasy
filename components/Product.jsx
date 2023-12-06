@@ -27,6 +27,7 @@ export const Product = ({ pData }) => {
             fill
             src={pData?.mediaURL[0]}
             loading="lazy"
+            alt="productImg"
             className="object-cover z-50 opacity-100 image rounded-t-md transition-all duration-150 delay-100 ease-linear"
           />
         </div>
