@@ -16,7 +16,7 @@ const Dashboard = () => {
   // making the the socket connection when the page is loaded...
   const makeSocketConnection = async () => {
     try {
-      await axios.get("/api/socket");
+      await axios.get("https://velvety-babka-72c4ff.netlify.app/api/socket");
       socket = io();
       socket.on("connect", () => {
         console.log("connected !");
