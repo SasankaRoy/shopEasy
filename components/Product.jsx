@@ -22,7 +22,7 @@ export const Product = ({ pData }) => {
         className="h-[350px] bg-gray-50 rounded-md shadow-md cursor-pointer"
         onClick={() => handleOnClick(pData?.productName, pData?._id)}
       >
-        <div className="relative h-[65%]  overflow-hidden">
+        <div className="relative h-[65%]  overflow-hidden z-0">
           <Image
             fill
             src={pData?.mediaURL[0]}
