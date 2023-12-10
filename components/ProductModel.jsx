@@ -117,6 +117,8 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
     imgData.append("upload_preset", process.env.NEXT_PUBLIC_UPLOAD_PRESET);
     try {
       let allUrl = [];
+
+      // img one...
       if (rawFiles.image1) {
         dispatch(
           loadingStart({
@@ -127,18 +129,26 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
           })
         );
         imgData.append("file", rawFiles.image1);
+        try {
         const GetMediaUrlForImg1 = await axios.post(
           `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData
         );
         allUrl.push(GetMediaUrlForImg1.data?.secure_url);
         dispatch(loadingComplete());
+        console.log(GetMediaUrlForImg1,'the img 1');          
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         if (ProductDetails.mediaURL[0]) {
           allUrl.push(ProductDetails.mediaURL[0]);
         }
       }
+
+      // img two...
       if (rawFiles.image2) {
+        console.log("GetMediaUrlForImg1 started!");
         dispatch(
           loadingStart({
             message: {
@@ -148,19 +158,24 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
           })
         );
         imgData.append("file", rawFiles.image2);
+        try {
         const GetMediaUrlForImg2 = await axios.post(
           process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER,
           imgData
         );
         console.log("the second img", GetMediaUrlForImg2);
         allUrl.push(GetMediaUrlForImg2.data?.secure_url);
-
-        dispatch(loadingComplete());
+        dispatch(loadingComplete());          
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         if (ProductDetails.mediaURL[1]) {
           allUrl.push(ProductDetails.mediaURL[1]);
         }
       }
+
+      // img 3...
       if (rawFiles.image3) {
         dispatch(
           loadingStart({
@@ -171,18 +186,23 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
           })
         );
         imgData.append("file", rawFiles.image3);
+        try {
         const GetMediaUrlForImg3 = await axios.post(
           `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData
         );
-
         allUrl.push(GetMediaUrlForImg3.data?.secure_url);
-        dispatch(loadingComplete());
+        dispatch(loadingComplete());          
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         if (ProductDetails.mediaURL[2]) {
           allUrl.push(ProductDetails.mediaURL[2]);
         }
       }
+
+      // img four...
       if (rawFiles.image4) {
         dispatch(
           loadingStart({
@@ -193,12 +213,17 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
           })
         );
         imgData.append("file", rawFiles.image4);
+        try {
         const GetMediaUrlForImg4 = await axios.post(
           `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData
         );
         allUrl.push(GetMediaUrlForImg4.data?.secure_url);
         dispatch(loadingComplete());
+          
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         if (ProductDetails.mediaURL[3]) {
           allUrl.push(ProductDetails.mediaURL[3]);
