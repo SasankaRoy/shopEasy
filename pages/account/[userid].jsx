@@ -25,7 +25,6 @@ const initialValuesForImages = {
 };
 const Account = () => {
   const user = useSelector((state) => state.user);
-
   const isLoading = useSelector((state) => state.loading);
   const [newProduct, setNewProduct] = useState(false);
   const filePicker = useRef(null);

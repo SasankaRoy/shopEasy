@@ -1,5 +1,5 @@
 // product details page...
-import { useState, startTransition, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -16,16 +16,13 @@ import FAQ from "../../components/FAQ";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-// import  { Events } from "../../utils/events";
-// import CircularProgress from "@mui/material/CircularProgress";
 
 const ProductImageView = dynamic(() =>
   import("../../components/ProductImageView")
 );
 const ProductModel = dynamic(() => import("../../components/ProductModel"));
 
-const Product = ({ product, error }) => { 
-
+const Product = ({ product, error }) => {
   const [handleImageShowHide, setHandleImageShowHide] = useState({
     state: false,
     curImage: "",
@@ -40,7 +37,6 @@ const Product = ({ product, error }) => {
   const user = useSelector((state) => state.user);
   const router = useRouter();
   const { query } = router;
-
 
   const handleOnClick = (curImage) => {
     setHandleImageShowHide({
@@ -66,12 +62,8 @@ const Product = ({ product, error }) => {
       }
     } catch (error) {
       handleError(error);
-      // console.log(error);
     }
   };
-
-
-
 
   return (
     <>
@@ -172,14 +164,15 @@ const Product = ({ product, error }) => {
             ))}
           </div>
           <div
-            className={`mt-5 flex justify-center items-center ${user.userInfo?.role === "admin" ||
+            className={`mt-5 flex justify-center items-center ${
+              user.userInfo?.role === "admin" ||
               user.userInfo?.role === "manager"
-              ? "space-x-3"
-              : "space-x-0"
-              }`}
+                ? "space-x-3"
+                : "space-x-0"
+            }`}
           >
             {user.userInfo?.role === "admin" ||
-              user.userInfo?.role === "manager" ? (
+            user.userInfo?.role === "manager" ? (
               <>
                 <button
                   disabled={
@@ -204,8 +197,9 @@ const Product = ({ product, error }) => {
                   Add To Cart.
                 </button>
                 <button
-                  onClick={() =>{ setUpdateProduct(true)
-                    }}
+                  onClick={() => {
+                    setUpdateProduct(true);
+                  }}
                   className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border border-[#212a2f] shadow-md text-[#212a2f] bg-[#ffffff] hover:bg-[#212a2f] hover:border-[#212a2f] hover:text-[#ffffff] transition-all duration-150 ease-in"
                 >
                   Update Product.
@@ -249,14 +243,13 @@ const Product = ({ product, error }) => {
                 4.5 <span className="text-sm font-medium">rattings</span>
               </h2> */}
               <ol className="flex flex-col justify-start items-start space-y-3 px-4">
-                {
-                  product?.describtion.map((cur, id) => (
-                    <li key={id} className="list-decimal font-semibold text-lg">{cur?.heading}</li>
-                  ))
-                }
+                {product?.describtion.map((cur, id) => (
+                  <li key={id} className="list-decimal font-semibold text-lg">
+                    {cur?.heading}
+                  </li>
+                ))}
               </ol>
             </div>
-
           </div>
         </div>
       </motion.div>
@@ -288,7 +281,7 @@ export const getServerSideProps = async (context) => {
       const getProductList = await axios.get(
         `${process.env.DEVELOPMENT_DOMAIN}/api/products?pid=${pid}`
       );
-      console.log(getProductList?.data.filteredProducts, 'the new is here...');
+      console.log(getProductList?.data.filteredProducts, "the new is here...");
       return {
         props: {
           product: getProductList?.data.filteredProducts,
