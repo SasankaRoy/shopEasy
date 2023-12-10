@@ -24,45 +24,7 @@ const ProductImageView = dynamic(() =>
 );
 const ProductModel = dynamic(() => import("../../components/ProductModel"));
 
-const Product = ({ product, error }) => {
-
-  const [Products, setProducts] = useState(product);
-  // const [didDataUpdate,setDidDataUpdate] = useState(false);
-
-  console.log(Products);
-  // useEffect(()=>{
-  //   if(myState === 'hello'){
-  //     setProducts('hello')
-  //   }
-  // },[didDataUpdate])
-
-  // const reFetchProduct = async () => {
-  //   // setMyState(()=>'hello world')
-  //   const response = await axios.get(`/api/products?pid=${query.pid}`);
-  //   if (response.status === 200) {
-  //     // setProducts(()=>response.data.filteredProducts);
-  //     setMyState(()=>response.data.filteredProducts);
-  //     // setMyState(()=>'hello world')
-  //     console.log(response.data.filteredProducts)
-  //     return
-  //   }
-  //   // setProducts(product);
-  // }
-
-
-
-
-    // because the "reFetch__Product" was running more than one time...
-    // const listeners = Events.listeners('reFetch__Product');
-    // if (listeners.length === 0) {
-    //   Events.on('reFetch__Product', () => {
-    //     setMyState('the event is fired immediately');
-    //     console.log('the event is fired immediately',Products)
-        // reFetchProduct();
-    //   })
-    // }
-
- 
+const Product = ({ product, error }) => { 
 
   const [handleImageShowHide, setHandleImageShowHide] = useState({
     state: false,
@@ -89,7 +51,7 @@ const Product = ({ product, error }) => {
 
   // expecting an array here...
 
-  const hexCodes = colorCodes(Products?.color);
+  const hexCodes = colorCodes(product?.color);
 
   // addtoCart function...
 
@@ -128,7 +90,7 @@ const Product = ({ product, error }) => {
         className="flex flex-col lg:flex-row space-y-3 lg:space-x-3 lg:space-y-0  h-[88vh] w-screen px-2 lg:px-8 py-4"
       >
         <div className="grid lg:grid-cols-2 lg:grid-flow-row grid-flow-col auto-cols-[93.3%] lg:auto-cols-[40%] gap-5 overflow-x-auto h-[40%] lg:flex-1 lg:h-full  px-3 lg:py-3 overscroll-x-contain snap-x  snap-mandatory scroll-smooth">
-          {Products?.mediaURL.map((img, id) => (
+          {product?.mediaURL.map((img, id) => (
             <div
               key={id}
               className="relative snap-center
@@ -154,15 +116,15 @@ const Product = ({ product, error }) => {
         </div>
         <div className="lg:w-[30%] flex-1 py-3 px-1">
           <h2 className="text-lg font-semibold tracking-wider capitalize">
-            {Products?.brand}
+            {product?.brand}
           </h2>
           <div className="flex justify-between items-center ">
             <h1 className="text-3xl lg:text-4xl tracking-wide m-0 font-[600]">
-              {Products?.productName}
+              {product?.productName}
             </h1>
             <h2 className="flex justify-center items-center font-[800] text-2xl lg:text-3xl tracking-wide m-0">
               <CurrencyRupeeIcon />
-              {Products?.price}
+              {product?.price}
             </h2>
           </div>
           <h3 className="text-base tracking-wider uppercase font-medium mt-5">
@@ -192,7 +154,7 @@ const Product = ({ product, error }) => {
             Select Size
           </h3>
           <div className="flex flex-wrap justify-start items-start gap-3">
-            {Products?.size.map((cur, id) => (
+            {product?.size.map((cur, id) => (
               <div
                 key={id}
                 onClick={() => {
@@ -227,14 +189,14 @@ const Product = ({ product, error }) => {
                   }
                   onClick={() =>
                     addToCart({
-                      id: Products?._id,
-                      productName: Products?.productName,
-                      price: Products?.price,
+                      id: product?._id,
+                      productName: product?.productName,
+                      price: product?.price,
                       quantity: 1,
-                      productImage: Products?.mediaURL[0],
+                      productImage: product?.mediaURL[0],
                       size: selectedSizeAndColor?.size,
                       color: selectedSizeAndColor?.color.code,
-                      total: Products?.price,
+                      total: product?.price,
                     })
                   }
                   className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border shadow-md bg-[#212a2f] disabled:cursor-not-allowed disabled:opacity-40 text-[#ffffff] hover:text-[#212a2f] hover:border-[#212a2f] hover:bg-[#ffffff] transition-all duration-150 ease-in"
@@ -258,14 +220,14 @@ const Product = ({ product, error }) => {
                 }
                 onClick={() =>
                   addToCart({
-                    id: Products?._id,
-                    productName: Products?.productName,
-                    price: Products?.price,
+                    id: product?._id,
+                    productName: product?.productName,
+                    price: product?.price,
                     quantity: 1,
-                    productImage: Products?.mediaURL[0],
+                    productImage: product?.mediaURL[0],
                     size: selectedSizeAndColor?.size,
                     color: selectedSizeAndColor?.color.code,
-                    total: Products?.price,
+                    total: product?.price,
                   })
                 }
                 className="w-[95%] rounded-md py-2 text-xl lg:text-2xl font-medium capitalize tracking-wider border shadow-md bg-[#212a2f] disabled:cursor-not-allowed disabled:opacity-40 text-[#ffffff] hover:text-[#212a2f] hover:border-[#212a2f] hover:bg-[#ffffff] transition-all duration-150 ease-in"
@@ -288,7 +250,7 @@ const Product = ({ product, error }) => {
               </h2> */}
               <ol className="flex flex-col justify-start items-start space-y-3 px-4">
                 {
-                  Products?.describtion.map((cur, id) => (
+                  product?.describtion.map((cur, id) => (
                     <li key={id} className="list-decimal font-semibold text-lg">{cur?.heading}</li>
                   ))
                 }
@@ -298,8 +260,8 @@ const Product = ({ product, error }) => {
           </div>
         </div>
       </motion.div>
-      <ProductDetails   pDescribtion={Products?.describtion} />
-      <FAQ productID={Products._id} />
+      <ProductDetails pDescribtion={product?.describtion} />
+      <FAQ productID={product?._id} />
       {handleImageShowHide.state && (
         <ProductImageView
           productIamge={handleImageShowHide?.curImage}
@@ -309,10 +271,8 @@ const Product = ({ product, error }) => {
       {updateProduct && (
         <ProductModel
           setNewProduct={setUpdateProduct}
-          ProductDetails={Products}
+          ProductDetails={product}
           activeFor="Update_A_Product"
-          setProducts={setProducts}
-          oldProduct={product}
         />
       )}
     </>
@@ -323,15 +283,12 @@ export default Product;
 
 export const getServerSideProps = async (context) => {
   const { pid } = context.query;
-
-
-
   try {
     if (context.req.headers.host === "localhost:3000") {
       const getProductList = await axios.get(
         `${process.env.DEVELOPMENT_DOMAIN}/api/products?pid=${pid}`
       );
-
+      console.log(getProductList?.data.filteredProducts, 'the new is here...');
       return {
         props: {
           product: getProductList?.data.filteredProducts,

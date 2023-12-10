@@ -11,6 +11,7 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { loadingComplete, loadingStart } from "../Redux/loadingSlice";
+import { useRouter } from "next/router";
 // import events, { Events } from "../utils/events";
 
 const initialValuesForImages = {
@@ -20,15 +21,10 @@ const initialValuesForImages = {
   image4: "",
 };
 
-const ProductModel = ({
-  setNewProduct,
-  ProductDetails,
-  activeFor,
-  setProducts,
-  oldProduct,
-}) => {
+const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
   const isLoading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   // for getting the media URL of the images...
   const [rawFiles, setRawFiles] = useState(initialValuesForImages);
@@ -156,6 +152,7 @@ const ProductModel = ({
           process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER,
           imgData
         );
+        console.log("the second img", GetMediaUrlForImg2);
         allUrl.push(GetMediaUrlForImg2.data?.secure_url);
 
         dispatch(loadingComplete());
@@ -178,6 +175,7 @@ const ProductModel = ({
           `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData
         );
+
         allUrl.push(GetMediaUrlForImg3.data?.secure_url);
         dispatch(loadingComplete());
       } else {
@@ -240,9 +238,9 @@ const ProductModel = ({
             toast.success(update_Product.data.message);
             dispatch(loadingComplete());
             if (update_Product.data.updatedProduct) {
-              setProducts(update_Product.data.updatedProduct);
-            }else{
-              setProducts(oldProduct);
+              router.push(
+                `/product/${update_Product.data.updatedProduct.productName}?pid=${update_Product.data.updatedProduct._id}`
+              );
             }
           } else {
             toast.success(update_Product.data.message);

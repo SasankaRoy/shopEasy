@@ -132,7 +132,7 @@ const Cart = ({ setShowCart }) => {
                               }}
                               className="text-xl font-semibold tracking-wide cursor-pointer p-0 m-0 hover:underline transition-all duration-150 ease-linear"
                             >
-                              {cur.productName}
+                              {cur.productName}2
                             </h1>
                           </Link>
 
