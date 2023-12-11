@@ -26,6 +26,8 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  console.log(process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER,'the url')
+
   // for getting the media URL of the images...
   const [rawFiles, setRawFiles] = useState(initialValuesForImages);
 
@@ -130,6 +132,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
         );
         imgData.append("file", rawFiles.image1);
         try {
+          console.log(process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER,'the url')
         const GetMediaUrlForImg1 = await axios.post(
           `${process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER}`,
           imgData

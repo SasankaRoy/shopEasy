@@ -6,10 +6,12 @@ import axios from "axios";
 const Productes = ({ category }) => {
   const [showCaseProduct, setShowCaseProduct] = useState([]);
   const fetchProductsByCategory = async () => {
+    
     const getDataByCategory = await axios.get(
       `/api/products?category=${category}`
     );
     setShowCaseProduct([...getDataByCategory.data.filteredProducts]);
+    
   };
   useEffect(() => {
     fetchProductsByCategory();
