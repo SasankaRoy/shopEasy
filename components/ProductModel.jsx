@@ -26,7 +26,7 @@ const ProductModel = ({ setNewProduct, ProductDetails, activeFor }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  console.log(process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER,'the url')
+  console.log(process.env.NEXT_PUBLIC_MEDIA_TO_MEDIAURL_CONVERTER,'the url',process.env.NEXT_PUBLIC_CLOUD_NAME)
 
   // for getting the media URL of the images...
   const [rawFiles, setRawFiles] = useState(initialValuesForImages);
