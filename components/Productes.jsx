@@ -31,7 +31,7 @@ const Productes = ({ category }) => {
             Best Seller
           </h1>
           <div className="grid  grid-flow-col gap-5 px-7 py-5 auto-cols-[96.5%] lg:auto-cols-[35%] w-full overflow-x-auto overscroll-x-contain snap-x  snap-mandatory scroll-smooth">
-            {showCaseProduct.map((cur, id) => (
+            {showCaseProduct.slice(7,15).map((cur, id) => (
               <ItemCard data={cur} key={id} />
             ))}
           </div>

@@ -7,7 +7,7 @@ const handleGetProduct = async (req, res) => {
   try {
     const { pid, category, sub } = req.query;
     let products;
-
+    
     if (category) {
       // this block filter product based on category or subcategory...
       if (sub) {
@@ -28,7 +28,7 @@ const handleGetProduct = async (req, res) => {
     } else {
       products = await Products.find(); // gives all the products..
     }
-
+    
     if (!products || (Array.isArray(products) && products.length === 0)) {
       res.status(404).json({ error: "Products not found" });
     } else {

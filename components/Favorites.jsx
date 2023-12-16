@@ -30,6 +30,7 @@ const Favorites = () => {
       const products = await axios.get(
         `api/products?category=${filters.toLocaleLowerCase()}`
       );
+
       setFilterArr(products.data.filteredProducts);
 
        dispatch(loadingComplete())
@@ -73,7 +74,7 @@ const Favorites = () => {
               <SkeletonLoading />
             ) : (
               <>
-                {filterArr.map((data, id) => (
+                {filterArr.slice(0,6).map((data, id) => (
                   <ItemCard data={data} key={id} />
                 ))}
               </>

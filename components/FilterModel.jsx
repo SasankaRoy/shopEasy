@@ -230,6 +230,7 @@ const FilterModel = ({ showFilter, setShowFilter }) => {
                         `/category/${showFilter.type.toLowerCase()}?sub=${cur.toLowerCase()}`
                       );
                       setShowFilter(false);
+                      console.log(`/category/${showFilter.type.toLowerCase()}?sub=${cur.toLowerCase()}`)
                     }}
                     initial={{ scale: 1 }}
                     whileHover={{ scale: 1.1 }}

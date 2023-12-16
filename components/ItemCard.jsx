@@ -41,7 +41,7 @@ export const ItemCard = ({ data }) => {
           </div>
         </div>
         <div className="p-2 lg:p-3">
-          <h1 className="capitalize text-2xl font-semibold text-[#212a2f] tracking-wide m-0 p-1">
+          <h1 className="capitalize text-xl font-semibold text-[#212a2f] tracking-wide m-0 p-1">
             {data?.productName}
           </h1>
           <hr className="bg-gray-400 my-2" />

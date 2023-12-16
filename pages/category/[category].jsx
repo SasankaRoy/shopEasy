@@ -243,17 +243,17 @@ const FilterModel = ({
  */
 export const getServerSideProps = async (context) => {
   const { category, sub } = context.query;
-  console.log(sub);
+  // console.log(sub);
 
   try {
     if (context.req.headers.host === "localhost:3000") {
-      console.log(process.env.PRODUCTION_DOMAIN, "the categozy");
+      // console.log(process.env.PRODUCTION_DOMAIN, "the categozy");
       const getProductList = await axios.get(
         sub
           ? `${process.env.DEVELOPMENT_DOMAIN}/api/products?category=${category}&sub=${sub}`
           : `${process.env.DEVELOPMENT_DOMAIN}/api/products?category=${category}`
       );
-
+        console.log(getProductList,'on the client');
       return {
         props: {
           products: getProductList?.data,
