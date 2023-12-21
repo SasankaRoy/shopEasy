@@ -9,14 +9,12 @@ let socket;
 const Dashboard = () => {
   const [message, setMessage] = useState("");
   const [allSMS, setAllSMS] = useState([]);
-  useEffect(() => {
-    makeSocketConnection();
-  }, []);
+
 
   // making the the socket connection when the page is loaded...
   const makeSocketConnection = async () => {
     try {
-      await axios.get("https://velvety-babka-72c4ff.netlify.app/api/socket");
+      await axios.get("/api/socket");
       console.log('the url is fetched');
       socket = io();
       socket.on("connect", () => {
@@ -37,6 +35,9 @@ const Dashboard = () => {
       console.log(data, "from the server");
     });
   };
+  useEffect(() => {
+    makeSocketConnection();
+  }, []);
   return (
     <>
       <Head>

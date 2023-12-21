@@ -21,18 +21,11 @@ export default async function handler(req, res) {
     io.on("connection", (socket) => {
       console.log("Connection");
       socket.on("test__SocketServer", (data) => {
-        io.emit("test__SocketServer", data);
+        io.emit("test__SocketServer", `data from the server ${data}`);
       });
     });
 
-
-
-
-    console.log("hello");
-
-    // Continue with your handler logic
-
-    console.log("hello2");
+    res.status(200).json({socket:'socket'});
 
     res.end();
   } catch (error) {

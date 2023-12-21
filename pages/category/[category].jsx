@@ -253,7 +253,7 @@ export const getServerSideProps = async (context) => {
           ? `${process.env.DEVELOPMENT_DOMAIN}/api/products?category=${category}&sub=${sub}`
           : `${process.env.DEVELOPMENT_DOMAIN}/api/products?category=${category}`
       );
-        console.log(getProductList,'on the client');
+
       return {
         props: {
           products: getProductList?.data,
