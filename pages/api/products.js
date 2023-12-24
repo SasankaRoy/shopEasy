@@ -3,6 +3,20 @@ import connectDB from "../../utils/connectDb";
 
 // get route
 
+
+// $gte: and $gt: in mongoDB is a query for getting the items which
+//  matches the given input value and greater then that value.
+
+// example - price:1000(the input by the user) so it will return the the product
+//  which matches price of 1000 and also the products which are above 1000 too.
+
+// $lt: and $lte: is also a mongoDB query that returns the product
+//  which matches price of 1000 and also the products which are less than 1000 too.
+
+// In the above context the e in ($gte: and $lte:) stands for equal to (=) ... 
+
+
+
 const handleGetProduct = async (req, res) => {
   try {
     const { pid, category, sub } = req.query;
@@ -150,8 +164,19 @@ const handlePutProduct = async (req, res) => {
 };
 
 // DELETE
-const handleDeleteProduct = (req, res) => {
-  console.log(req.method, "from the product");
+const handleDeleteProduct = async (req, res) => {
+  try {
+    const {pID} = req.query;    
+    console.log("🚀 ➽ file: products.js:174  ➽ handleDeleteProduct  ➽ ̥ ⏩" ,pID);
+    // delete from the database....
+
+   await Products.findByIdAndDelete({_id:pID});
+   // send a response to the client...
+   res.status(200).json({message: 'product deleted successfully'});
+
+  }catch(err){
+  }
+  res.status(500).json({error: err});
 };
 export default async function handler(req, res) {
   try {

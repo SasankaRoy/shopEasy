@@ -17,6 +17,7 @@ import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import { Avatar } from "@mui/material";
+import Cookies from "js-cookie";
 
 const ProductModel = dynamic(() => import("../../components/ProductModel"));
 
@@ -195,7 +196,13 @@ const Account = () => {
                   {userInfo.number ? userInfo.number : user.userInfo?.number}
                 </h2>
 
-                <button className="self-end text-center mt-5 rounded-md tracking-wide bg-red-500 hover:bg-red-600 transition-all duration-200 ease-out text-white w-[70%] lg:w-[50%] py-1 font-semibold text-2xl">
+                <button onClick={() => {
+                  Cookies.remove("userToken", {
+                  expires: 1,
+                  path: "/",
+                });
+                window.location.reload();
+                }} className="self-end text-center mt-5 rounded-md tracking-wide bg-red-500 hover:bg-red-600 transition-all duration-200 ease-out text-white w-[70%] lg:w-[50%] py-1 font-semibold text-2xl">
                   Log out
                 </button>
               </div>
@@ -210,7 +217,7 @@ const Account = () => {
 
                 <>
                   {user.userInfo?.role === "admin" ||
-                  user.userInfo?.role === "manager" ? (
+                    user.userInfo?.role === "manager" ? (
                     <button
                       onClick={() => setNewProduct(true)}
                       className="bg-green-400 py-2 px-3 font-[600] rounded-xl shadow-lg tracking-widest text-md lg:text-xl text-white hover:bg-green-500 transition-all duration-150 ease-out"
@@ -366,7 +373,7 @@ const Account = () => {
                     className="w-[80%] mx-auto mt-3 py-2 bg-[#212a2f] border border-[#212a2f] text-white text-xl font-semibold  rounded-md flex justify-center items-center tracking-wider capitalize disabled:cursor-not-allowed disabled:opacity-50 hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-in"
                   >
                     {isLoading.state &&
-                    isLoading.forWhichPorpose === "ProfileImage" ? (
+                      isLoading.forWhichPorpose === "ProfileImage" ? (
                       <>
                         <CircularProgress className="text-sm" />{" "}
                         {isLoading.currentMessage}...
