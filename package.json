@@ -18,6 +18,7 @@
     "color-name-list": "^10.10.0",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
+    "events": "^3.3.0",
     "formik": "^2.4.2",
     "framer-motion": "^8.5.2",
     "js-cookie": "^3.0.5",
