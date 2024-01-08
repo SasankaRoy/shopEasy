@@ -31,7 +31,7 @@ export const ItemCard = ({ data }) => {
             className="object-cover object-center image rounded-t-md transition-all duration-150 delay-100 ease-linear"
           />
 
-          <div className="main__div flex justify-center items-center w-full h-full z-40 absolute top-0 transition-all duration-150 delay-100 ease-linear">
+          <div className="main__div flex justify-center items-center w-full h-full z-0 absolute top-0 transition-all duration-150 delay-100 ease-linear">
             <button
               onClick={() => handleOnclick(data?._id, data?.productName)}
               className="uppercase icons font-medium tracking-wider text-xl px-6 py-3 rounded text-[#212a2f] bg-[#ffffff] hover:bg-[#212a2f] hover:text-[#ffffff] transition-all duration-150 ease-in"

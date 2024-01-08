@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 
 import { useRouter } from "next/router";
@@ -14,14 +14,12 @@ import { loadingComplete, loadingStart } from "../../Redux/loadingSlice";
 
 const Category = ({ products }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
+  
   const [showFilterModel, setShowFilterModel] = useState(false);
-  const [filters, setFilters] = useState({
-    price: "",
-    category: "",
-  });
+
   const router = useRouter();
   const { query } = router;
-  console.log(filteredProducts);
+
 
   return (
     <>
@@ -59,8 +57,8 @@ const Category = ({ products }) => {
       {showFilterModel && (
         <FilterModel
           setShowFilterModel={setShowFilterModel}
-          setFilters={setFilters}
-          filters={filters}
+          // setFilters={setFilters}
+          // filters={filters}
           products={products}
           setFilteredProducts={setFilteredProducts}
         />
@@ -72,11 +70,17 @@ export default Category;
 
 const FilterModel = ({
   setShowFilterModel,
-  setFilters,
-  filters,
+  // setFilters,
+  // filters,
   products,
   setFilteredProducts,
 }) => {
+
+  const [filters, setFilters] = useState({
+    price: "",
+    category: "",
+  });
+
   const isLoading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
   /* The code is creating an array called `categoriesWhichArePresent` that contains unique categories
@@ -98,6 +102,9 @@ const FilterModel = ({
         },
       })
     );
+
+
+
     const filteredApplyed = products.filteredProducts.filter((item) => {
       const filterCategory = filters.category;
       const filterPrice = filters.price;
