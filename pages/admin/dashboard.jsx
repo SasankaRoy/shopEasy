@@ -14,35 +14,35 @@ const Dashboard = () => {
 
   // making the the socket connection when the page is loaded...
 
-  // const makeSocketConnection = async () => {
-  //   try {
-  //     await axios.get("/api/socket");
-  //     console.log('the url is fetched');
-  //     socket = io();
-  //     socket.on("connect", () => {
-  //       console.log("connected !");
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const makeSocketConnection = async () => {
+    try {
+     
+      socket = io("http://localhost:5000/");
+      
+
+      socket.on("connect", () => {
+        console.log("connected to the server!");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
   const handleChange = (e) => {
     setMessage(e.target.value);
   };
   const handleSubmit = () => {
-    // console.log("Submit");
-    // socket.emit("test__SocketServer", message);
-    // socket.on("test__SocketServer", (data) => {
-    //   setAllSMS([...allSMS,data])
-    //   console.log(data, "from the server");
-    // });
-    CustomEvent.emit('myEvent',{message});
+   
+    socket.emit("test__SocketServer", message);
+    socket.on("test__SocketServer", (data) => {
+      setAllSMS([...allSMS,data])
+      console.log(data, "from the server");
+    });
+    
   };
   useEffect(() => {
-    // makeSocketConnection();
-    // CoustomEvent.emit('customEvent',)
+    makeSocketConnection();    
 
   }, []);
   return (
