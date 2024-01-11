@@ -35,8 +35,8 @@ const Dashboard = () => {
   const handleSubmit = () => {
    
     socket.emit("test__SocketServer", message);
-    socket.on("test__SocketServer", (data) => {
-      setAllSMS([...allSMS,data])
+    socket.on("test__messageSendBack", (data) => {
+      setAllSMS([...allSMS, data]);
       console.log(data, "from the server");
     });
     
