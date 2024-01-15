@@ -106,6 +106,18 @@ a {
   }
 }
 
+.statusSelect { 
+  /* for Firefox */ 
+  -moz-appearance: none; 
+  /* for Safari, Chrome, Opera */ 
+  -webkit-appearance: none; 
+} 
+
+/* for IE10 */ 
+ .statusSelect::-ms-expand { 
+  display: none; 
+} 
+
 /* .logIn__glassStyle {
   background: rgba(33, 42, 47, 0.25);
   box-shadow: 0 1px 12px 0 rgba(31, 38, 135, 0.37);
