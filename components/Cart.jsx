@@ -19,6 +19,7 @@ import Link from "next/link";
 
 const Cart = ({ setShowCart }) => {
   const cart = useSelector((state) => state.cart);
+  const User = useSelector((state) => state.user.userInfo);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -36,6 +37,8 @@ const Cart = ({ setShowCart }) => {
     }
     return widthInPer;
   };
+  const productIds = cart.cart?.map((cur, id) => cur.id);
+  // sperating the product id's from the cart.
 
   return (
     <div className="h-screen w-screen flex justify-end items-end fixed z-50 bg-black/20 top-0">
@@ -223,6 +226,10 @@ const Cart = ({ setShowCart }) => {
                     </span>
                   </div>
                   <button
+                      onClick={() => {
+                        router.push(`/checkout/${User?._id}&o=${productIds[0]}&n=${productIds[1]}`);
+                        setShowCart(false);
+                      }}
                     className="w-full py-2 rounded-md uppercase text-xl
                     bg-[#212a2f] text-[#ffffff] font-semibold tracking-wider
                     hover:text-[#212a2f] hover:bg-[#ffffff] hover:border

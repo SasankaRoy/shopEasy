@@ -300,8 +300,7 @@ export const getServerSideProps = async (context) => {
             if (context.req.headers.host === "localhost:3000") {
                   const getProductList = await axios.get(
                         `${process.env.DEVELOPMENT_DOMAIN}/api/products?pid=${pid}`
-                  );
-                  console.log(getProductList?.data.filteredProducts, "the new is here...");
+                  );                  
                   return {
                         props: {
                               product: getProductList?.data.filteredProducts,

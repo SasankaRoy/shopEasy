@@ -3,10 +3,13 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import axios from "axios";
 
 let socket;
 
-const Dashboard = () => {
+const Dashboard = ({ oders, error }) => {
+  console.log(oders, "the oders in the dashboard UI", error);
+
   const [message, setMessage] = useState("");
   const [allSMS, setAllSMS] = useState([]);
   const [selectBg, setSelectBg] = useState({
@@ -14,7 +17,10 @@ const Dashboard = () => {
     color: "red",
   });
 
-  const [showProductList, setShowProductList] = useState(false);
+  const [showProductList, setShowProductList] = useState({
+    status: false,
+    productIds:[],
+  });
 
   // making the the socket connection when the page is loaded...
 
@@ -23,7 +29,7 @@ const Dashboard = () => {
       socket = io("http://localhost:5000/");
 
       socket.on("connect", () => {
-        console.log("connected to the server!");
+        console.log("connected to the socket server!");
       });
     } catch (error) {
       console.log(error);
@@ -44,7 +50,23 @@ const Dashboard = () => {
     makeSocketConnection();
   }, []);
 
-  const handleChangeSelection = (e) => {    
+  /* The code below is a JavaScript function that takes a date as input and formats it in the
+"MM/DD/YYYY" format. It uses the `toLocaleString` method with the specified options to format the
+date. */
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  const formateDate = (formateTheDate) => {
+    const createdDate = new Date(formateTheDate);
+    const readableDate = new Date(createdDate.getTime());
+    const formattedDate = readableDate.toLocaleString("en-US", options);
+
+    return formattedDate;
+  };
+
+  const handleChangeSelection = (e) => {
     console.log(e);
     // setMessage(e.target.value);
     switch (e.target.value) {
@@ -109,434 +131,77 @@ const Dashboard = () => {
                 Total amount (<CurrencyRupeeIcon className="text-base" />)
               </th>
             </tr>
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702447524/ofchr5yy87ogbyfnfipu.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Black Cotton</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                03/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                1000
-              </td>
-            </tr>
 
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702224261/yepkj0spq935vctlzdyj.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Blue and White</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                01/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                5000
-              </td>
-            </tr>
-
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702447524/ofchr5yy87ogbyfnfipu.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Black Cotton</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                03/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                1000
-              </td>
-            </tr>
-
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702224261/yepkj0spq935vctlzdyj.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Blue and White</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                01/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                5000
-              </td>
-            </tr>
-
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702447524/ofchr5yy87ogbyfnfipu.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Black Cotton</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                03/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                1000
-              </td>
-            </tr>
-
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702224261/yepkj0spq935vctlzdyj.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Blue and White</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                01/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                5000
-              </td>
-            </tr>
-
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702447524/ofchr5yy87ogbyfnfipu.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Black Cotton</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                03/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                1000
-              </td>
-            </tr>
-
-            <tr
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowProductList(true);
-              }}
-              className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-            >
-              <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                <img
-                  className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                  src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702224261/yepkj0spq935vctlzdyj.jpg"
-                  alt="productImg"
-                />
-                <h2>Roadster Blue and White</h2>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                180018002012unyfbfgn5824
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                01/01/2024
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                <select
-                  onChange={handleChangeSelection}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                  className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                  style={{
-                    background: selectBg.bg,
-                    color: selectBg.color,
-                    fontWeight: 700,
-                  }}
-                >
-                  <option value="pending" default className="font-bold">
-                    Pending
-                  </option>
-                  <option value="shipping" className="font-bold">
-                    Shipping
-                  </option>
-                  <option value="complete" className="font-bold">
-                    Complete
-                  </option>
-                </select>
-              </td>
-              <td className="font-semibold text-center text-md tracking-wider p-2">
-                COD
-              </td>
-              <td className="font-extrabold text-center text-lg tracking-wider p-2">
-                5000
-              </td>
-            </tr>
+            {oders?.map((cur, id) => (
+              <tr
+                key={id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowProductList({
+                    status: true,
+                    productIds: [...cur.itemList],
+                  });
+                }}
+                className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
+              >
+                <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
+                  <img
+                    className="object-cover h-[40px] w-[40px] object-top rounded-full"
+                    src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702447524/ofchr5yy87ogbyfnfipu.jpg"
+                    alt="productImg"
+                  />
+                  <h2>{cur.userName}</h2>
+                </td>
+                <td className="font-semibold text-center text-md tracking-wider p-2">
+                  {cur.address} , {cur.country}
+                </td>
+                <td className="font-semibold text-center text-md tracking-wider p-2">
+                  {cur.createdAt && formateDate(cur.createdAt)}
+                </td>
+                <td className="font-semibold text-center text-md tracking-wider p-2">
+                  <select
+                    onChange={handleChangeSelection}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
+                    style={{
+                      background: selectBg.bg,
+                      color: selectBg.color,
+                      fontWeight: 700,
+                    }}
+                  >
+                    <option
+                      value={cur.status}
+                      default
+                      className="font-bold capitalize"
+                    >
+                      {cur.status}
+                    </option>
+                    <option value="shipping" className="font-bold">
+                      Shipping
+                    </option>
+                    <option value="complete" className="font-bold">
+                      Complete
+                    </option>
+                  </select>
+                </td>
+                <td className="font-semibold text-center text-md tracking-wider p-2">
+                  {cur.paymentMethod}
+                </td>
+                <td className="font-extrabold text-center text-lg tracking-wider p-2">
+                  {cur.totalPrice}.00
+                </td>
+              </tr>
+            ))}            
           </thead>
         </table>
       </div>
-      {showProductList && (
-        <ProductList setShowProductList={setShowProductList} />
+      {showProductList.status && (
+        <ProductList
+          setShowProductList={setShowProductList}
+          showProductList={showProductList}
+        />
       )}
     </>
   );
@@ -544,14 +209,32 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const ProductList = ({ setShowProductList }) => {
+const ProductList = ({ setShowProductList, showProductList }) => {
+  const [oderLists, setOderLists] = useState([]);
+
+  showProductList.productIds?.forEach(async (element) => {
+    try {
+      const fetchProduct = await axios.get(`/api/products?pid=${element}`);
+      if (fetchProduct.status === 200) {               
+        console.log(fetchProduct.data, 'hello') 
+      }
+        
+    } catch (error) {
+      console.log(error,'in the foreach loop api call')
+    }
+  });
   return (
     <>
       <div className="fixed z-50 w-full h-screen backdrop-blur-sm bg-[#000]/40 top-0 flex justify-center items-center">
         <div className="w-[65%] mx-auto p-3 bg-white rounded-md relative">
           <h2
             className="absolute right-3 font-semibold text-red-500 text-xl top-3 capitalize cursor-pointer tracking-wider"
-            onClick={() => setShowProductList(false)}
+            onClick={() =>
+              setShowProductList({
+                status: false,
+                productIds: [],
+              })
+            }
           >
             Close
           </h2>
@@ -634,4 +317,56 @@ const ProductList = ({ setShowProductList }) => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (context) => {
+  try {
+    /* The code below is checking the host of the request and based on that, it makes a GET request to
+   either the development or production domain to fetch a list of orders. If the request is
+   successful, it returns the orders data as props. If the request fails with a status code of 400,
+   it returns an error message as props. */
+
+    if (context.req.headers.host === "localhost:3000") {
+      const reqAllOders = await axios.get(
+        `${process.env.DEVELOPMENT_DOMAIN}/api/oders`
+      );
+      if (reqAllOders.status === 400) {
+        return {
+          props: {
+            error: "the error which while come form the server side.",
+          },
+        };
+      }
+
+      return {
+        props: {
+          oders: reqAllOders.data.orderList,
+        },
+      };
+    } else {
+      const reqAllOders = await axios.get(
+        `${process.env.PRODUCTION_DOMAIN}/api/oders`
+      );
+      if (reqAllOders.status === 400) {
+        return {
+          props: {
+            error: "the error which while come form the server side.",
+          },
+        };
+      }
+
+      return {
+        props: {
+          oders: reqAllOders.data.orderList,
+        },
+      };
+    }
+  } catch (error) {
+    console.log("Error", error);
+    return {
+      props: {
+        error,
+      },
+    };
+  }
 };

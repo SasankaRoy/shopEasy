@@ -1,8 +1,71 @@
+import React, {  useState } from "react";
 import Head from "next/head";
-import React from "react";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import axios from "axios";
+import { useFormik } from "formik";
+import { shippingValidation } from "../../utils/formValidation";
+import { useSelector } from "react-redux";
 
-const orderId = () => {
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import { toast } from "react-toastify";
+
+const OrderId = () => {
+  const [coupon, setCoupon] = useState("");
+  const cart = useSelector((state) => state.cart.cart);
+  const User = useSelector((state) => state.user.userInfo);
+  const subTotal = useSelector((state) => state.cart.subTotal);
+
+  const productIds = cart?.map((cur, id) => cur.id); // sperating the product id's from the cart. 
+
+  
+
+  const { values, handleBlur, handleSubmit, handleChange, touched, errors } =
+    useFormik({
+      initialValues: {
+        fullName: "",
+        email: "",
+        phoneNumber: "",
+        alternatePhoneNumber: "",
+        country: "",
+        fullAddress: "",
+        payMethod: "",
+      },
+      validationSchema: shippingValidation,
+      onSubmit: async (values) => {
+        try {
+          const placeOrder = await axios.post("/api/oders", {
+            oder: values,
+            productIds,
+            userId: User._id,
+            subTotal,
+          });
+
+          if (placeOrder.status === 500) {
+            // notify the error to the user.....
+            toast.error('sometime went wrong while placing order. Please try again');
+
+            return;
+          }
+
+          // notify the user if every thing go's right...
+          toast.success("your oder has been placed successfully");
+
+          // redirect the user to the oder page  ....
+          // (is pending now..create the oder page for the user first)...
+
+          // router.push('/oders/(user"s id)');
+          
+        } catch (error) {
+          console.log(error);
+          toast.error(
+            "sometime went wrong while placing order. Please try again"
+          );
+        }
+        
+      },
+    });
+
+
+
   return (
     <>
       <Head>
@@ -16,7 +79,7 @@ const orderId = () => {
       <div className="w-[80%] mx-auto p-2 mt-3">
         <h2 className="font-bold text-3xl tracking-wider my-3">Check Out</h2>
         <div className="flex justify-between items-start space-x-5">
-          <div className="flex-1 p-2">
+          <form className="flex-1 p-2">
             <h2 className="font-semibold text-2xl tracking-wider capitalize text-gray-500 my-2">
               Billing details
             </h2>
@@ -24,31 +87,22 @@ const orderId = () => {
               <div className="flex flex-col justify-start items-start space-y-2 flex-1">
                 <label
                   className="font-bold text-gray-600 text-md tracking-wider"
-                  htmlFor="firstName"
+                  htmlFor="fullName"
                 >
-                  First Name{" "}
+                  Full Name{" "}
                   <span className="text-red-500 text-xl font-bold">*</span>
                 </label>
                 <input
-                  placeholder="First Name..."
-                  className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
+                  placeholder="Full Name..."
+                  className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider tracking-wider ${
+                    errors.fullName && touched.fullName && "ring-1 ring-red-400"
+                  }`}
                   type="text"
-                  id="firstName"
-                />
-              </div>
-              <div className="flex flex-col justify-start items-start space-y-2 flex-1">
-                <label
-                  className="font-bold text-gray-600 text-md tracking-wider"
-                  htmlFor="lastName"
-                >
-                  Last Name{" "}
-                  <span className="text-red-500 text-xl font-bold">*</span>{" "}
-                </label>
-                <input
-                  placeholder="Last Name..."
-                  className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
-                  type="text"
-                  id="lastName"
+                  id="fullName"
+                  name="fullName"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.fullName}
                 />
               </div>
             </div>
@@ -61,9 +115,15 @@ const orderId = () => {
               </label>
               <input
                 placeholder="Enter Your Email..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider tracking-wider ${
+                  errors.email && touched.email && "right-1 ring-red-400"
+                }`}
                 type="text"
                 id="email"
+                name="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
               />
             </div>
             <div className="flex flex-col justify-start items-start space-y-2 my-2">
@@ -76,9 +136,17 @@ const orderId = () => {
               </label>
               <input
                 placeholder="Enter Phone Number..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
+                  errors.phoneNumber &&
+                  touched.phoneNumber &&
+                  "ring-1 ring-red-400"
+                }`}
                 type="text"
                 id="phoneNumber"
+                name="phoneNumber"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.phoneNumber}
               />
             </div>
             <div className="flex flex-col justify-start items-start space-y-2 my-2">
@@ -91,9 +159,17 @@ const orderId = () => {
               </label>
               <input
                 placeholder="Enter Alternate Number..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
+                  errors.alternatePhoneNumber &&
+                  touched.alternatePhoneNumber &&
+                  "ring-1 ring-red-400"
+                }`}
                 type="text"
                 id="alterNumber"
+                name="alternatePhoneNumber"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.alternatePhoneNumber}
               />
             </div>
             <div className="flex flex-col justify-start items-start space-y-2 my-2">
@@ -106,84 +182,41 @@ const orderId = () => {
               </label>
               <input
                 placeholder="Enter Your Country..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
+                  errors.country && touched.country && "ring-1 ring-red-400"
+                }`}
                 type="text"
                 id="country"
+                name="country"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.country}
               />
             </div>
             <div className="flex flex-col justify-start items-start space-y-2 my-2">
               <label
                 className="font-bold text-gray-600 text-md tracking-wider"
-                htmlFor="streetAddress"
+                htmlFor="fullAddress"
               >
-                Street Adress{" "}
+                Full Adress{" "}
                 <span className="text-red-500 text-xl font-bold">*</span>
               </label>
               <input
-                placeholder="Enter Street Address..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
+                placeholder="Enter Full Address..."
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
+                  errors.fullAddress &&
+                  touched.fullAddress &&
+                  "ring-1 ring-red-400"
+                }`}
                 type="text"
-                id="streetAddress"
+                id="fullAddress"
+                name="fullAddress"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.fullAddress}
               />
             </div>
-            <div className="flex flex-col justify-start items-start space-y-2 my-2">
-              <label
-                className="font-bold text-gray-600 text-md tracking-wider"
-                htmlFor="apartmentNumber"
-              >
-                Apartment Number
-              </label>
-              <input
-                placeholder="Apartment Number , Name..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
-                type="text"
-                id="apartmentNumber"
-              />
-            </div>
-            <div className="flex flex-col justify-start items-start space-y-2 my-2">
-              <label
-                className="font-bold text-gray-600 text-md tracking-wider"
-                htmlFor="city"
-              >
-                City <span className="text-red-500 text-xl font-bold">*</span>
-              </label>
-              <input
-                placeholder="Enter Your City..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
-                type="text"
-                id="city"
-              />
-            </div>
-            <div className="flex flex-col justify-start items-start space-y-2 my-2">
-              <label
-                className="font-bold text-gray-600 text-md tracking-wider"
-                htmlFor="state"
-              >
-                State <span className="text-red-500 text-xl font-bold">*</span>
-              </label>
-              <input
-                placeholder="Enter Your State..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
-                type="text"
-                id="state"
-              />
-            </div>
-            <div className="flex flex-col justify-start items-start space-y-2 my-2">
-              <label
-                className="font-bold text-gray-600 text-md tracking-wider"
-                htmlFor="pincode"
-              >
-                Pin-Code{" "}
-                <span className="text-red-500 text-xl font-bold">*</span>
-              </label>
-              <input
-                placeholder="Enter Pin-Code..."
-                className="border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider capitalize tracking-wider"
-                type="text"
-                id="pincode"
-              />
-            </div>
-          </div>
+          </form>
           <div className="flex-1  p-2">
             <h2 className="font-semibold text-2xl tracking-wider capitalize text-gray-500 my-2">
               Payment details
@@ -204,34 +237,25 @@ const orderId = () => {
             {/* heading end */}
 
             <div className="my-2">
-              <div className="flex justify-between items-center">
-                {/* loop here start */}
-                <div className="flex-1 p-2">
-                  <h2 className="text-lg font-semibold tracking-wider">
-                    Roadstret Round Neck Navy Blue with Yellow stripe. x 1
-                  </h2>
-                </div>
-                <div className="flex-1 p-2">
-                  <h2 className="text-2xl font-semibold tracking-wider text-center">
-                    <CurrencyRupeeIcon className="text-base" />
-                    356.00
-                  </h2>
-                </div>
-              </div>
+              {/* loop here start */}
+              {cart?.map((cur, id) => (
+                <div key={id} className="flex justify-between items-center">
+                  <div className="flex-1 p-2">
+                    <h2 className="text-lg font-semibold tracking-wider">
+                      {cur.productName}
+                    </h2>
+                  </div>
 
-              <div className="flex justify-between items-center">
-                <div className="flex-1 p-2">
-                  <h2 className="text-lg font-semibold tracking-wider">
-                    Roadstret Round Neck Navy Blue with Yellow stripe. x 1
-                  </h2>
+                  <div className="flex-1 p-2">
+                    <h2 className="text-2xl font-semibold tracking-wider text-center">
+                      <CurrencyRupeeIcon className="text-base" />
+                      {cur.total}.00
+                    </h2>
+                  </div>
                 </div>
-                <div className="flex-1 p-2">
-                  <h2 className="text-2xl font-semibold tracking-wider text-center">
-                    <CurrencyRupeeIcon className="text-base" />
-                    356.00
-                  </h2>
-                </div>
-              </div>
+              ))}
+
+              
 
               {/* ^^^^^loop here end */}
 
@@ -244,7 +268,7 @@ const orderId = () => {
                 <div className="flex-1 p-2">
                   <h2 className="text-2xl font-semibold tracking-wider text-center">
                     <CurrencyRupeeIcon className="text-base" />
-                    712.00
+                    {subTotal}.00
                   </h2>
                 </div>
               </div>
@@ -257,7 +281,7 @@ const orderId = () => {
                 <div className="flex-1 p-2">
                   <h2 className="text-2xl font-semibold tracking-wider text-center">
                     <CurrencyRupeeIcon className="text-base" />
-                    712.00
+                    {subTotal}.00
                   </h2>
                 </div>
               </div>
@@ -273,10 +297,14 @@ const orderId = () => {
                     type="text"
                     className="w-full py-1 px-3 outline-gray-400 text-lg font-semibold tracking-wider rounded-s-md"
                     placeholder="Enter Code..."
+                    onChange={(e) => setCoupon(e.target.value)}
                   />
                 </div>
                 <div className="">
-                  <button className="font-extrabold text-md tracking-wider text-white px-3 py-2 rounded-e-md bg-green-400">
+                  <button
+                    disabled={!coupon}
+                    className="font-extrabold text-md tracking-wider text-white px-3 py-2 rounded-e-md bg-green-400 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
                     Apply Discount
                   </button>
                 </div>
@@ -289,18 +317,50 @@ const orderId = () => {
               </h2>
               <div className="flex justify-evenly items-center">
                 <div className="flex justify-center items-center space-x-5 my-2">
-                  <input id="COD" type="radio" />
+                  <input
+                    id="COD"
+                    type="radio"
+                    className={
+                      errors.payMethod &&
+                      touched.payMethod &&
+                      "ring-1 ring-red-400"
+                    }
+                    name="payMethod"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value="COD"
+                  />
                   <label className="text-xl font-semibold" htmlFor="COD">
                     Case on Delivery
                   </label>
                 </div>
                 <div className="flex justify-center items-center space-x-5 my-2">
-                  <input id="onlinePay" type="radio" />
+                  <input
+                    id="onlinePay"
+                    type="radio"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    name="payMethod"
+                    value="onlinePay"
+                  />
                   <label className="text-xl font-semibold" htmlFor="onlinePay">
                     paytm
                   </label>
                 </div>
               </div>
+            </div>
+
+            <div className="my-3 flex justify-center items-center">
+              <button
+                onClick={() => handleSubmit()}
+                disabled={
+                  !Object.keys(values).every((key) => Boolean(values[key]))
+                }
+                type="submit"
+                className="w-[40%] bg-[#212a2f] border border-[#212a2f] shadow-md text-white font-bold py-2 text-xl tracking-wider rounded-md hover:text-[#212a2f] hover:bg-white transition-all duration-200 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                Place An Order
+              </button>
             </div>
           </div>
         </div>
@@ -309,4 +369,4 @@ const orderId = () => {
   );
 };
 
-export default orderId;
+export default OrderId;

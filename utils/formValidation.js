@@ -1,4 +1,7 @@
 import * as Yup from "yup";
+
+const phoneNumberReg = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
 export const loginValidation = Yup.object({
   email: Yup.string().email().required("email is required"),
   password: Yup.string().min(6).max(12).required("password is required"),
@@ -27,3 +30,13 @@ export const createProductValidation = Yup.object({
   description3: Yup.string().required("description3 is required"),
   description4: Yup.string().required("description4 is required"),
 });
+
+export const shippingValidation = Yup.object({
+  fullName: Yup.string().required("name is a required"),
+  email: Yup.string().email().required("email is a required"),
+  phoneNumber: Yup.string().matches(phoneNumberReg, 'phone number is not valid').max(10, 'too long').min(10, 'too short').required("phoneNumber is a required"),
+  alternatePhoneNumber: Yup.string().matches(phoneNumberReg, 'phone number is not vali').max(10, 'too long').min(10, 'too short').required('alternative phone number is a required'),
+  fullAddress:Yup.string().required("address is required"),
+  country:Yup.string().required("country is required"),
+  payMethod:Yup.string().required("pay method is required")
+})
