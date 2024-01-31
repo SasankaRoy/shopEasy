@@ -54,14 +54,27 @@ const NavBar = ({ user }) => {
 
   useEffect(() => {
     setTimeout(() => fetchUserCart(), 3000);
+    const isProtectedRoute = router.pathname === "/account/[userid]";
+    const adminDashbord = router.pathname === '/admin/dashboard';
+
     if (!user) {
-      const isProtectedRoute = router.pathname === "/account/[userid]";
-      if (isProtectedRoute) {
+      // user is not logged in .....
+      if (isProtectedRoute || adminDashbord) {
         router.push("/");
         toast.warn("session expired! Please login again");
       }
       return;
     }
+    
+    // when user is loggin but user does not have the authority to visit dashboard page....
+
+    if (adminDashbord) {
+      if (user.role !== "admin" && user.role !== 'manager') {
+        router.push('/');
+        toast.error('You are not authorised to visit "dashboard" page !')
+      }
+    }
+
   }, []);
 
   const handleShowCart = () => {
