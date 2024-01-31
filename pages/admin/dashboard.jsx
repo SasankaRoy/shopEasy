@@ -4,12 +4,36 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import axios from "axios";
-import {useSelector} from 'react-redux'
+import { useSelector, useDispatch } from "react-redux";
+import { loadingComplete, loadingStart } from "../../Redux/loadingSlice";
+import { CircularProgress } from "@mui/material";
 
 let socket;
 
 const Dashboard = ({ oders, error }) => {
-  // console.log(oders, "the oders in the dashboard UI", error);
+  const user = useSelector((state) => state.user.userInfo);
+  const isLoading = useSelector((state) => state.loading);
+  const dispatch = useDispatch();
+
+/* The code below is using the `useEffect` hook in a React component. It is dispatching two actions:
+`loadingStart` and `loadingComplete` for showing the loading indicator on the project page. */
+  
+  useEffect(() => {
+    dispatch(
+      loadingStart({
+        message: {
+          currentMessage: "checking user authoraisation...",
+          forWhichPorpose: "Authority",
+        },
+      })
+    );
+    // console.log(user)
+    setTimeout(() => {
+      dispatch(loadingComplete());
+    }, 2000);
+  }, [user]);
+
+  
 
   const [message, setMessage] = useState("");
   const [allSMS, setAllSMS] = useState([]);
@@ -17,12 +41,10 @@ const Dashboard = ({ oders, error }) => {
     bg: "#fca5a533",
     color: "red",
   });
-  const isLoading = useSelector(state => state.loading);
-
 
   const [showProductList, setShowProductList] = useState({
     status: false,
-    productIds:[],
+    productIds: [],
   });
 
   // making the the socket connection when the page is loaded...
@@ -54,8 +76,9 @@ const Dashboard = ({ oders, error }) => {
   }, []);
 
   /* The code below is a JavaScript function that takes a date as input and formats it in the
-"MM/DD/YYYY" format. It uses the `toLocaleString` method with the specified options to format the
-date. */
+    "MM/DD/YYYY" format. It uses the `toLocaleString` method with the specified options to format the
+    date. */
+  
   const options = {
     year: "numeric",
     month: "2-digit",
@@ -108,98 +131,114 @@ date. */
         <link rel="shortcut icon" href="/icon2.png" />
       </Head>
 
-      <h2 className="text-center font-semibold text-3xl capitalize underline underline-offset-8 tracking-wider my-2">
-        List of Orders {allSMS}
-      </h2>
-      <div class="w-[90%] mx-auto my-3 p-2 overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="font-extraboldbold text-xl p-2 tracking-wider">
-                Ordered By :
-              </th>
-              <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                address
-              </th>
-              <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                date
-              </th>
-              <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                Status
-              </th>
-              <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                payment Mode
-              </th>
-              <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                Total amount (<CurrencyRupeeIcon className="text-base" />)
-              </th>
-            </tr>
+      {isLoading.state && isLoading.forWhichPorpose === "Authority" ? (
+        <div className="w-screen h-screen fixed top-0 z-50 bg-[#000]/10 flex flex-col justify-center items-center space-y-3 backdrop-blur-md ">
+          <CircularProgress className="text-3xl" />
+          <h1 className="text-semibold text-2xl capitalize tracking-normal">
+            {isLoading.currentMessage}...
+          </h1>
+        </div>
+      ) : (
+        <>
+          <h2 className="text-center font-semibold text-3xl capitalize underline underline-offset-8 tracking-wider my-2">
+            List of Orders {allSMS}
+          </h2>
+          <div class="w-[90%] mx-auto my-3 p-2 overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className="font-extraboldbold text-xl p-2 tracking-wider">
+                    Ordered By :
+                  </th>
+                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
+                    address
+                  </th>
+                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
+                    date
+                  </th>
+                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
+                    Status
+                  </th>
+                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
+                    payment Mode
+                  </th>
+                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
+                    Total amount (<CurrencyRupeeIcon className="text-base" />)
+                  </th>
+                </tr>
 
-            {oders?.map((cur, id) => (
-              <tr
-                key={id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowProductList({
-                    status: true,
-                    productIds: [...cur.itemList],
-                  });
-                }}
-                className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
-              >
-                <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
-                  <img
-                    className="object-cover h-[40px] w-[40px] object-top rounded-full"
-                    src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702447524/ofchr5yy87ogbyfnfipu.jpg"
-                    alt="productImg"
-                  />
-                  <h2>{cur.userName}</h2>
-                </td>
-                <td className="font-semibold text-center text-md tracking-wider p-2">
-                  {cur.address} , {cur.country}
-                </td>
-                <td className="font-semibold text-center text-md tracking-wider p-2">
-                  {cur.createdAt && formateDate(cur.createdAt)}
-                </td>
-                <td className="font-semibold text-center text-md tracking-wider p-2">
-                  <select
-                    onChange={handleChangeSelection}
+                {oders?.map((cur, id) => (
+                  <tr
+                    key={id}
                     onClick={(e) => {
                       e.stopPropagation();
+                      setShowProductList({
+                        status: true,
+                        productIds: [...cur.itemList],
+                      });
                     }}
-                    className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
-                    style={{
-                      background: selectBg.bg,
-                      color: selectBg.color,
-                      fontWeight: 700,
-                    }}
+                    className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
                   >
-                    <option
-                      value={cur.status}
-                      default
-                      className="font-bold capitalize"
+                    <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
+                      <img
+                        className="object-cover h-[40px] w-[40px] object-top rounded-full"
+                        src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702447524/ofchr5yy87ogbyfnfipu.jpg"
+                        alt="productImg"
+                      />
+                      <h2>{cur.userName}</h2>
+                    </td>
+                    <td className="font-semibold text-center text-md tracking-wider p-2">
+                      {cur.address} , {cur.country}
+                    </td>
+                    <td className="font-semibold text-center text-md tracking-wider p-2">
+                      {cur.createdAt && formateDate(cur.createdAt)}
+                    </td>
+                    <td className="font-semibold text-center text-md tracking-wider p-2">
+                      <select
+                        onChange={handleChangeSelection}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
+                        style={{
+                          background: selectBg.bg,
+                          color: selectBg.color,
+                          fontWeight: 700,
+                        }}
+                      >
+                        <option
+                          value={cur.status}
+                          default
+                          className="font-bold capitalize"
+                        >
+                          {cur.status}
+                        </option>
+                        <option value="shipping" className="font-bold">
+                          Shipping
+                        </option>
+                        <option value="complete" className="font-bold">
+                          Complete
+                        </option>
+                      </select>
+                    </td>
+                    <td className="font-semibold text-center text-md tracking-wider p-2">
+                      {cur.paymentMethod}
+                    </td>
+                    <td
+                      className={`${
+                        cur.paymentMethod === "onlinePay" && "text-green-600"
+                      }  font-extrabold text-center text-lg tracking-wider p-2`}
                     >
-                      {cur.status}
-                    </option>
-                    <option value="shipping" className="font-bold">
-                      Shipping
-                    </option>
-                    <option value="complete" className="font-bold">
-                      Complete
-                    </option>
-                  </select>
-                </td>
-                <td className="font-semibold text-center text-md tracking-wider p-2">
-                  {cur.paymentMethod}
-                </td>
-                <td className={`${cur.paymentMethod === 'onlinePay'&& 'text-green-600'}  font-extrabold text-center text-lg tracking-wider p-2`}>
-                  {cur.totalPrice}.00
-                </td>
-              </tr>
-            ))}            
-          </thead>
-        </table>
-      </div>
+                      {cur.totalPrice}.00
+                    </td>
+                  </tr>
+                ))}
+              </thead>
+            </table>
+          </div>
+        </>
+      )}
+
       {showProductList.status && (
         <ProductList
           setShowProductList={setShowProductList}
@@ -229,37 +268,34 @@ const ProductList = ({ setShowProductList, showProductList }) => {
             Close
           </h2>
           {/* loop here */}
-          {
-            showProductList.productIds?.map((cur, id) => (
-              
-          <div key={id} className="flex justify-evenly items-center my-5">
-            <div className="flex-1 flex justify-start space-x-3 items-center">
-              <img
-                src={cur.productImage}
-                alt="product Image"
-                className="w-[70px] h-[60px] rounded-full object-cover object-top"
-              />
-              <h2 className="font-semibold text-xl tracking-wider">
-                {cur.productName} - {cur.size}
-              </h2>
-            </div>
-            <div className="flex-1 flex justify-evenly items-center">
-              <div className="flex justify-center items-center space-x-3">
-                <h2 className="text-lg font-bold tracking-wider">Quantity -</h2>
-                    <h2 className="text-xl font-extrabold">{cur.quantity}</h2>
-              </div>
-              <div className="flex justify-center items-center space-x-3">
-                <h2 className="text-lg font-bold tracking-wider">
-                  Price <CurrencyRupeeIcon className="text-base" /> -
+          {showProductList.productIds?.map((cur, id) => (
+            <div key={id} className="flex justify-evenly items-center my-5">
+              <div className="flex-1 flex justify-start space-x-3 items-center">
+                <img
+                  src={cur.productImage}
+                  alt="product Image"
+                  className="w-[70px] h-[60px] rounded-full object-cover object-top"
+                />
+                <h2 className="font-semibold text-xl tracking-wider">
+                  {cur.productName} - {cur.size}
                 </h2>
-                    <h2 className={` text-xl font-extrabold`}>{cur.total}.00</h2>
+              </div>
+              <div className="flex-1 flex justify-evenly items-center">
+                <div className="flex justify-center items-center space-x-3">
+                  <h2 className="text-lg font-bold tracking-wider">
+                    Quantity -
+                  </h2>
+                  <h2 className="text-xl font-extrabold">{cur.quantity}</h2>
+                </div>
+                <div className="flex justify-center items-center space-x-3">
+                  <h2 className="text-lg font-bold tracking-wider">
+                    Price <CurrencyRupeeIcon className="text-base" /> -
+                  </h2>
+                  <h2 className={` text-xl font-extrabold`}>{cur.total}.00</h2>
+                </div>
               </div>
             </div>
-          </div>
-            ))
-          }
-
-
+          ))}
         </div>
       </div>
     </>
