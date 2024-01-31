@@ -15,6 +15,8 @@ import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 
 import { loginSuccess } from "../Redux/userSlice";
 import { handleError } from "../utils/Error&SuccessHandler";
+import { loadingComplete, loadingError, loadingStart } from "../Redux/loadingSlice";
+
 // import CircularProgress from "@mui/material/CircularProgress";
 
 const Cart = dynamic(() => import("./Cart"), { ssr: false });
@@ -65,14 +67,15 @@ const NavBar = ({ user }) => {
       }
       return;
     }
-    
+
     // when user is loggin but user does not have the authority to visit dashboard page....
 
-    if (adminDashbord) {
-      if (user.role !== "admin" && user.role !== 'manager') {
+    if (adminDashbord) {      
+      if (user.role !== "admin" && user.role !== 'manager') {       
         router.push('/');
         toast.error('You are not authorised to visit "dashboard" page !')
       }
+      
     }
 
   }, []);

@@ -14,7 +14,7 @@ const OrderId = () => {
   const User = useSelector((state) => state.user.userInfo);
   const subTotal = useSelector((state) => state.cart.subTotal);
 
-  const productIds = cart?.map((cur, id) => cur.id); // sperating the product id's from the cart. 
+  // const productIds = cart?.map((cur, id) => cur.id); // sperating the product id's from the cart. 
 
   
 
@@ -34,7 +34,7 @@ const OrderId = () => {
         try {
           const placeOrder = await axios.post("/api/oders", {
             oder: values,
-            productIds,
+            productIds:cart,
             userId: User._id,
             subTotal,
           });

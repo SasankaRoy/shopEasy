@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import axios from "axios";
+import {useSelector} from 'react-redux'
 
 let socket;
 
 const Dashboard = ({ oders, error }) => {
-  console.log(oders, "the oders in the dashboard UI", error);
+  // console.log(oders, "the oders in the dashboard UI", error);
 
   const [message, setMessage] = useState("");
   const [allSMS, setAllSMS] = useState([]);
@@ -16,6 +17,8 @@ const Dashboard = ({ oders, error }) => {
     bg: "#fca5a533",
     color: "red",
   });
+  const isLoading = useSelector(state => state.loading);
+
 
   const [showProductList, setShowProductList] = useState({
     status: false,
@@ -189,7 +192,7 @@ date. */
                 <td className="font-semibold text-center text-md tracking-wider p-2">
                   {cur.paymentMethod}
                 </td>
-                <td className="font-extrabold text-center text-lg tracking-wider p-2">
+                <td className={`${cur.paymentMethod === 'onlinePay'&& 'text-green-600'}  font-extrabold text-center text-lg tracking-wider p-2`}>
                   {cur.totalPrice}.00
                 </td>
               </tr>
@@ -210,19 +213,6 @@ date. */
 export default Dashboard;
 
 const ProductList = ({ setShowProductList, showProductList }) => {
-  const [oderLists, setOderLists] = useState([]);
-
-  showProductList.productIds?.forEach(async (element) => {
-    try {
-      const fetchProduct = await axios.get(`/api/products?pid=${element}`);
-      if (fetchProduct.status === 200) {               
-        console.log(fetchProduct.data, 'hello') 
-      }
-        
-    } catch (error) {
-      console.log(error,'in the foreach loop api call')
-    }
-  });
   return (
     <>
       <div className="fixed z-50 w-full h-screen backdrop-blur-sm bg-[#000]/40 top-0 flex justify-center items-center">
@@ -239,80 +229,37 @@ const ProductList = ({ setShowProductList, showProductList }) => {
             Close
           </h2>
           {/* loop here */}
-          <div className="flex justify-evenly items-center my-5">
-            <div className="flex-1 flex justify-evenly items-center">
+          {
+            showProductList.productIds?.map((cur, id) => (
+              
+          <div key={id} className="flex justify-evenly items-center my-5">
+            <div className="flex-1 flex justify-start space-x-3 items-center">
               <img
-                src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702224261/yepkj0spq935vctlzdyj.jpg"
+                src={cur.productImage}
                 alt="product Image"
-                className="w-[60px] h-[60px] rounded-full object-cover object-top"
+                className="w-[70px] h-[60px] rounded-full object-cover object-top"
               />
               <h2 className="font-semibold text-xl tracking-wider">
-                The product Name
+                {cur.productName} - {cur.size}
               </h2>
             </div>
             <div className="flex-1 flex justify-evenly items-center">
               <div className="flex justify-center items-center space-x-3">
                 <h2 className="text-lg font-bold tracking-wider">Quantity -</h2>
-                <h2 className="text-xl font-extrabold">5</h2>
+                    <h2 className="text-xl font-extrabold">{cur.quantity}</h2>
               </div>
               <div className="flex justify-center items-center space-x-3">
                 <h2 className="text-lg font-bold tracking-wider">
                   Price <CurrencyRupeeIcon className="text-base" /> -
                 </h2>
-                <h2 className="text-xl font-extrabold">2000</h2>
+                    <h2 className={` text-xl font-extrabold`}>{cur.total}.00</h2>
               </div>
             </div>
           </div>
+            ))
+          }
 
-          <div className="flex justify-evenly items-center my-5">
-            <div className="flex-1 flex justify-evenly items-center">
-              <img
-                src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702224261/yepkj0spq935vctlzdyj.jpg"
-                alt="product Image"
-                className="w-[60px] h-[60px] rounded-full object-cover object-top"
-              />
-              <h2 className="font-semibold text-xl tracking-wider">
-                The product Name
-              </h2>
-            </div>
-            <div className="flex-1 flex justify-evenly items-center">
-              <div className="flex justify-center items-center space-x-3">
-                <h2 className="text-lg font-bold tracking-wider">Quantity -</h2>
-                <h2 className="text-xl font-extrabold">5</h2>
-              </div>
-              <div className="flex justify-center items-center space-x-3">
-                <h2 className="text-lg font-bold tracking-wider">
-                  Price <CurrencyRupeeIcon className="text-base" /> -
-                </h2>
-                <h2 className="text-xl font-extrabold">2000</h2>
-              </div>
-            </div>
-          </div>
 
-          <div className="flex justify-evenly items-center my-5">
-            <div className="flex-1 flex justify-evenly items-center">
-              <img
-                src="https://res.cloudinary.com/dcgmbgmyk/image/upload/v1702224261/yepkj0spq935vctlzdyj.jpg"
-                alt="product Image"
-                className="w-[60px] h-[60px] rounded-full object-cover object-top"
-              />
-              <h2 className="font-semibold text-xl tracking-wider">
-                The product Name
-              </h2>
-            </div>
-            <div className="flex-1 flex justify-evenly items-center">
-              <div className="flex justify-center items-center space-x-3">
-                <h2 className="text-lg font-bold tracking-wider">Quantity -</h2>
-                <h2 className="text-xl font-extrabold">5</h2>
-              </div>
-              <div className="flex justify-center items-center space-x-3">
-                <h2 className="text-lg font-bold tracking-wider">
-                  Price <CurrencyRupeeIcon className="text-base" /> -
-                </h2>
-                <h2 className="text-xl font-extrabold">2000</h2>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>
