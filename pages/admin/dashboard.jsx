@@ -47,7 +47,7 @@ const Dashboard = ({ oders, error }) => {
     });
   };
   useEffect(() => {
-    makeSocketConnection();
+    // makeSocketConnection();
   }, []);
 
   /* The code below is a JavaScript function that takes a date as input and formats it in the
