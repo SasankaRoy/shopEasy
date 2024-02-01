@@ -53,12 +53,14 @@ export const Hero = () => {
 
             <div className="flex justify-evenly items-center w-[95%] lg:w-[50%] mt-4">
               <button
+                name="shop-Men"
                 onClick={handleOnClick}
                 className="uppercase font-semibold tracking-wider text-lg lg:text-xl px-6 py-3 rounded text-[#212a2f] bg-[#ffffff] hover:bg-[#212a2f] hover:text-[#ffffff] transition-all duration-150 ease-in"
               >
                 Shop Men
               </button>
               <button
+                name="shop-Women"
                 onClick={handleOnClick}
                 className="uppercase font-semibold tracking-wider text-lg lg:text-xl px-6 py-3 rounded text-[#212a2f] bg-[#ffffff] hover:bg-[#212a2f] hover:text-[#ffffff] transition-all duration-150 ease-in"
               >

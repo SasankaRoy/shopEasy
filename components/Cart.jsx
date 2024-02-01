@@ -98,7 +98,7 @@ const Cart = ({ setShowCart }) => {
                   <h1 className="text-2xl font-semibold tracking-wider">
                     Your cart is emply
                   </h1>
-                  <button className="bg-[#212a2f] border border-[#212a2f] w-full text-white py-2 text-2xl rounded-md font-semibold tracking-wide hover:tracking-wider hover:text-[#212a2f] hover:bg-white transition-all duration-200 ease-linear">
+                  <button name="Shop-Now" className="bg-[#212a2f] border border-[#212a2f] w-full text-white py-2 text-2xl rounded-md font-semibold tracking-wide hover:tracking-wider hover:text-[#212a2f] hover:bg-white transition-all duration-200 ease-linear">
                     Shop Now
                   </button>
                 </div>
@@ -225,7 +225,8 @@ const Cart = ({ setShowCart }) => {
                       {cart.subTotal < 1000 ? 300 : "Free"}
                     </span>
                   </div>
-                  <button
+                    <button
+                      name="proceed-to-checkout"
                       onClick={() => {
                         router.push(`/checkout/${User?._id}&o=${productIds[0]}&n=${productIds[1]}`);
                         setShowCart(false);
@@ -250,7 +251,7 @@ const Cart = ({ setShowCart }) => {
               <h1 className="text-2xl text-center font-semibold tracking-wider">
                 Your session is expired ! Please
               </h1>
-              <button
+              <button 
                 onClick={() => router.push("/auth/login")}
                 className="bg-[#212a2f] border border-[#212a2f]
               w-full text-white py-2 text-2xl rounded-md font-semibold

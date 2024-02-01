@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Provider store={Store}>
-        {pathname !== "/auth/login" && pathname !== "/auth/register" && (
+        {pathname !== "/auth/login" && pathname !== "/auth/register"   && (
           <>
             <Announcement />
             <NavBar user={pageProps.user} />
@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }) {
 
         <Component {...pageProps} />
 
-        {pathname !== "/auth/login" && pathname !== "/auth/register" && (
+        {pathname !== "/auth/login" && pathname !== "/auth/register" && pathname !== '/404' && (
           <>
             <NewsLetter />
             <Footer />    
