@@ -7,13 +7,32 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { loadingComplete, loadingStart } from "../../Redux/loadingSlice";
 import { CircularProgress } from "@mui/material";
+import { toast } from "react-toastify";
 
 let socket;
 
-const Dashboard = ({ oders, error }) => {
+const Dashboard = () => {
+  const [oders, setOders] = useState([]);
   const user = useSelector((state) => state.user.userInfo);
   const isLoading = useSelector((state) => state.loading);
   const dispatch = useDispatch();
+  const [updater, setUpdater] = useState(0);
+  const [showProductList, setShowProductList] = useState({
+    status: false,
+    productIds: [],
+  });
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  const formateDate = (formateTheDate) => {
+    const createdDate = new Date(formateTheDate);
+    const readableDate = new Date(createdDate.getTime());
+    const formattedDate = readableDate.toLocaleString("en-US", options);
+    return formattedDate;
+  };
+
 
 /* The code below is using the `useEffect` hook in a React component. It is dispatching two actions:
 `loadingStart` and `loadingComplete` for showing the loading indicator on the project page. */
@@ -26,51 +45,26 @@ const Dashboard = ({ oders, error }) => {
           forWhichPorpose: "Authority",
         },
       })
-    );
-    // console.log(user)
+    );    
     setTimeout(() => {
       dispatch(loadingComplete());
     }, 2000);
   }, [user]);
 
-  
 
-  const [message, setMessage] = useState("");
-  const [allSMS, setAllSMS] = useState([]);
-  const [selectBg, setSelectBg] = useState({
-    bg: "#fca5a533",
-    color: "red",
-  });
-
-  const [showProductList, setShowProductList] = useState({
-    status: false,
-    productIds: [],
-  });
 
   // making the the socket connection when the page is loaded...
 
   const makeSocketConnection = async () => {
     try {
       socket = io("http://localhost:5000/");
-
       socket.on("connect", () => {
         console.log("connected to the socket server!");
       });
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleChange = (e) => {
-    setMessage(e.target.value);
-  };
-  const handleSubmit = () => {
-    socket.emit("test__SocketServer", message);
-    socket.on("test__messageSendBack", (data) => {
-      setAllSMS([...allSMS, data.message]);
-      console.log(data.message, "from the server");
-    });
-  };
+  }; 
   useEffect(() => {
     // makeSocketConnection();
   }, []);
@@ -78,48 +72,39 @@ const Dashboard = ({ oders, error }) => {
   /* The code below is a JavaScript function that takes a date as input and formats it in the
     "MM/DD/YYYY" format. It uses the `toLocaleString` method with the specified options to format the
     date. */
-  
-  const options = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  };
-  const formateDate = (formateTheDate) => {
-    const createdDate = new Date(formateTheDate);
-    const readableDate = new Date(createdDate.getTime());
-    const formattedDate = readableDate.toLocaleString("en-US", options);
 
-    return formattedDate;
+  const handleChangeSelection = async(e,id) => {   
+    const updateOderStatus = await axios.put('/api/oders', { productId: id, oderStatus: e.target.value });
+    toast.success(updateOderStatus.data.message);
+    setUpdater(updater + 1);
   };
 
-  const handleChangeSelection = (e) => {
-    console.log(e);
-    // setMessage(e.target.value);
-    switch (e.target.value) {
-      case "processing":
-        setSelectBg({ bg: "#fde04733", color: "#5b4c0099" });
-        socket.emit("test__SocketServer", e.target.value);
-        socket.on("test__messageSendBack", (data) => {
-          setAllSMS([...allSMS, data.message]);
-          console.log(data.message, "from the server");
-        });
-        break;
-
-      case "shipping":
-        setSelectBg({ bg: "#fdba7433", color: "#88460099" });
-        // setSelectBg('yellow')
-        break;
-
-      case "complete":
-        setSelectBg({ bg: "#86efac33", color: "green" });
-        // setSelectBg('orange')
-        break;
-
-      default:
-        setSelectBg({ bg: "#fca5a533", color: "red" });
-        break;
+  const fetchOders = async () => {
+    try {
+      const reqOrders = await axios.get('/api/oders');      
+      setOders(reqOrders.data.orderList);
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }
+
+  const checkOderStatus = (status) => {
+    switch (status) { 
+      case "pending":        
+        return{ bg: "#fca5a533", color: "red" }        
+      case "shipping":
+        return{ bg: "#fdba7433", color: "#88460099" }
+      case "complete":
+        return{ bg: "#86efac33", color: "green" }
+      default:
+        return{ bg: "#fca5a533", color: "red" }
+       
+    }
+  }
+
+  useEffect(() => {
+    fetchOders();
+  }, [updater]);
   return (
     <>
       <Head>
@@ -141,9 +126,9 @@ const Dashboard = ({ oders, error }) => {
       ) : (
         <>
           <h2 className="text-center font-semibold text-3xl capitalize underline underline-offset-8 tracking-wider my-2">
-            List of Orders {allSMS}
+            List of Orders 
           </h2>
-          <div class="w-[90%] mx-auto my-3 p-2 overflow-x-auto">
+          <div className="w-[90%] mx-auto my-3 p-2 overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr>
@@ -195,14 +180,14 @@ const Dashboard = ({ oders, error }) => {
                     </td>
                     <td className="font-semibold text-center text-md tracking-wider p-2">
                       <select
-                        onChange={handleChangeSelection}
+                        onChange={(e)=>handleChangeSelection(e,cur._id)}
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
                         className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
                         style={{
-                          background: selectBg.bg,
-                          color: selectBg.color,
+                          background: checkOderStatus(cur.status).bg,
+                          color: checkOderStatus(cur.status).color,
                           fontWeight: 700,
                         }}
                       >
@@ -212,6 +197,9 @@ const Dashboard = ({ oders, error }) => {
                           className="font-bold capitalize"
                         >
                           {cur.status}
+                        </option>
+                        <option value="pending" className="font-bold">
+                        Pending
                         </option>
                         <option value="shipping" className="font-bold">
                           Shipping
@@ -302,54 +290,58 @@ const ProductList = ({ setShowProductList, showProductList }) => {
   );
 };
 
-export const getServerSideProps = async (context) => {
-  try {
-    /* The code below is checking the host of the request and based on that, it makes a GET request to
-   either the development or production domain to fetch a list of orders. If the request is
-   successful, it returns the orders data as props. If the request fails with a status code of 400,
-   it returns an error message as props. */
+// export const getServerSideProps = async (context) => {
+//   try {
+//     console.log('running after the useEffect() getServerSideProps()')
 
-    if (context.req.headers.host === "localhost:3000") {
-      const reqAllOders = await axios.get(
-        `${process.env.DEVELOPMENT_DOMAIN}/api/oders`
-      );
-      if (reqAllOders.status === 400) {
-        return {
-          props: {
-            error: "the error which while come form the server side.",
-          },
-        };
-      }
 
-      return {
-        props: {
-          oders: reqAllOders.data.orderList,
-        },
-      };
-    } else {
-      const reqAllOders = await axios.get(
-        `${process.env.PRODUCTION_DOMAIN}/api/oders`
-      );
-      if (reqAllOders.status === 400) {
-        return {
-          props: {
-            error: "the error which while come form the server side.",
-          },
-        };
-      }
 
-      return {
-        props: {
-          oders: reqAllOders.data.orderList,
-        },
-      };
-    }
-  } catch (error) {
-    console.log("Error", error);
-    return {
-      props: {
-        error,
-      },
-    };
-  }
-};
+//     /* The code below is checking the host of the request and based on that, it makes a GET request to
+//    either the development or production domain to fetch a list of orders. If the request is
+//    successful, it returns the orders data as props. If the request fails with a status code of 400,
+//    it returns an error message as props. */
+
+//     if (context.req.headers.host === "localhost:3000") {
+//       const reqAllOders = await axios.get(
+//         `${process.env.DEVELOPMENT_DOMAIN}/api/oders`
+//       );
+//       if (reqAllOders.status === 400) {
+//         return {
+//           props: {
+//             error: "the error which while come form the server side.",
+//           },
+//         };
+//       }
+
+//       return {
+//         props: {
+//           oders: reqAllOders.data.orderList,
+//         },
+//       };
+//     } else {
+//       const reqAllOders = await axios.get(
+//         `${process.env.PRODUCTION_DOMAIN}/api/oders`
+//       );
+//       if (reqAllOders.status === 400) {
+//         return {
+//           props: {
+//             error: "the error which while come form the server side.",
+//           },
+//         };
+//       }
+
+//       return {
+//         props: {
+//           oders: reqAllOders.data.orderList,
+//         },
+//       };
+//     }
+//   } catch (error) {
+//     console.log("Error", error);
+//     return {
+//       props: {
+//         error,
+//       },
+//     };
+//   }
+// };

@@ -1,5 +1,6 @@
 import connectDB from "../../utils/connectDb";
 import Oder from '../../Models/oder'
+import oder from "../../Models/oder";
 
 const handleGetOders = async (req, res) => {
 
@@ -44,6 +45,7 @@ const handlePostOders = async (req, res) => {
 
         console.log(oderSaved, 'oderSaved successfuly');
 
+        res.setHeader('Server', 'Custom');
         res.status(200).json({ success: oderSaved });
 
 
@@ -57,7 +59,16 @@ const handlePostOders = async (req, res) => {
 
 }
 
-const handlePutOders = async (req, res) => { }
+const handlePutOders = async (req, res) => {
+    try {
+        const { productId,oderStatus } = req.body;
+        const updateOderStatus = await oder.findByIdAndUpdate({ _id: productId }, { status: oderStatus });
+        res.status(200).json({ message: 'Oder status updated' });       
+        
+    } catch (error) {
+        console.log(error);
+    }
+ }
 
 const handleDeleteOders = async (req, res) => { }
 
