@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import axios from "axios";
 
 const Trackmyorder = () => {
-  const userInfo = useSelector((state) => state.user);
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const fetchOders = async () => {
+    try {
+      if (userInfo._id) {
+        console.log(userInfo._id);
+        const getAllOders = await axios.get(`/api/oders?uId=${userInfo._id}`);
+        console.log(userInfo._id);
+        console.log(getAllOders.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchOders();
+  }, [userInfo]);
+
   // if (typeof window !== "undefined") {
   //   if (window.location.reload) {
   //     console.log("Reloading");
@@ -117,3 +135,19 @@ const Trackmyorder = () => {
   );
 };
 export default Trackmyorder;
+
+
+export const getServerSideProps = async( ctx ) => {
+  try {
+    
+    console.log(ctx.query,'in the server side props in trackmyorder page');
+
+    return {
+      props: {
+        oders:"",
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}

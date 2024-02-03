@@ -66,18 +66,24 @@ const Dashboard = () => {
     }
   }; 
   useEffect(() => {
-    // makeSocketConnection();
+    makeSocketConnection();
   }, []);
 
   /* The code below is a JavaScript function that takes a date as input and formats it in the
     "MM/DD/YYYY" format. It uses the `toLocaleString` method with the specified options to format the
     date. */
 
-  const handleChangeSelection = async(e,id) => {   
+  const handleChangeSelection = async (e, id) => { 
+    
+    socket.emit("CHANGE__STATUS", {
+      productId: id,
+      oderStatus: e.target.value,
+    });
+
     const updateOderStatus = await axios.put('/api/oders', { productId: id, oderStatus: e.target.value });
     toast.success(updateOderStatus.data.message);
     setUpdater(updater + 1);
-  };
+  }; 
 
   const fetchOders = async () => {
     try {
@@ -93,7 +99,7 @@ const Dashboard = () => {
       case "pending":        
         return{ bg: "#fca5a533", color: "red" }        
       case "shipping":
-        return{ bg: "#fdba7433", color: "#88460099" }
+        return { bg: "#F1E399", color: "#795316" };
       case "complete":
         return{ bg: "#86efac33", color: "green" }
       default:
@@ -126,7 +132,7 @@ const Dashboard = () => {
       ) : (
         <>
           <h2 className="text-center font-semibold text-3xl capitalize underline underline-offset-8 tracking-wider my-2">
-            List of Orders 
+            List of Orders
           </h2>
           <div className="w-[90%] mx-auto my-3 p-2 overflow-x-auto">
             <table className="w-full">
@@ -180,11 +186,11 @@ const Dashboard = () => {
                     </td>
                     <td className="font-semibold text-center text-md tracking-wider p-2">
                       <select
-                        onChange={(e)=>handleChangeSelection(e,cur._id)}
+                        onChange={(e) => handleChangeSelection(e, cur._id)}
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
-                        className="w-full px-2 py-1 font-bold border-none outline-none  tracking-wider rounded-md  shadow-sm text-center statusSelect"
+                        className="w-full px-2 py-1 font-semibold capitalize border-none outline-none tracking-wider rounded-md  shadow-sm text-center statusSelect"
                         style={{
                           background: checkOderStatus(cur.status).bg,
                           color: checkOderStatus(cur.status).color,
@@ -199,7 +205,7 @@ const Dashboard = () => {
                           {cur.status}
                         </option>
                         <option value="pending" className="font-bold">
-                        Pending
+                          Pending
                         </option>
                         <option value="shipping" className="font-bold">
                           Shipping
