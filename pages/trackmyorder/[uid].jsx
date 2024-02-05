@@ -6,24 +6,26 @@ import { useSelector } from "react-redux";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import axios from "axios";
 
-const Trackmyorder = () => {
-  const userInfo = useSelector((state) => state.user.userInfo);
-  const fetchOders = async () => {
-    try {
-      if (userInfo._id) {
-        console.log(userInfo._id);
-        const getAllOders = await axios.get(`/api/oders?uId=${userInfo._id}`);
-        console.log(userInfo._id);
-        console.log(getAllOders.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+const Trackmyorder = ({ orders }) => {
+  console.log(orders, "in the trackmyorder client");
 
-  useEffect(() => {
-    fetchOders();
-  }, [userInfo]);
+  // const userInfo = useSelector((state) => state.user.userInfo);
+  // const fetchOders = async () => {
+  //   try {
+  //     if (userInfo._id) {
+  //       console.log(userInfo._id);
+  //       const getAllOders = await axios.get(`/api/oders?uId=${userInfo._id}`);
+  //       console.log(userInfo._id);
+  //       console.log(getAllOders.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   fetchOders();
+  // }, [userInfo]);
 
   // if (typeof window !== "undefined") {
   //   if (window.location.reload) {
@@ -41,14 +43,14 @@ const Trackmyorder = () => {
           <h1 className="text-xl font-semibold tracking-wider capitalize">
             my order&apos;s
           </h1>
-          {["1", "2"].map((cur, id) => (
+          {orders.itemList?.map((cur, id) => (
             <div
               key={id}
               className="flex flex-col lg:flex-row justify-start items-start space-y-3 lg:space-y-0 w-full h-full lg:h-[30%]  p-1 mt-6"
             >
               <div className="relative w-[90%] mx-auto lg:w-[40%] h-[40%] lg:h-full">
                 <Image
-                  src="/bg1.jpg"
+                  src={cur.productImage}
                   alt="productImage"
                   fill
                   loading="lazy"
@@ -137,17 +139,31 @@ const Trackmyorder = () => {
 export default Trackmyorder;
 
 
-export const getServerSideProps = async( ctx ) => {
-  try {
-    
-    console.log(ctx.query,'in the server side props in trackmyorder page');
 
-    return {
-      props: {
-        oders:"",
-      }
+
+
+
+export const getServerSideProps = async (ctx) => {
+  try {
+    const { uid } = ctx.query;    
+
+    const getAllOrders = await axios.get(`http://localhost:3000/api/oders?uId=${uid}`);    
+
+    if (getAllOrders.status === 200) {
+      return {
+        props: {
+          orders: getAllOrders.data?.orderList,
+        },
+      };
+    } else {
+      return {
+        props: {
+          error: "some thing went wrong",
+        },
+      };
     }
-  } catch (error) {
+     
+  } catch (error) {  
     console.log(error);
   }
-}
+};

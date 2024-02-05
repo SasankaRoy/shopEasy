@@ -12,10 +12,9 @@ const handleGetOders = async (req, res) => {
       //  for retrieving all oders for the single user.
       
     if (uId) {
-      const getOderForSingleUser = await Oder.find({ userId: uId });
-      console.log(uId,getOderForSingleUser);
-        if (getOderForSingleUser.length >= 1) {
-          console.log(getOderForSingleUser)
+      const getOderForSingleUser = await Oder.find({ userId: uId }).sort({ createdAt: -1 });
+      console.log(getOderForSingleUser,'sort in single Oder server')
+        if (getOderForSingleUser.length >= 1) { 
         Oders = getOderForSingleUser;
       } else {
         res
@@ -23,23 +22,24 @@ const handleGetOders = async (req, res) => {
           .json({
             error: 'Sorry! It"s seem that you don"t have any Oders to track',
           });
+          return;
         }
         
     } else {
       // This code is handling the GET request
       // for retrieving all orders for the admin dashbord.
 
-      const getAllOders = await Oder.find();
+      const getAllOders = await Oder.find().sort({createdAt:-1});      
       if (getAllOders.length >= 1) {
         Oders = getAllOders;
       } else {
         res.status(404).json({ error: "Sorry! there are no orders yet" });
+        return
       }
     }
-    console.log(Oders,'the order in the Order server');
+   
     res.status(200).json({ orderList: Oders });
-
-    // res.status(404).json({ noOder: 'there are no orders yet !' });
+    
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
@@ -72,8 +72,7 @@ const handlePostOders = async (req, res) => {
 
     res.setHeader("Server", "Custom");
     res.status(200).json({ success: oderSaved });
-
-    // console.log(oder, productIds, userId, subTotal);
+    
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error });

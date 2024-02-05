@@ -4,6 +4,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { shippingValidation } from "../../utils/formValidation";
 import { useSelector } from "react-redux";
+import {useRouter} from 'next/router'
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { toast } from "react-toastify";
@@ -13,6 +14,7 @@ const OrderId = () => {
   const cart = useSelector((state) => state.cart.cart);
   const User = useSelector((state) => state.user.userInfo);
   const subTotal = useSelector((state) => state.cart.subTotal);
+  const router = useRouter();
 
   // const productIds = cart?.map((cur, id) => cur.id); // sperating the product id's from the cart. 
 
@@ -42,12 +44,13 @@ const OrderId = () => {
           if (placeOrder.status === 500) {
             // notify the error to the user.....
             toast.error('sometime went wrong while placing order. Please try again');
-
+            router.push(`/trackmyorder/${User._id}`)
             return;
           }
 
           // notify the user if every thing go's right...
           toast.success("your oder has been placed successfully");
+          router.push(`/trackmyorder/${User._id}`);
 
           // redirect the user to the oder page  ....
           // (is pending now..create the oder page for the user first)...
