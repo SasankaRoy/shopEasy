@@ -9,7 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemsQuantity } from "../../Redux/cartSlice";
 import { handleError } from "../../utils/Error&SuccessHandler";
 import { colorCodes } from "../../utils/getColorCodes";
-import {ProductDetails} from "../../components/ProductDetails";
+
+import ProductDetails from '../../components/ProductDetails';
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import FAQ from "../../components/FAQ";
@@ -18,7 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-// import { SimilarItem } from "../../components/SimilarItem";
+
 
 
 const ProductImageView = dynamic(() =>

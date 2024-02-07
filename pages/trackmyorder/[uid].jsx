@@ -4,10 +4,11 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { handleError } from "../../utils/Error&SuccessHandler";
 
 const Trackmyorder = ({ orders }) => {
-  console.log(orders, "in the trackmyorder client");
+  // console.log(orders, "in the trackmyorder client");
 
   // const userInfo = useSelector((state) => state.user.userInfo);
   // const fetchOders = async () => {
@@ -43,55 +44,55 @@ const Trackmyorder = ({ orders }) => {
           <h1 className="text-xl font-semibold tracking-wider capitalize">
             my order&apos;s
           </h1>
-          {orders.itemList?.map((cur, id) => (
-            <div
-              key={id}
-              className="flex flex-col lg:flex-row justify-start items-start space-y-3 lg:space-y-0 w-full h-full lg:h-[30%]  p-1 mt-6"
-            >
-              <div className="relative w-[90%] mx-auto lg:w-[40%] h-[40%] lg:h-full">
-                <Image
-                  src={cur.productImage}
-                  alt="productImage"
-                  fill
-                  loading="lazy"
-                  className="object-cover rounded-md shadow-lg"
-                />
-              </div>
-              <div className="w-full h-[50%] lg:w-[50%]">
-                <div>
-                  <h1 className="font-bold text-2xl capitalize tracking-wider">
-                    product name
-                  </h1>
-                  <p className="text-sm my-1">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Eveniet suscipit inventore at nulla eos commodi nesciunt
-                    omnis, sapiente nemo in illum vel dolorum, reiciendis
-                    exercitationem vitae ipsum est voluptatibus perferendis?
-                  </p>
-                  <h2 className="font-extrabold text-xl">
-                    <CurrencyRupeeIcon /> 2000.0
-                  </h2>
+          {orders?.map((cur, id) => (
+            <>
+              {cur.itemList.map((cur, ids) => (
+                <div
+                  key={ids}
+                  className="flex flex-col lg:flex-row justify-start items-start space-y-3 lg:space-y-0 w-full h-full lg:h-[30%]  p-1 mt-6"
+                >
+                  <div className="relative w-[90%] mx-auto lg:w-[40%] h-[40%] lg:h-full">
+                    <Image
+                      src={cur.productImage}
+                      alt="productImage"
+                      fill
+                      loading="lazy"
+                      className="object-cover object-top rounded-md shadow-lg"
+                    />
+                  </div>
+                  <div className="w-full h-[50%] lg:w-[50%]">
+                    <div>
+                      <h1 className="font-bold text-2xl capitalize tracking-wider">
+                        {cur.productName}
+                      </h1>
+
+                      <div className="flex justify-around items-center my-5">
+                        <div className="flex justify-center space-x-3 items-center">
+                          <h3 className="text-lg font-semibold">Quantity -</h3>
+                          <h3 className="text-lg font-semibold">
+                            {cur.quantity}
+                          </h3>
+                        </div>
+                        <div className="flex justify-center items-center space-x-3">
+                          <h3 className="text-lg font-semibold">Price -</h3>
+                          <h2 className="font-extrabold text-xl">
+                            <CurrencyRupeeIcon /> {cur.total}.0
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-around items-center space-x-5 mt-3">
+                      <button className="text-lg font-bold tracking-wider px-5 py-2 rounded-md border-pink-600 bg-pink-600 text-white shadow-lg hover:text-pink-600 hover:bg-white transition-all duration-150 ease-linear">
+                        Cancel
+                      </button>
+                      <button className="text-lg font-bold tracking-wider px-5 py-2 rounded-md bg-[#212a2f] text-white shadow-lg  hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-linear">
+                        Track status
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-around items-center space-x-5 mt-3">
-                  <button
-                    className="text-lg font-bold tracking-wider
-                 px-5 py-2 rounded-md border-pink-600 bg-pink-600 text-white
-                 shadow-lg hover:text-pink-600 hover:bg-white
-                 transition-all duration-150 ease-linear"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="text-lg font-bold tracking-wider
-               px-5 py-2 rounded-md bg-[#212a2f] text-white
-               shadow-lg  hover:text-[#212a2f] hover:bg-white
-               transition-all duration-150 ease-linear"
-                  >
-                    Track status
-                  </button>
-                </div>
-              </div>
-            </div>
+              ))}
+            </>
           ))}
         </div>
         <div className="lg:h-full h-[30%]  w-full lg:w-[30%] py-3 px-2">
@@ -138,32 +139,40 @@ const Trackmyorder = ({ orders }) => {
 };
 export default Trackmyorder;
 
-
-
-
-
-
 export const getServerSideProps = async (ctx) => {
   try {
-    const { uid } = ctx.query;    
+    const { uid } = ctx.query;
 
-    const getAllOrders = await axios.get(`http://localhost:3000/api/oders?uId=${uid}`);    
+    const getAllOrders = await axios.get(
+      `http://localhost:3000/api/oders?uId=${uid}`
+    );
+
+    console.log(getAllOrders.data.orderList, "the order");
 
     if (getAllOrders.status === 200) {
       return {
         props: {
           orders: getAllOrders.data?.orderList,
+          error: null,
         },
       };
     } else {
+      console.lov;
       return {
         props: {
           error: "some thing went wrong",
+          orders: null,
         },
       };
     }
-     
-  } catch (error) {  
+  } catch (error) {
     console.log(error);
+
+    return {
+      props: {
+        error: handleError(error),
+        orders: [],
+      },
+    };
   }
 };

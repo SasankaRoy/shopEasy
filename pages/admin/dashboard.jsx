@@ -102,8 +102,8 @@ const Dashboard = () => {
         return { bg: "#F1E399", color: "#795316" };
       case "complete":
         return{ bg: "#86efac33", color: "green" }
-      default:
-        return{ bg: "#fca5a533", color: "red" }
+      // default:
+      //   return{ bg: "#fca5a533", color: "red" }
        
     }
   }
@@ -114,7 +114,7 @@ const Dashboard = () => {
 
 
 
-  function stringToColor(string) {
+  const stringToColor = (string)=> {
     let hash = 0;
     let i;
   
@@ -134,7 +134,7 @@ const Dashboard = () => {
     return color;
   }
   
-  function stringAvatar(name) {
+  const stringAvatar = (name)=> {
     return {
       sx: {
         bgcolor: stringToColor(name),

@@ -13,8 +13,8 @@ const handleGetOders = async (req, res) => {
       
     if (uId) {
       const getOderForSingleUser = await Oder.find({ userId: uId }).sort({ createdAt: -1 });
-      console.log(getOderForSingleUser,'sort in single Oder server')
-        if (getOderForSingleUser.length >= 1) { 
+      
+      if (getOderForSingleUser.length >= 1) {          
         Oders = getOderForSingleUser;
       } else {
         res
