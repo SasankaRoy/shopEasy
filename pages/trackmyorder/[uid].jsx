@@ -1,13 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import axios, { AxiosError } from "axios";
 import { handleError } from "../../utils/Error&SuccessHandler";
+import { toast } from "react-toastify";
+import { io } from "socket.io-client";
+import { useRouter } from "next/router";
+
+let sockets;
 
 const Trackmyorder = ({ orders }) => {
+  console.log(orders);
+  const [socket, setSocket] = useState();
+
+  const router = useRouter();
+
+  const { uid } = router.query;
+
+  const connectToSocketServer = () => {
+    try {
+      sockets = io("http://localhost:5000", {
+        query: {
+          userId: uid,
+        },
+      });
+      sockets.on("connect", () => {
+        console.log("connection established");
+        setSocket(sockets);
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error(handleError(error));
+    }
+  };
+
+  useEffect(() => {
+    connectToSocketServer();
+
+    return () => {
+      sockets.disconnect();
+    };
+  }, []);
+
+  if (socket) {
+    // console.log("socket");
+    socket.on("STATUS__CHANGED", (message) => {
+      console.log("test message in the [uid].js page to message", message);
+    });
+  } else {
+    console.log("no socket");
+  }
+
   // console.log(orders, "in the trackmyorder client");
 
   // const userInfo = useSelector((state) => state.user.userInfo);
@@ -49,58 +95,44 @@ const Trackmyorder = ({ orders }) => {
               {cur.itemList.map((cur, ids) => (
                 <div
                   key={ids}
-                  className="flex flex-col lg:flex-row justify-start items-start space-y-3 lg:space-y-0 w-full h-full lg:h-[30%]  p-1 mt-6"
+                  className="flex flex-col lg:flex-row justify-start items-start lg:space-x-5 space-y-3 lg:space-y-0 w-full p-2 mt-6"
                 >
-                  <div className="relative w-[90%] mx-auto lg:w-[40%] h-[40%] lg:h-full">
+                  <div className="h-[80px] w-[80px] rounded-full relative">
                     <Image
-                      src={cur.productImage}
-                      alt="productImage"
                       fill
-                      loading="lazy"
-                      className="object-cover object-top rounded-md shadow-lg"
+                      alt="productImage"
+                      className="object-cover rounded-full object-top"
+                      src={cur.productImage}
                     />
                   </div>
-                  <div className="w-full h-[50%] lg:w-[50%]">
-                    <div>
-                      <h1 className="font-bold text-2xl capitalize tracking-wider">
-                        {cur.productName}
-                      </h1>
-
-                      <div className="flex justify-around items-center my-5">
-                        <div className="flex justify-center space-x-3 items-center">
-                          <h3 className="text-lg font-semibold">Quantity -</h3>
-                          <h3 className="text-lg font-semibold">
-                            {cur.quantity}
-                          </h3>
-                        </div>
-                        <div className="flex justify-center items-center space-x-3">
-                          <h3 className="text-lg font-semibold">Price -</h3>
-                          <h2 className="font-extrabold text-xl">
-                            <CurrencyRupeeIcon /> {cur.total}.0
-                          </h2>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-around items-center space-x-5 mt-3">
-                      <button className="text-lg font-bold tracking-wider px-5 py-2 rounded-md border-pink-600 bg-pink-600 text-white shadow-lg hover:text-pink-600 hover:bg-white transition-all duration-150 ease-linear">
-                        Cancel
-                      </button>
-                      <button className="text-lg font-bold tracking-wider px-5 py-2 rounded-md bg-[#212a2f] text-white shadow-lg  hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-linear">
-                        Track status
-                      </button>
-                    </div>
+                  <div>
+                    <h2 className="text-2xl font-semibold ">
+                      {cur.productName} - {cur.size} , quantity - {cur.quantity}
+                    </h2>
+                    <h2 className="text-xl font-bold">
+                      Price : <CurrencyRupeeIcon /> {cur.price}
+                    </h2>
                   </div>
                 </div>
               ))}
+              <div className="flex justify-end my-2 items-center space-x-3 ">
+                <button className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-red-600 shadow-md bg-red-600 text-white hover:text-red-600 hover:bg-white transition-all duration-150 ease-in">
+                  Cancel Order
+                </button>
+                <button className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-[#212a2f] shadow-md bg-[#212a2f] text-white hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-in">
+                  Track Status
+                </button>
+              </div>
+              <hr className="my-5 bg-[#212a2f] h-[.85px] w-[95%] mx-auto" />
             </>
           ))}
         </div>
-        <div className="lg:h-full h-[30%]  w-full lg:w-[30%] py-3 px-2">
+        <div className="lg:h-full h-[30%] w-full lg:w-[30%] py-3 px-2">
           <h1 className="text-xl font-semibold tracking-wider">
             Shipping status.
           </h1>
           <div className="mt-14 relative">
-            <span className="w-[87%] h-2 mx-auto absolute  bg-[#212a2f]/10 rounded-full left-[6px] z-0 top-[6px]" />
+            <span className="w-[87%] h-2 mx-auto absolute bg-[#212a2f]/10 rounded-full left-[6px] z-0 top-[6px]" />
             <div className="flex justify-around items-center">
               <div className="z-40 flex flex-col justify-center items-center">
                 <div className="h-5 w-5 rounded-full bg-green-500" />
@@ -157,7 +189,7 @@ export const getServerSideProps = async (ctx) => {
         },
       };
     } else {
-      console.lov;
+      // console.log;
       return {
         props: {
           error: "some thing went wrong",

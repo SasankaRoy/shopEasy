@@ -8,7 +8,7 @@ const handleGetOders = async (req, res) => {
 
       let Oders;
       
-    //   This code block hendling the GET request
+      //  This code block hendling the GET request
       //  for retrieving all oders for the single user.
       
     if (uId) {

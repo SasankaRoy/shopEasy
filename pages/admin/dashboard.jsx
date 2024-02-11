@@ -33,10 +33,9 @@ const Dashboard = () => {
     return formattedDate;
   };
 
-
-/* The code below is using the `useEffect` hook in a React component. It is dispatching two actions:
+  /* The code below is using the `useEffect` hook in a React component. It is dispatching two actions:
 `loadingStart` and `loadingComplete` for showing the loading indicator on the project page. */
-  
+
   useEffect(() => {
     dispatch(
       loadingStart({
@@ -45,105 +44,117 @@ const Dashboard = () => {
           forWhichPorpose: "Authority",
         },
       })
-    );    
+    );
     setTimeout(() => {
       dispatch(loadingComplete());
     }, 2000);
   }, [user]);
 
-
-
   // making the the socket connection when the page is loaded...
 
   const makeSocketConnection = async () => {
     try {
-      socket = io("http://localhost:5000/");
+      socket = io("http://localhost:5000/", {
+        query: {
+          userId: user?._id,
+        },
+      });
       socket.on("connect", () => {
         console.log("connected to the socket server!");
       });
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
-  }; 
-  useEffect(() => {
+  };
+  useEffect(() => {   
     makeSocketConnection();
-  }, []);
+    
+    return () => {
+      console.log('in the return () in the useEffect')
+      socket.disconnect();
+    }
+  }, [user]);
 
   /* The code below is a JavaScript function that takes a date as input and formats it in the
     "MM/DD/YYYY" format. It uses the `toLocaleString` method with the specified options to format the
     date. */
 
-  const handleChangeSelection = async (e, id) => { 
-    
+  const handleChangeSelection = async (e, id,userId) => {
     socket.emit("CHANGE__STATUS", {
+      productId: id,
+      userId,
+      oderStatus: e.target.value,
+    });
+    socket.on("test__message", ({ message }) => {
+      console.log(message, "in the dashborder page");
+    });
+
+    const updateOderStatus = await axios.put("/api/oders", {
       productId: id,
       oderStatus: e.target.value,
     });
-
-    const updateOderStatus = await axios.put('/api/oders', { productId: id, oderStatus: e.target.value });
     toast.success(updateOderStatus.data.message);
     setUpdater(updater + 1);
-  }; 
+  };
 
   const fetchOders = async () => {
     try {
-      const reqOrders = await axios.get('/api/oders');      
+      const reqOrders = await axios.get("/api/oders");
       setOders(reqOrders.data.orderList);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const checkOderStatus = (status) => {
-    switch (status) { 
-      case "pending":        
-        return{ bg: "#fca5a533", color: "red" }        
+    switch (status) {
+      case "pending":
+        return { bg: "#fca5a533", color: "red" };
       case "shipping":
         return { bg: "#F1E399", color: "#795316" };
       case "complete":
-        return{ bg: "#86efac33", color: "green" }
+        return { bg: "#86efac33", color: "green" };
       // default:
       //   return{ bg: "#fca5a533", color: "red" }
-       
     }
-  }
+  };
+
+  // console.log(oders)
 
   useEffect(() => {
     fetchOders();
   }, [updater]);
 
-
-
-  const stringToColor = (string)=> {
+  const stringToColor = (string) => {
     let hash = 0;
     let i;
-  
+
     /* eslint-disable no-bitwise */
     for (i = 0; i < string.length; i += 1) {
       hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-  
-    let color = '#';
-  
+
+    let color = "#";
+
     for (i = 0; i < 3; i += 1) {
       const value = (hash >> (i * 8)) & 0xff;
       color += `00${value.toString(16)}`.slice(-2);
     }
     /* eslint-enable no-bitwise */
-  
+
     return color;
-  }
-  
-  const stringAvatar = (name)=> {
+  };
+
+  const stringAvatar = (name) => {
     return {
       sx: {
         bgcolor: stringToColor(name),
         fontWeight: 500,
-        fontSize:18
+        fontSize: 18,
       },
-      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
     };
-  }
+  };
 
   return (
     <>
@@ -204,8 +215,12 @@ const Dashboard = () => {
                     }}
                     className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
                   >
-                    <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">                    
-                      <Avatar {...stringAvatar(cur.userName)} round={true} size={40}></Avatar>
+                    <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
+                      <Avatar
+                        {...stringAvatar(cur.userName)}
+                        round={true}
+                        size={40}
+                      ></Avatar>
                       <h2>{cur.userName}</h2>
                     </td>
                     <td className="font-semibold text-center text-md tracking-wider p-2">
@@ -216,7 +231,7 @@ const Dashboard = () => {
                     </td>
                     <td className="font-semibold text-center text-md tracking-wider p-2">
                       <select
-                        onChange={(e) => handleChangeSelection(e, cur._id)}
+                        onChange={(e) => handleChangeSelection(e, cur._id,cur.userId)}
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
@@ -294,8 +309,13 @@ const ProductList = ({ setShowProductList, showProductList }) => {
           {/* loop here */}
           {showProductList.productIds?.map((cur, id) => (
             <div key={id} className="flex justify-evenly items-center my-5">
-              <div className="flex-1 flex justify-start space-x-3 items-center">               
-                <Avatar src={cur.productImage} round='true' className="object-top" sx={{ width: 56, height: 56 }} />
+              <div className="flex-1 flex justify-start space-x-3 items-center">
+                <Avatar
+                  src={cur.productImage}
+                  round="true"
+                  className="object-top"
+                  sx={{ width: 56, height: 56 }}
+                />
                 <h2 className="font-semibold text-xl tracking-wider">
                   {cur.productName} - {cur.size}
                 </h2>
@@ -325,8 +345,6 @@ const ProductList = ({ setShowProductList, showProductList }) => {
 // export const getServerSideProps = async (context) => {
 //   try {
 //     console.log('running after the useEffect() getServerSideProps()')
-
-
 
 //     /* The code below is checking the host of the request and based on that, it makes a GET request to
 //    either the development or production domain to fetch a list of orders. If the request is
