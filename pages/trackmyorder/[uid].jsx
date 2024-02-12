@@ -13,8 +13,11 @@ import { useRouter } from "next/router";
 let sockets;
 
 const Trackmyorder = ({ orders }) => {
-  console.log(orders);
   const [socket, setSocket] = useState();
+  const [showOrderStatus, setShowOrderStatus] = useState({
+    state: false,
+    orderStatus: "",
+  });
 
   const router = useRouter();
 
@@ -45,41 +48,31 @@ const Trackmyorder = ({ orders }) => {
     };
   }, []);
 
-  if (socket) {
-    // console.log("socket");
-    socket.on("STATUS__CHANGED", (message) => {
-      console.log("test message in the [uid].js page to message", message);
+  const TrackOrderStatus = async (status) => {
+    // console.log(id, status);
+
+    setShowOrderStatus({
+      state: true,
+      orderStatus: status,
     });
-  } else {
-    console.log("no socket");
-  }
 
-  // console.log(orders, "in the trackmyorder client");
+    socket.on("STATUS__CHANGED", ({ oderStatus }) => {
+      console.log("in the TrackOrderStatus function", oderStatus);
+      setSocket({
+        state: true,
+        orderStatus: oderStatus,
+      });
+    });
+  };
 
-  // const userInfo = useSelector((state) => state.user.userInfo);
-  // const fetchOders = async () => {
-  //   try {
-  //     if (userInfo._id) {
-  //       console.log(userInfo._id);
-  //       const getAllOders = await axios.get(`/api/oders?uId=${userInfo._id}`);
-  //       console.log(userInfo._id);
-  //       console.log(getAllOders.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+  // if (socket) {
+  //   socket.on("STATUS__CHANGED", (message) => {
+  //     console.log("test message in the [uid].js page to message", message);
+  //   });
+  // } else {
+  //   console.log("no socket");
   // }
 
-  // useEffect(() => {
-  //   fetchOders();
-  // }, [userInfo]);
-
-  // if (typeof window !== "undefined") {
-  //   if (window.location.reload) {
-  //     console.log("Reloading");
-  //     console.log(userInfo);
-  //   }
-  // }
   return (
     <>
       <Head>
@@ -119,7 +112,10 @@ const Trackmyorder = ({ orders }) => {
                 <button className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-red-600 shadow-md bg-red-600 text-white hover:text-red-600 hover:bg-white transition-all duration-150 ease-in">
                   Cancel Order
                 </button>
-                <button className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-[#212a2f] shadow-md bg-[#212a2f] text-white hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-in">
+                <button
+                  onClick={() => TrackOrderStatus(cur.status)}
+                  className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-[#212a2f] shadow-md bg-[#212a2f] text-white hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-in"
+                >
                   Track Status
                 </button>
               </div>
@@ -131,39 +127,51 @@ const Trackmyorder = ({ orders }) => {
           <h1 className="text-xl font-semibold tracking-wider">
             Shipping status.
           </h1>
-          <div className="mt-14 relative">
-            <span className="w-[87%] h-2 mx-auto absolute bg-[#212a2f]/10 rounded-full left-[6px] z-0 top-[6px]" />
-            <div className="flex justify-around items-center">
-              <div className="z-40 flex flex-col justify-center items-center">
-                <div className="h-5 w-5 rounded-full bg-green-500" />
-                <h2 className="font-extrabold tracking-wide capitalize">
-                  shipping soon
-                </h2>
+          {showOrderStatus.state && (
+            <div className="mt-14 relative">
+              <span className="w-[87%] h-2 mx-auto absolute bg-[#212a2f]/10 rounded-full left-[6px] z-0 top-[6px]" />
+              <div className="flex justify-around items-center">
+                <div className="z-40 flex flex-col justify-center items-center">
+                  <div
+                    className={`h-5 w-5 rounded-full ${
+                      showOrderStatus.orderStatus === "pending" &&
+                      "bg-green-500"
+                    } bg-gray-500 `}
+                  />
+                  <h2 className="font-extrabold tracking-wide capitalize">
+                    shipping soon
+                  </h2>
+                </div>
+                <div className="z-40 flex flex-col justify-center items-center">
+                  <div
+                    className={`h-5 w-5 rounded-full ${
+                      showOrderStatus.orderStatus === "shipping" &&
+                      "bg-green-500"
+                    } bg-gray-500`}
+                  />
+                  <h2 className="font-extrabold tracking-wide capitalize">
+                    shipped
+                  </h2>
+                </div>
+                <div className="z-40 flex flex-col justify-center items-center">
+                  <div className="h-5 w-5 rounded-full bg-green-500" />
+                  <h2 className="font-extrabold tracking-wide capitalize">
+                    out for delivery
+                  </h2>
+                </div>
+                <div className="z-40 flex flex-col justify-center items-center">
+                  <div className="h-5 w-5 rounded-full bg-green-500" />
+                  <h2 className="font-extrabold tracking-wide capitalize">
+                    delivered
+                  </h2>
+                </div>
               </div>
-              <div className="z-40 flex flex-col justify-center items-center">
-                <div className="h-5 w-5 rounded-full bg-green-500" />
-                <h2 className="font-extrabold tracking-wide capitalize">
-                  shipped
-                </h2>
-              </div>
-              <div className="z-40 flex flex-col justify-center items-center">
-                <div className="h-5 w-5 rounded-full bg-green-500" />
-                <h2 className="font-extrabold tracking-wide capitalize">
-                  out for delivery
-                </h2>
-              </div>
-              <div className="z-40 flex flex-col justify-center items-center">
-                <div className="h-5 w-5 rounded-full bg-green-500" />
-                <h2 className="font-extrabold tracking-wide capitalize">
-                  delivered
-                </h2>
-              </div>
+              <p className="text-xl font-medium mt-7 tracking-wide capitalize">
+                The product will be delivered by{" "}
+                <span className="text-2xl font-extrabold">06 March 2023.</span>
+              </p>
             </div>
-            <p className="text-xl font-medium mt-7 tracking-wide capitalize">
-              The product will be delivered by{" "}
-              <span className="text-2xl font-extrabold">06 March 2023.</span>
-            </p>
-          </div>
+          )}
         </div>
       </div>
     </>
