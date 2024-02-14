@@ -1,5 +1,5 @@
 import Head from "next/head";
-// import Todos from "../../components/Todos";
+
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -8,6 +8,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadingComplete, loadingStart } from "../../Redux/loadingSlice";
 import { Avatar, CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
+
+// import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
 let socket;
 
@@ -52,9 +55,9 @@ const Dashboard = () => {
 
   // making the the socket connection when the page is loaded...
 
-  const makeSocketConnection = async () => {
+  const makeSocketConnection = async () => {    
     try {
-      socket = io("http://localhost:5000/", {
+      socket = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
         query: {
           userId: user?._id,
         },
@@ -69,8 +72,7 @@ const Dashboard = () => {
   useEffect(() => {   
     makeSocketConnection();
     
-    return () => {
-      console.log('in the return () in the useEffect')
+    return () => {      
       socket.disconnect();
     }
   }, [user]);
@@ -112,15 +114,13 @@ const Dashboard = () => {
         return { bg: "#fca5a533", color: "red" };
       case "shipping":
         return { bg: "#F1E399", color: "#795316" };
+      case 'out for delivery':
+        return { bg: "#0061ff42", color: "#006dff" };
       case "complete":
         return { bg: "#86efac33", color: "green" };
-      // default:
-      //   return{ bg: "#fca5a533", color: "red" }
+      
     }
   };
-
-  // console.log(oders)
-
   useEffect(() => {
     fetchOders();
   }, [updater]);
@@ -213,7 +213,7 @@ const Dashboard = () => {
                         productIds: [...cur.itemList],
                       });
                     }}
-                    className="bg-gray-50 py-[10px] rounded cursor-pointer hover:bg-gray-200 transition-all duration-200 ease-in-out"
+                    className="bg-gray-50 py-[10px]  cursor-pointer hover:rounded-md hover:bg-gray-200 transition-all duration-200 ease-in-out"
                   >
                     <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
                       <Avatar
@@ -231,7 +231,9 @@ const Dashboard = () => {
                     </td>
                     <td className="font-semibold text-center text-md tracking-wider p-2">
                       <select
-                        onChange={(e) => handleChangeSelection(e, cur._id,cur.userId)}
+                        onChange={(e) =>
+                          handleChangeSelection(e, cur._id, cur.userId)
+                        }
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
@@ -254,6 +256,9 @@ const Dashboard = () => {
                         </option>
                         <option value="shipping" className="font-bold">
                           Shipping
+                        </option>
+                        <option value="out for delivery" className="font-bold">
+                          Out for delivery
                         </option>
                         <option value="complete" className="font-bold">
                           Complete
@@ -304,7 +309,7 @@ const ProductList = ({ setShowProductList, showProductList }) => {
               })
             }
           >
-            Close
+            <CancelOutlinedIcon  className="text-3xl" />
           </h2>
           {/* loop here */}
           {showProductList.productIds?.map((cur, id) => (
