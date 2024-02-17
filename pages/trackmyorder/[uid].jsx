@@ -17,8 +17,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 let sockets;
 
-const Trackmyorder = ({ orders, error }) => {
-  console.log(error);
+const Trackmyorder = ({ orders, error }) => { 
   const [socket, setSocket] = useState();
   const [showOrderStatus, setShowOrderStatus] = useState({
     state: false,
