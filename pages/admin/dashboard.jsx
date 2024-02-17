@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [updater, setUpdater] = useState(0);
   const [showProductList, setShowProductList] = useState({
     status: false,
-    productIds: [],
+    productIds: {},
   });
   const options = {
     year: "numeric",
@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   // making the the socket connection when the page is loaded...
 
-  const makeSocketConnection = async () => {    
+  const makeSocketConnection = async () => {
     try {
       socket = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
         query: {
@@ -69,10 +69,10 @@ const Dashboard = () => {
       throw new Error(error);
     }
   };
-  useEffect(() => {   
+  useEffect(() => {
     makeSocketConnection();
-    
-    return () => {      
+
+    return () => {
       socket.disconnect();
     }
   }, [user]);
@@ -81,7 +81,7 @@ const Dashboard = () => {
     "MM/DD/YYYY" format. It uses the `toLocaleString` method with the specified options to format the
     date. */
 
-  const handleChangeSelection = async (e, id,userId) => {
+  const handleChangeSelection = async (e, id, userId) => {
     socket.emit("CHANGE__STATUS", {
       productId: id,
       userId,
@@ -118,7 +118,7 @@ const Dashboard = () => {
         return { bg: "#0061ff42", color: "#006dff" };
       case "complete":
         return { bg: "#86efac33", color: "green" };
-      
+
     }
   };
   useEffect(() => {
@@ -179,27 +179,21 @@ const Dashboard = () => {
           <h2 className="text-center font-semibold text-3xl capitalize underline underline-offset-8 tracking-wider my-2">
             List of Orders
           </h2>
-          <div className="w-[90%] mx-auto my-3 p-2 overflow-x-auto">
+          <div className="lg:w-[90%] mx-auto my-3 p-2 overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr>
-                  <th className="font-extraboldbold text-xl p-2 tracking-wider">
-                    Ordered By :
+                  <th className="font-extraboldbold text-md lg:text-xl p-2 ">
+                    Order By :
                   </th>
-                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                    address
-                  </th>
-                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                    date
-                  </th>
-                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
+                  <th className="font-extraboldbold text-md lg:text-xl capitalize p-2 tracking-wider">
                     Status
                   </th>
-                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                    payment Mode
+                  <th className="font-extraboldbold text-md lg:text-xl capitalize p-2 tracking-wider">
+                    pay
                   </th>
-                  <th className="font-extraboldbold text-xl capitalize p-2 tracking-wider">
-                    Total amount (<CurrencyRupeeIcon className="text-base" />)
+                  <th className="font-extraboldbold text-md lg:text-xl capitalize p-2 tracking-wider">
+                    Total <CurrencyRupeeIcon className="lg:text-base text-sm" />
                   </th>
                 </tr>
 
@@ -210,26 +204,21 @@ const Dashboard = () => {
                       e.stopPropagation();
                       setShowProductList({
                         status: true,
-                        productIds: [...cur.itemList],
+                        productIds: cur,
                       });
                     }}
                     className="bg-gray-50 py-[10px]  cursor-pointer hover:rounded-md hover:bg-gray-200 transition-all duration-200 ease-in-out"
                   >
-                    <td className="font-semibold text-center text-md tracking-wider p-2 flex justify-start items-center space-x-2">
+                    <td className="font-extrabold lg:text-center text-sm lg:text-lg p-2 flex justify-start items-center lg:space-x-2">
                       <Avatar
                         // {...stringAvatar(cur.userName)}
                         round={true}
                         size={40}
+                        className="lg:inline-flex hidden"
                       ></Avatar>
                       <h2>{cur.userName}</h2>
                     </td>
-                    <td className="font-semibold text-center text-md tracking-wider p-2">
-                      {cur.address} , {cur.country}
-                    </td>
-                    <td className="font-semibold text-center text-md tracking-wider p-2">
-                      {cur.createdAt && formateDate(cur.createdAt)}
-                    </td>
-                    <td className="font-semibold text-center text-md tracking-wider p-2">
+                    <td className="font-semibold lg:text-center text-sm lg:text-lg  p-2">
                       <select
                         onChange={(e) =>
                           handleChangeSelection(e, cur._id, cur.userId)
@@ -237,7 +226,7 @@ const Dashboard = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                         }}
-                        className="w-full px-2 py-1 font-semibold capitalize border-none outline-none tracking-wider rounded-md  shadow-sm text-center statusSelect"
+                        className="w-full px-2 py-1 font-semibold capitalize border-none outline-none rounded-md shadow-sm text-center statusSelect"
                         style={{
                           background: checkOderStatus(cur.status).bg,
                           color: checkOderStatus(cur.status).color,
@@ -265,13 +254,12 @@ const Dashboard = () => {
                         </option>
                       </select>
                     </td>
-                    <td className="font-semibold text-center text-md tracking-wider p-2">
+                    <td className="font-semibold lg:text-center text-sm lg:text-lg p-2">
                       {cur.paymentMethod}
                     </td>
                     <td
-                      className={`${
-                        cur.paymentMethod === "onlinePay" && "text-green-600"
-                      }  font-extrabold text-center text-lg tracking-wider p-2`}
+                      className={`${cur.paymentMethod === "onlinePay" && "text-green-600"
+                        }  font-extrabold lg:text-center text-md lg:text-lg p-2`}
                     >
                       {cur.totalPrice}.00
                     </td>
@@ -295,25 +283,37 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const ProductList = ({ setShowProductList, showProductList }) => {
+const ProductList = ({ setShowProductList, showProductList }) => {  
   return (
     <>
-      <div className="fixed z-50 w-full h-screen backdrop-blur-sm bg-[#000]/40 top-0 flex justify-center items-center">
-        <div className="w-[65%] mx-auto p-3 bg-white rounded-md relative">
-          <h2
-            className="absolute right-3 font-semibold text-red-500 text-xl top-3 capitalize cursor-pointer tracking-wider"
-            onClick={() =>
-              setShowProductList({
-                status: false,
-                productIds: [],
-              })
-            }
-          >
-            <CancelOutlinedIcon  className="text-3xl" />
-          </h2>
-          {/* loop here */}
-          {showProductList.productIds?.map((cur, id) => (
-            <div key={id} className="flex justify-evenly items-center my-5">
+      <div onClick={(e) => {
+        e.stopPropagation();
+        setShowProductList({
+          status: false,
+          productIds: {},
+        })
+      }
+      } className="fixed z-50 w-full h-screen backdrop-blur-sm bg-[#000]/40 top-0 flex justify-center items-center">
+        <div className="lg:w-[65%] w-[97%] mx-auto p-3 bg-white rounded-md relative">
+          <CancelOutlinedIcon onClick={() =>
+            setShowProductList({
+              status: false,
+              productIds: {},
+            })
+          }
+            className="text-3xl absolute right-3 text-red-500 cursor-pointer hover:scale-90 hover:rotate-180 transition-transform duration-150 ease-in-out" />
+
+
+            <h2 className="lg:text-xl text-md font-semibold px-2 my-3"><span className="text-lg">Order Id</span> : {showProductList.productIds._id}</h2>
+            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Name</span> : {showProductList.productIds.userName}</h2>
+
+            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Email</span> : {showProductList.productIds.email}</h2>
+            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Phone Number</span> : {showProductList.productIds.phoneNumber} , {showProductList.productIds.alternativePhoneNumber}</h2>
+
+            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Address</span> : {showProductList.productIds.address} , {showProductList.productIds.country}</h2>
+
+          {showProductList.productIds.itemList?.map((cur, id) => (
+            <div key={id} className="flex flex-col lg:flex-row justify-evenly items-center my-5">
               <div className="flex-1 flex justify-start space-x-3 items-center">
                 <Avatar
                   src={cur.productImage}
@@ -325,7 +325,7 @@ const ProductList = ({ setShowProductList, showProductList }) => {
                   {cur.productName} - {cur.size}
                 </h2>
               </div>
-              <div className="flex-1 flex justify-evenly items-center">
+              <div className="flex-1 flex w-full justify-evenly items-center">
                 <div className="flex justify-center items-center space-x-3">
                   <h2 className="text-lg font-bold tracking-wider">
                     Quantity -
