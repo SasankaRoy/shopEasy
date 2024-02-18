@@ -57,6 +57,7 @@ const Dashboard = () => {
 
   const makeSocketConnection = async () => {
     try {
+      // 
       socket = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
         query: {
           userId: user?._id,

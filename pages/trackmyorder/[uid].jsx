@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
-// import { useSelector } from "react-redux";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import axios from "axios";
@@ -17,7 +16,8 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 let sockets;
 
-const Trackmyorder = ({ orders, error }) => { 
+const Trackmyorder = ({ orders, error }) => {
+  const [order, setOrder] = useState(orders)
   const [socket, setSocket] = useState();
   const [showOrderStatus, setShowOrderStatus] = useState({
     state: false,
@@ -30,6 +30,7 @@ const Trackmyorder = ({ orders, error }) => {
 
   const connectToSocketServer = () => {
     try {
+      // 
       sockets = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
         query: {
           userId: uid,
@@ -54,7 +55,7 @@ const Trackmyorder = ({ orders, error }) => {
   }, []);
 
   const TrackOrderStatus = async (status) => {
-    // console.log(id, status);
+    
 
     setShowOrderStatus({
       state: true,
@@ -70,13 +71,13 @@ const Trackmyorder = ({ orders, error }) => {
     });
   };
 
-  // if (socket) {
-  //   socket.on("STATUS__CHANGED", (message) => {
-  //     console.log("test message in the [uid].js page to message", message);
-  //   });
-  // } else {
-  //   console.log("no socket");
-  // }
+  const cancelOrder = (orderId) => {
+    socket.emit('CANCEL__ORDER', { userId: uid, orderId });
+    socket.on('UPDATED__ORDERLIST', (data) => {
+      setOrder(data.orders);
+    })
+  }
+
 
   return (
     <>
@@ -88,9 +89,16 @@ const Trackmyorder = ({ orders, error }) => {
           <h1 className="text-xl font-semibold tracking-wider capitalize">
             my order&apos;s
           </h1>
-          {orders?.map((cur, id) => (
-            <>
-              {cur.itemList.map((cur, ids) => (
+          {order?.map((curr, id) => (
+            <div key={id} className="relative">
+              {
+                curr.status === 'cancel' && (
+                  <div className="absolute flex justify-center items-center backdrop-blur-sm bg-black/5 w-full h-full top-0 left-0 z-30 opacity-100">
+                    <h2 className="text-5xl font-extrabold uppercase">Canceled</h2>
+                  </div>
+                )
+              }
+              {curr.itemList.map((cur, ids) => (
                 <div
                   key={ids}
                   className="flex flex-col lg:flex-row justify-start items-start lg:space-x-5 space-y-3 lg:space-y-0 w-full p-2 mt-6"
@@ -114,18 +122,20 @@ const Trackmyorder = ({ orders, error }) => {
                 </div>
               ))}
               <div key={id} className="flex justify-end my-2 items-center space-x-3 ">
-                <button className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-red-600 shadow-md bg-red-600 text-white hover:text-red-600 hover:bg-white transition-all duration-150 ease-in">
+                <button
+                  onClick={() => cancelOrder(curr._id)}
+                  className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-red-600 shadow-md bg-red-600 text-white hover:text-red-600 hover:bg-white transition-all duration-150 ease-in">
                   Cancel Order
                 </button>
                 <button
-                  onClick={() => TrackOrderStatus(cur.status)}
+                  onClick={() => TrackOrderStatus(curr.status)}
                   className="px-3 py-1 font-extrabold text-lg tracking-wider rounded-md border border-[#212a2f] shadow-md bg-[#212a2f] text-white hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-in"
                 >
                   Track Status
                 </button>
               </div>
               <hr className="my-5 bg-[#212a2f] h-[.85px] w-[95%] mx-auto" />
-            </>
+            </div>
           ))}
           {
             error && (
