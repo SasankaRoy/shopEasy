@@ -88,22 +88,19 @@ const Dashboard = () => {
       userId,
       oderStatus: e.target.value,
     });
-    socket.on("test__message", ({ message }) => {
-      console.log(message, "in the dashborder page");
-    });
 
     const updateOderStatus = await axios.put("/api/oders", {
       productId: id,
       oderStatus: e.target.value,
     });
-    toast.success(updateOderStatus.data.message);
+    toast.success(updateOderStatus.data?.message);
     setUpdater(updater + 1);
   };
 
   const fetchOders = async () => {
     try {
       const reqOrders = await axios.get("/api/oders");
-      setOders(reqOrders.data.orderList);
+      setOders(reqOrders.data?.orderList);
     } catch (error) {
       console.log(error);
     }
@@ -125,6 +122,12 @@ const Dashboard = () => {
   useEffect(() => {
     fetchOders();
   }, [updater]);
+
+  if (socket) {
+    socket.on('CANCEL__ORDER', (data) => {
+      console.log(data, 'in the dashboard')
+    })
+  }
 
   // const stringToColor = (string) => {
   //   let hash = 0;
@@ -208,7 +211,7 @@ const Dashboard = () => {
                         productIds: cur,
                       });
                     }}
-                    className="bg-gray-50 py-[10px]  cursor-pointer hover:rounded-md hover:bg-gray-200 transition-all duration-200 ease-in-out"
+                    className={` ${cur.status === 'cancel' ? 'bg-red-400' : 'bg-gray-50 hover:bg-gray-200'} py-[10px] cursor-pointer hover:rounded-md  transition-all duration-200 ease-in-out`}
                   >
                     <td className="font-extrabold lg:text-center text-sm lg:text-lg p-2 flex justify-start items-center lg:space-x-2">
                       <Avatar
@@ -217,7 +220,7 @@ const Dashboard = () => {
                         size={40}
                         className="lg:inline-flex hidden"
                       ></Avatar>
-                      <h2>{cur.userName}</h2>
+                      <h2>{cur.userName} </h2>
                     </td>
                     <td className="font-semibold lg:text-center text-sm lg:text-lg  p-2">
                       <select
@@ -229,8 +232,8 @@ const Dashboard = () => {
                         }}
                         className="w-full px-2 py-1 font-semibold capitalize border-none outline-none rounded-md shadow-sm text-center statusSelect"
                         style={{
-                          background: checkOderStatus(cur.status).bg,
-                          color: checkOderStatus(cur.status).color,
+                          background: checkOderStatus(cur.status)?.bg,
+                          color: checkOderStatus(cur.status)?.color,
                           fontWeight: 700,
                         }}
                       >
@@ -284,7 +287,7 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const ProductList = ({ setShowProductList, showProductList }) => {  
+const ProductList = ({ setShowProductList, showProductList }) => {
   return (
     <>
       <div onClick={(e) => {
@@ -305,13 +308,13 @@ const ProductList = ({ setShowProductList, showProductList }) => {
             className="text-3xl absolute right-3 text-red-500 cursor-pointer hover:scale-90 hover:rotate-180 transition-transform duration-150 ease-in-out" />
 
 
-            <h2 className="lg:text-xl text-md font-semibold px-2 my-3"><span className="text-lg">Order Id</span> : {showProductList.productIds._id}</h2>
-            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Name</span> : {showProductList.productIds.userName}</h2>
+          <h2 className="lg:text-xl text-md font-semibold px-2 my-3"><span className="text-lg">Order Id</span> : {showProductList.productIds._id}</h2>
+          <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Name</span> : {showProductList.productIds.userName}</h2>
 
-            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Email</span> : {showProductList.productIds.email}</h2>
-            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Phone Number</span> : {showProductList.productIds.phoneNumber} , {showProductList.productIds.alternativePhoneNumber}</h2>
+          <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Email</span> : {showProductList.productIds.email}</h2>
+          <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Phone Number</span> : {showProductList.productIds.phoneNumber} , {showProductList.productIds.alternativePhoneNumber}</h2>
 
-            <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Address</span> : {showProductList.productIds.address} , {showProductList.productIds.country}</h2>
+          <h2 className="lg:text-xl text-md font-extrabold px-2 my-3"><span className="text-lg font-bold">Address</span> : {showProductList.productIds.address} , {showProductList.productIds.country}</h2>
 
           {showProductList.productIds.itemList?.map((cur, id) => (
             <div key={id} className="flex flex-col lg:flex-row justify-evenly items-center my-5">

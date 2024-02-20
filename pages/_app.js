@@ -85,10 +85,12 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   }
 
   if (userToken) {
+    // console.log(ctx.req.headers.host);
+    const domainName = ctx.req.headers.host;
     try {
-      if (ctx.req.headers.host === "localhost:3000") {
+      if (domainName === "localhost:3000") {
         const checkUserExits = await axios.post(
-          "http://localhost:3000/api/auth/login",
+          `${process.env.DEVELOPMENT_DOMAIN}/api/auth/login`,
           { userToken }
         );
         const user = checkUserExits.data.user;
@@ -96,7 +98,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
         pageProps.user = user;
       } else {
         const checkUserExits = await axios.post(
-          "https://shop-easee.vercel.app/api/auth/login",
+          `${process.env.PRODUCTION_DOMAIN}/api/auth/login`,
           { userToken }
         );
         const user = checkUserExits.data.user;
