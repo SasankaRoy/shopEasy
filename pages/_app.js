@@ -86,7 +86,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
   if (userToken) {
     // console.log(ctx.req.headers.host);
-    const domainName = ctx.req.headers.host;
+    const domainName = ctx.req?.headers?.host;
     console.log(domainName);
     try {
       if (domainName === "localhost:3000") {
