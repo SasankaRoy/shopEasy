@@ -101,7 +101,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       } 
         const checkUserExits = await axios.post(
           // `${process.env.PRODUCTION_DOMAIN}/api/auth/login`,
-          'https://shop-easee.vercel.app/api/auth/login',
+          'https://shopeasee.vercel.app/api/auth/login',
           { userToken }
         );
         const user = checkUserExits.data.user;
