@@ -88,7 +88,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     // console.log(ctx.req.headers.host);
     const domainName = ctx.req.headers.host;
     try {
-      if (ctx.req.headers?.host === "localhost:3000") {
+      if (domainName === "localhost:3000") {
         const checkUserExits = await axios.post(
           // `${process.env.DEVELOPMENT_DOMAIN}/api/auth/login`,
           'http://localhost:3000/api/auth/login',
