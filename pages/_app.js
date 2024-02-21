@@ -88,22 +88,24 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     // console.log(ctx.req.headers.host);
     const domainName = ctx.req.headers.host;
     try {
-      if (domainName === "localhost:3000") {
+      if (ctx.req.headers?.host === "localhost:3000") {
         const checkUserExits = await axios.post(
-          `${process.env.DEVELOPMENT_DOMAIN}/api/auth/login`,
+          // `${process.env.DEVELOPMENT_DOMAIN}/api/auth/login`,
+          'http://localhost:3000/api/auth/login',
           { userToken }
         );
         const user = checkUserExits.data.user;
 
         pageProps.user = user;
-      } else {
+      } 
         const checkUserExits = await axios.post(
-          `${process.env.PRODUCTION_DOMAIN}/api/auth/login`,
+          // `${process.env.PRODUCTION_DOMAIN}/api/auth/login`,
+          'https://shop-easee.vercel.app/api/auth/login',
           { userToken }
         );
         const user = checkUserExits.data.user;
         pageProps.user = user;
-      }
+      
     } catch (err) {
       console.log("the error block is running", err);
     }
