@@ -13,6 +13,7 @@ import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
+import { useSelector } from "react-redux";
 
 let sockets;
 
@@ -27,15 +28,20 @@ const Trackmyorder = ({ orders, error }) => {
   const router = useRouter();
 
   const { uid } = router.query;
+  const user = useSelector(state => state.user?.userInfo);
+  // console.log(user);
 
   const connectToSocketServer = () => {
     try {
       // 
-      sockets = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
-        query: {
-          userId: uid,
-        },
-      });
+      sockets = io(
+        process.env.NEXT_PUBLIC_SOCKET_SERVER_URL
+        , {
+          query: {
+            userId: uid,
+            role: user?.role
+          },
+        });
       sockets.on("connect", () => {
         console.log("connection established");
         setSocket(sockets);
@@ -52,10 +58,10 @@ const Trackmyorder = ({ orders, error }) => {
     return () => {
       sockets.disconnect();
     };
-  }, []);
+  }, [user]);
 
   const TrackOrderStatus = async (status) => {
-    
+
 
     setShowOrderStatus({
       state: true,

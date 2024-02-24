@@ -1,25 +1,54 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import { useFormik } from "formik";
 import { shippingValidation } from "../../utils/formValidation";
 import { useSelector } from "react-redux";
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { toast } from "react-toastify";
+import { io } from "socket.io-client";
 
 const OrderId = () => {
   const [coupon, setCoupon] = useState("");
+  const [Socket, setSocket] = useState();
   const cart = useSelector((state) => state.cart.cart);
   const User = useSelector((state) => state.user.userInfo);
   const subTotal = useSelector((state) => state.cart.subTotal);
   const router = useRouter();
+  let socket;
 
   // const productIds = cart?.map((cur, id) => cur.id); // sperating the product id's from the cart. 
 
-  
 
+  // connect to the socket server here....
+  useEffect(() => {
+    try {
+      socket = io(
+        process.env.NEXT_PUBLIC_SOCKET_SERVER_URL
+        , {
+          query: {
+            userId: User?._id,
+            role: User?.role
+          }
+        })
+      socket.on("connect", () => {
+        console.log("connected to the socket server!");
+        setSocket(socket);
+      });
+    } catch (error) {
+      throw new Error(error)
+    }
+
+    // disconnect when the user leaves the page or the component get unMounted...
+    return () => {
+      socket.disconnect();
+    }
+  }, [User]);
+
+
+  // form validation and placing the order...
   const { values, handleBlur, handleSubmit, handleChange, touched, errors } =
     useFormik({
       initialValues: {
@@ -34,38 +63,54 @@ const OrderId = () => {
       validationSchema: shippingValidation,
       onSubmit: async (values) => {
         try {
-          const placeOrder = await axios.post("/api/oders", {
+          // const placeOrder = await axios.post("/api/oders", {
+          //   oder: values,
+          //   productIds:cart,
+          //   userId: User._id,
+          //   subTotal,
+          // });
+
+          // if (placeOrder.status === 500) {
+          //   // notify the error to the user.....
+          //   toast.error('sometime went wrong while placing order. Please try again');
+          //   router.push(`/trackmyorder/${User._id}`)
+          //   return;
+          // }
+
+          // emitting an even for updating the admin on real-time......
+
+          Socket.emit('NEW__ORDER', {
             oder: values,
-            productIds:cart,
+            productIds: cart,
             userId: User._id,
             subTotal,
           });
 
-          if (placeOrder.status === 500) {
-            // notify the error to the user.....
-            toast.error('sometime went wrong while placing order. Please try again');
-            router.push(`/trackmyorder/${User._id}`)
-            return;
-          }
 
           // notify the user if every thing go's right...
-          toast.success("your oder has been placed successfully");
+          Socket.on('ORDER__PLACED', ({ success }) => {
+            toast.success(success);
+          })
+
+          // redirect the user to the oder page  ....          
           router.push(`/trackmyorder/${User._id}`);
 
-          // redirect the user to the oder page  ....
-          // (is pending now..create the oder page for the user first)...
 
-          // router.push('/oders/(user"s id)');
-          
+
         } catch (error) {
           console.log(error);
           toast.error(
             "sometime went wrong while placing order. Please try again"
           );
         }
-        
+
       },
     });
+
+
+
+
+
 
 
 
@@ -97,9 +142,8 @@ const OrderId = () => {
                 </label>
                 <input
                   placeholder="Full Name..."
-                  className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider tracking-wider ${
-                    errors.fullName && touched.fullName && "ring-1 ring-red-400"
-                  }`}
+                  className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider tracking-wider ${errors.fullName && touched.fullName && "ring-1 ring-red-400"
+                    }`}
                   type="text"
                   id="fullName"
                   name="fullName"
@@ -118,9 +162,8 @@ const OrderId = () => {
               </label>
               <input
                 placeholder="Enter Your Email..."
-                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider tracking-wider ${
-                  errors.email && touched.email && "right-1 ring-red-400"
-                }`}
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider tracking-wider ${errors.email && touched.email && "right-1 ring-red-400"
+                  }`}
                 type="text"
                 id="email"
                 name="email"
@@ -139,11 +182,10 @@ const OrderId = () => {
               </label>
               <input
                 placeholder="Enter Phone Number..."
-                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
-                  errors.phoneNumber &&
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${errors.phoneNumber &&
                   touched.phoneNumber &&
                   "ring-1 ring-red-400"
-                }`}
+                  }`}
                 type="text"
                 id="phoneNumber"
                 name="phoneNumber"
@@ -162,11 +204,10 @@ const OrderId = () => {
               </label>
               <input
                 placeholder="Enter Alternate Number..."
-                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
-                  errors.alternatePhoneNumber &&
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${errors.alternatePhoneNumber &&
                   touched.alternatePhoneNumber &&
                   "ring-1 ring-red-400"
-                }`}
+                  }`}
                 type="text"
                 id="alterNumber"
                 name="alternatePhoneNumber"
@@ -185,9 +226,8 @@ const OrderId = () => {
               </label>
               <input
                 placeholder="Enter Your Country..."
-                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
-                  errors.country && touched.country && "ring-1 ring-red-400"
-                }`}
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${errors.country && touched.country && "ring-1 ring-red-400"
+                  }`}
                 type="text"
                 id="country"
                 name="country"
@@ -206,11 +246,10 @@ const OrderId = () => {
               </label>
               <input
                 placeholder="Enter Full Address..."
-                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${
-                  errors.fullAddress &&
+                className={`border border-gray-400 py-1 px-2 rounded-md outline-none w-full font-semibold text-black placeholder:font-semibold placeholder:text-gray-600 placeholder:tracking-wider  tracking-wider ${errors.fullAddress &&
                   touched.fullAddress &&
                   "ring-1 ring-red-400"
-                }`}
+                  }`}
                 type="text"
                 id="fullAddress"
                 name="fullAddress"
@@ -258,7 +297,7 @@ const OrderId = () => {
                 </div>
               ))}
 
-              
+
 
               {/* ^^^^^loop here end */}
 

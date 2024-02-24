@@ -49,9 +49,9 @@ const handlePostOders = async (req, res) => {
   try {
     const { oder, productIds, userId, subTotal } = req.body;
 
-    // first save the oder details........
+    
 
-    const newOder = await new Oder({
+    const newOder =  new Oder({
       userId,
       userName: oder.fullName,
       email: oder.email,

@@ -55,14 +55,17 @@ const Dashboard = () => {
 
   // making the the socket connection when the page is loaded...
 
-  const makeSocketConnection = async () => {
+  const makeSocketConnection = () => {
     try {
       // 
-      socket = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
-        query: {
-          userId: user?._id,
-        },
-      });
+      socket = io(
+        process.env.NEXT_PUBLIC_SOCKET_SERVER_URL
+        , {
+          query: {
+            userId: user?._id,
+            role: user?.role,
+          },
+        });
       socket.on("connect", () => {
         console.log("connected to the socket server!");
       });
@@ -124,8 +127,12 @@ const Dashboard = () => {
   }, [updater]);
 
   if (socket) {
-    socket.on('CANCEL__ORDER', (data) => {
-      console.log(data, 'in the dashboard')
+    socket.on("ORDERLIST__UPDATE", (data) => {
+      setOders(data.orders ?? oders);
+    });
+
+    socket.on('NEW__ORDERLIST', ({ savedOrder }) => {
+      setOders([savedOrder, ...oders]);
     })
   }
 
@@ -237,25 +244,40 @@ const Dashboard = () => {
                           fontWeight: 700,
                         }}
                       >
-                        <option
-                          value={cur.status}
-                          default
-                          className="font-bold capitalize"
-                        >
-                          {cur.status}
-                        </option>
-                        <option value="pending" className="font-bold">
-                          Pending
-                        </option>
-                        <option value="shipping" className="font-bold">
-                          Shipping
-                        </option>
-                        <option value="out for delivery" className="font-bold">
-                          Out for delivery
-                        </option>
-                        <option value="complete" className="font-bold">
-                          Complete
-                        </option>
+                        {
+                          cur.status === 'cancel' ? (
+                            <option
+                              value={cur.status}
+                              default
+                              className="font-bold capitalize"
+                            >
+                              {cur.status}
+                            </option>
+                          ) : (
+                            <>
+                              <option
+                                value={cur.status}
+                                default
+                                className="font-bold capitalize"
+                              >
+                                {cur.status}
+                              </option>
+                              <option value="pending" className="font-bold">
+                                Pending
+                              </option>
+                              <option value="shipping" className="font-bold">
+                                Shipping
+                              </option>
+                              <option value="out for delivery" className="font-bold">
+                                Out for delivery
+                              </option>
+                              <option value="complete" className="font-bold">
+                                Complete
+                              </option>
+                            </>
+                          )
+                        }
+
                       </select>
                     </td>
                     <td className="font-semibold lg:text-center text-sm lg:text-lg p-2">

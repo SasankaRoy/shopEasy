@@ -84,8 +84,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     pageProps = await Component.getInitialProps(ctx);
   }
 
-  if (userToken) {
-    // console.log(ctx.req.headers.host);
+  if (userToken) {    
     const domainName = ctx.req?.headers?.host;
 
     try {
