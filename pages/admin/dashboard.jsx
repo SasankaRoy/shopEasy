@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 
 // import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import { stringAvatar } from "../../utils/UserProfileIcon";
 
 let socket;
 
@@ -136,36 +137,7 @@ const Dashboard = () => {
     })
   }
 
-  // const stringToColor = (string) => {
-  //   let hash = 0;
-  //   let i;
 
-  //   /* eslint-disable no-bitwise */
-  //   for (i = 0; i < string.length; i += 1) {
-  //     hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  //   }
-
-  //   let color = "#";
-
-  //   for (i = 0; i < 3; i += 1) {
-  //     const value = (hash >> (i * 8)) & 0xff;
-  //     color += `00${value.toString(16)}`.slice(-2);
-  //   }
-  //   /* eslint-enable no-bitwise */
-
-  //   return color;
-  // };
-
-  // const stringAvatar = (name) => {
-  //   return {
-  //     sx: {
-  //       bgcolor: stringToColor(name),
-  //       fontWeight: 500,
-  //       fontSize: 18,
-  //     },
-  //     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-  //   };
-  // };
 
   return (
     <>
@@ -218,11 +190,18 @@ const Dashboard = () => {
                         productIds: cur,
                       });
                     }}
-                    className={` ${cur.status === 'cancel' ? 'bg-red-400' : 'bg-gray-50 hover:bg-gray-200'} py-[10px] cursor-pointer hover:rounded-md  transition-all duration-200 ease-in-out`}
+                    className={`${cur.status === 'cancel' ? 'opacity-40 bg-red-100':'bg-gray-50 hover:bg-gray-200'}  py-[10px] relative cursor-pointer hover:rounded-md  transition-all duration-200 ease-in-out`}
                   >
+                  {
+                    cur.status === 'cancel'&&(
+                      <div className="absolute w-full h-full flex justify-center items-center z-40" >
+                        <div className="h-[1.5px] bg-black w-full" />
+                      </div>
+                    )
+                  }
                     <td className="font-extrabold lg:text-center text-sm lg:text-lg p-2 flex justify-start items-center lg:space-x-2">
                       <Avatar
-                        // {...stringAvatar(cur.userName)}
+                        {...stringAvatar(cur.userName.toUpperCase())}
                         round={true}
                         size={40}
                         className="lg:inline-flex hidden"

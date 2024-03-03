@@ -20,6 +20,8 @@ import {
   loadingError,
   loadingStart,
 } from "../Redux/loadingSlice";
+import { Avatar } from "@mui/material";
+import { stringAvatar } from "../utils/UserProfileIcon";
 
 
 
@@ -71,6 +73,9 @@ const NavBar = ({ user }) => {
       }
       return;
     }
+
+
+
 
     // when user is loggin but user does not have the authority to visit dashboard page....
 
@@ -183,21 +188,12 @@ const NavBar = ({ user }) => {
             className=" flex justify-center items-center list-none text-[#212a2f] hover:text-[#212a2f] transition-all duration-150 ease-in"
           >
             <Person2OutlinedIcon className="text-4xl " />
+            
             <span className="text-2xl capitalize font-bold tracking-wide">
-              {!User.userInfo ? "Log In" : User.userInfo?.userName}
+              {!User.userInfo ? "Log In" : User.userInfo?.userName.split(" ")[0]}
             </span>
           </Link>
-          {/* ) : (
-            <Link
-              href="/auth/login"
-              prefetch={false}
-              className=" flex justify-center items-center text-2xl
-                capitalize font-bold tracking-wide list-none text-[#212a2f]
-              hover:text-[#212a2f]  transition-all duration-150 ease-in"
-            >
-              Log In
-            </Link>
-          )} */}
+        
           <button
             onClick={handleShowCart}
             className="flex justify-end items-end"

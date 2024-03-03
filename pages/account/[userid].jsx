@@ -18,6 +18,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import { Avatar } from "@mui/material";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 const ProductModel = dynamic(() => import("../../components/ProductModel"));
 
@@ -36,6 +37,11 @@ const Account = () => {
   // for the image preview...
   const [selectedFiles, setSelectedFiles] = useState(initialValuesForImages);
   const router = useRouter();
+  const { userid } = router.query;
+
+
+  // if user trying to access a protected route without proper validation...
+
 
   useEffect(() => {
     dispatch(
@@ -46,6 +52,7 @@ const Account = () => {
         },
       })
     );
+
     if (user) {
       setTimeout(() => {
         dispatch(loadingComplete());
@@ -139,17 +146,6 @@ const Account = () => {
             </h1>
             <div className="flex-1  w-full flex  flex-col justify-start items-center p-3">
               <div className="relative w-24 h-24 rounded-full">
-                {/* <Image
-                  src={
-                    selectedFiles.userProfileImage
-                      ? selectedFiles.userProfileImage
-                      : user.userInfo?.profilePicture
-                  }
-                  alt="userImage"
-                  fill
-                  className="object-cover rounded-full"
-                  loading="lazy"
-                /> */}
                 <Avatar
                   src={
                     selectedFiles.userProfileImage
@@ -198,10 +194,10 @@ const Account = () => {
 
                 <button onClick={() => {
                   Cookies.remove("userToken", {
-                  expires: 1,
-                  path: "/",
-                });
-                window.location.reload();
+                    expires: 1,
+                    path: "/",
+                  });
+                  window.location.reload();
                 }} className="self-end text-center mt-5 rounded-md tracking-wide bg-red-500 hover:bg-red-600 transition-all duration-200 ease-out text-white w-[70%] lg:w-[50%] py-1 font-semibold text-2xl">
                   Log out
                 </button>
@@ -217,16 +213,22 @@ const Account = () => {
 
                 <>
                   {user.userInfo?.role === "admin" ||
-                    user.userInfo?.role === "manager" ? (
-                    <button
-                      onClick={() => setNewProduct(true)}
-                      className="bg-green-400 py-2 px-3 font-[600] rounded-xl shadow-lg tracking-widest text-md lg:text-xl text-white hover:bg-green-500 transition-all duration-150 ease-out"
-                    >
-                      New Product
-                    </button>
-                  ) : (
-                    ""
-                  )}
+                    user.userInfo?.role === "manager" && (
+                      <div className="flex justify-center items-center gap-5">
+                        <button
+                          onClick={() => setNewProduct(true)}
+                          className="bg-white border border-[#212a2f] py-2 px-3 font-[800] rounded-lg shadow-lg tracking-wide text-md lg:text-xl text-[#212a2f] hover:bg-[#212a2f] hover:text-white transition-all duration-150 ease-out"
+                        >
+                          New Product
+                        </button>
+                        <Link
+                          href='/admin/dashboard'
+                          className="bg-[#212a2f] border border-[#212a2f] py-2 px-3 font-[800] rounded-lg shadow-lg tracking-wide text-md lg:text-xl text-white hover:bg-white hover:text-[#212a2f] transition-all duration-150 ease-out"
+                        >
+                          Dashboard
+                        </Link>
+                      </div>
+                    )}
                 </>
               </div>
               <div className="flex flex-col">
