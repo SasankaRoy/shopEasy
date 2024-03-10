@@ -39,9 +39,7 @@ const Account = () => {
   const router = useRouter();
   const { userid } = router.query;
 
-
-  // if user trying to access a protected route without proper validation...
-
+  // if user trying to access a protected route without proper validation..
 
   useEffect(() => {
     dispatch(
@@ -192,13 +190,16 @@ const Account = () => {
                   {userInfo.number ? userInfo.number : user.userInfo?.number}
                 </h2>
 
-                <button onClick={() => {
-                  Cookies.remove("userToken", {
-                    expires: 1,
-                    path: "/",
-                  });
-                  window.location.reload();
-                }} className="self-end text-center mt-5 rounded-md tracking-wide bg-red-500 hover:bg-red-600 transition-all duration-200 ease-out text-white w-[70%] lg:w-[50%] py-1 font-semibold text-2xl">
+                <button
+                  onClick={() => {
+                    Cookies.remove("userToken", {
+                      expires: 1,
+                      path: "/",
+                    });
+                    window.location.reload();
+                  }}
+                  className="self-end text-center mt-5 rounded-md tracking-wide bg-red-500 hover:bg-red-600 transition-all duration-200 ease-out text-white w-[70%] lg:w-[50%] py-1 font-semibold text-2xl"
+                >
                   Log out
                 </button>
               </div>
@@ -213,22 +214,24 @@ const Account = () => {
 
                 <>
                   {user.userInfo?.role === "admin" ||
-                    user.userInfo?.role === "manager" && (
-                      <div className="flex justify-center items-center gap-5">
-                        <button
-                          onClick={() => setNewProduct(true)}
-                          className="bg-white border border-[#212a2f] py-2 px-3 font-[800] rounded-lg shadow-lg tracking-wide text-md lg:text-xl text-[#212a2f] hover:bg-[#212a2f] hover:text-white transition-all duration-150 ease-out"
-                        >
-                          New Product
-                        </button>
-                        <Link
-                          href='/admin/dashboard'
-                          className="bg-[#212a2f] border border-[#212a2f] py-2 px-3 font-[800] rounded-lg shadow-lg tracking-wide text-md lg:text-xl text-white hover:bg-white hover:text-[#212a2f] transition-all duration-150 ease-out"
-                        >
-                          Dashboard
-                        </Link>
-                      </div>
-                    )}
+                  user.userInfo?.role === "manager" ? (
+                    <div className="flex justify-center items-center gap-5">
+                      <button
+                        onClick={() => setNewProduct(true)}
+                        className="bg-white border border-[#212a2f] py-2 px-3 font-[800] rounded-lg shadow-lg tracking-wide text-md lg:text-xl text-[#212a2f] hover:bg-[#212a2f] hover:text-white transition-all duration-150 ease-out"
+                      >
+                        New Product
+                      </button>
+                      <Link
+                        href="/admin/dashboard"
+                        className="bg-[#212a2f] border border-[#212a2f] py-2 px-3 font-[800] rounded-lg shadow-lg tracking-wide text-md lg:text-xl text-white hover:bg-white hover:text-[#212a2f] transition-all duration-150 ease-out"
+                      >
+                        Dashboard
+                      </Link>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </>
               </div>
               <div className="flex flex-col">
@@ -375,7 +378,7 @@ const Account = () => {
                     className="w-[80%] mx-auto mt-3 py-2 bg-[#212a2f] border border-[#212a2f] text-white text-xl font-semibold  rounded-md flex justify-center items-center tracking-wider capitalize disabled:cursor-not-allowed disabled:opacity-50 hover:text-[#212a2f] hover:bg-white transition-all duration-150 ease-in"
                   >
                     {isLoading.state &&
-                      isLoading.forWhichPorpose === "ProfileImage" ? (
+                    isLoading.forWhichPorpose === "ProfileImage" ? (
                       <>
                         <CircularProgress className="text-sm" />{" "}
                         {isLoading.currentMessage}...
