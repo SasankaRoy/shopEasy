@@ -3,11 +3,12 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-
 
 export const ItemCard = ({ data }) => {
   const router = useRouter();
+  const [mouseEnter, setMouseEnter] = useState(false);
 
   const handleOnclick = (id, productName) => {
     router.push(`/product/${productName}?pid=${id}`);
@@ -21,10 +22,14 @@ export const ItemCard = ({ data }) => {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.3, ease: "easeIn", delay: 0.1 }}
         className="h-[400px] lg:h-[450px] snap-center flex-shrink-0  rounded-md hoverEffects shadow-md"
+        onMouseEnter={() => setMouseEnter(true)}
+        onMouseLeave={() => setMouseEnter(false)}
       >
         <div className="w-full h-[65%] lg:h-[70%] relative overflow-hidden ImageDiv rounded-t-md">
           <Image
-            src={data.mediaURL && data.mediaURL[0]}
+            src={
+              data.mediaURL && mouseEnter ? data.mediaURL[0] : data.mediaURL[1]
+            }
             fill
             priority
             alt="itemsImg"

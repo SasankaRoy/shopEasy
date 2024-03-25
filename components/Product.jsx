@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import StarBorderTwoToneIcon from "@mui/icons-material/StarBorderTwoTone";
@@ -7,6 +7,7 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 // bg-[#F7AB0A]/20
 export const Product = ({ pData }) => {
   const router = useRouter();
+  const [mouseEnter, setMouseEnter] = useState(false);
   const handleOnClick = (productName, pid) => {
     router.push(`/product/${productName}?pid=${pid}`);
   };
@@ -21,11 +22,13 @@ export const Product = ({ pData }) => {
         }}
         className="h-[350px] bg-gray-50 rounded-md shadow-md cursor-pointer"
         onClick={() => handleOnClick(pData?.productName, pData?._id)}
+        onMouseEnter={() => setMouseEnter(true)}
+        onMouseLeave={() => setMouseEnter(false)}
       >
         <div className="relative h-[65%]  overflow-hidden z-0">
           <Image
             fill
-            src={pData?.mediaURL[0]}
+            src={mouseEnter ? pData?.mediaURL[2] : pData?.mediaURL[1]}
             loading="lazy"
             alt="productImg"
             className="object-cover z-50 opacity-100 image rounded-t-md transition-all duration-150 delay-100 ease-linear"
