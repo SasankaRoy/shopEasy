@@ -43,7 +43,7 @@ const Category = ({ products }) => {
           Filters
         </button>
       </motion.div>
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 w-[95%] mx-auto justify-center items-center px-5 mt-5">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-7 w-[95%] mx-auto justify-center items-center px-5 mt-5">
         {filteredProducts.length >= 1 ? (
           filteredProducts.map((cur, id) => <Product key={id} pData={cur} />)
         ) : (
