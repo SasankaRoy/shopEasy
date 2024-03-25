@@ -38,7 +38,7 @@ export const Hero = () => {
       }
     };
 
-    const interVal = setInterval(autoSlider, 8000);
+    const interVal = setInterval(autoSlider, 10000);
 
     return () => {
       clearInterval(interVal);
@@ -47,7 +47,7 @@ export const Hero = () => {
 
   return (
     <>
-      <main className="h-[75vh] w-screen z-0 flex flex-row justify-center items-center overflow-x-hidden to-black   ">
+      <main className="h-[80vh] w-screen z-0 flex flex-row justify-center items-center overflow-x-hidden to-black   ">
         <motion.div
           initial={{ opacity: 0, scale: 1.1 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -59,7 +59,7 @@ export const Hero = () => {
             fill
             alt="coverPic"
             priority
-            className="object-cover z-0 brightness-50 transition-all duration-300 ease-linear"
+            className="object-cover object-right-top z-0 brightness-50 transition-all duration-300 ease-linear"
           />
 
           <div className="absolute z-50  left-8 bottom-16 px-1 lg:px-5 py-3">

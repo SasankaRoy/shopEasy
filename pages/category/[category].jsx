@@ -20,7 +20,6 @@ const Category = ({ products }) => {
   const router = useRouter();
   const { query } = router;
 
-
   return (
     <>
       <Head>
@@ -75,10 +74,10 @@ const FilterModel = ({
   products,
   setFilteredProducts,
 }) => {
-
   const [filters, setFilters] = useState({
     price: "",
     category: "",
+    ShowProductUnderOrAbove: "",
   });
 
   const isLoading = useSelector((state) => state.loading);
@@ -102,8 +101,6 @@ const FilterModel = ({
         },
       })
     );
-
-
 
     const filteredApplyed = products.filteredProducts.filter((item) => {
       const filterCategory = filters.category;
@@ -176,34 +173,64 @@ const FilterModel = ({
 
             {/* check box start */}
 
-            {
-              filters.price && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.4, ease: "easeIn" }}
-                  className="flex flex-col w-full justify-start items-start">
-                  <label className="text-lg font-semibold tracking-wider">
-                    Show Products <span className="text-red-500 text-2xl">*</span>
-                  </label>
-                  <div className="flex justify-between items-center w-[80%] mx-auto my-3">
-                    <div className="flex justify-center items-center space-x-3 cursor-pointer">
-                      <input type="checkbox" id="under" className="cursor-pointer" />
-                      <label htmlFor="under" className="font-bold text-lg capitalize cursor-pointer">
-                        under <CurrencyRupeeIcon className="text-sm" />{filters.price}
-                      </label>
-                    </div>
-                    <div className="flex justify-center items-center space-x-3 cursor-pointer">
-                      <input type="checkbox" id="above" className="cursor-pointer" />
-                      <label htmlFor="above" className="font-bold text-lg capitalize cursor-pointer">
-                        above <CurrencyRupeeIcon className="text-sm" />{filters.price}
-                      </label>
-                    </div>
+            {filters.price && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.4, ease: "easeIn" }}
+                className="flex flex-col w-full justify-start items-start"
+              >
+                <label className="text-lg font-semibold tracking-wider">
+                  Show Products <span className="text-red-500 text-2xl">*</span>
+                </label>
+                <div className="flex justify-between items-center w-[80%] mx-auto my-3">
+                  <div className="flex justify-center items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="ShowProductUnderOrAbove"
+                      value={filters.price}
+                      onChange={(e) => {
+                        setFilters({
+                          ...filters,
+                          ShowProductUnderOrAbove: e.target.value,
+                        });
+                      }}
+                      id="under"
+                      className="cursor-pointer"
+                    />
+                    <label
+                      htmlFor="under"
+                      className="font-bold text-lg capitalize cursor-pointer"
+                    >
+                      under <CurrencyRupeeIcon className="text-sm" />
+                      {filters.price}
+                    </label>
                   </div>
-
-                </motion.div>
-              )
-            }
+                  <div className="flex justify-center items-center space-x-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="ShowProductUnderOrAbove"
+                      value={filters.price}
+                      onChange={(e) => {
+                        setFilters({
+                          ...filters,
+                          ShowProductUnderOrAbove: e.target.value,
+                        });
+                      }}
+                      id="above"
+                      className="cursor-pointer"
+                    />
+                    <label
+                      htmlFor="above"
+                      className="font-bold text-lg capitalize cursor-pointer"
+                    >
+                      above <CurrencyRupeeIcon className="text-sm" />
+                      {filters.price}
+                    </label>
+                  </div>
+                </div>
+              </motion.div>
+            )}
             {/* check box end */}
 
             <div className="flex flex-col w-full justify-start items-start">
