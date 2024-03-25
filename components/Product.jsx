@@ -28,7 +28,7 @@ export const Product = ({ pData }) => {
         <div className="relative h-[65%]  overflow-hidden z-0">
           <Image
             fill
-            src={mouseEnter ? pData?.mediaURL[2] : pData?.mediaURL[1]}
+            src={mouseEnter ? pData?.mediaURL[1] : pData?.mediaURL[2]}
             loading="lazy"
             alt="productImg"
             className="object-cover z-50 opacity-100 image rounded-t-md transition-all duration-150 delay-100 ease-linear"
