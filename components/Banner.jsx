@@ -20,7 +20,7 @@ const Banner = ({ image, title }) => {
             src={image}
             fill
             priority
-            className="object-cover object-center"
+            className="object-cover object-center brightness-50"
             alt="image"
           />
         </div>

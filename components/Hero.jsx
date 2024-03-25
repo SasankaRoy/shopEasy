@@ -32,11 +32,11 @@ export const Hero = () => {
             fill
             alt="coverPic"
             priority
-            className="object-cover z-0"
+            className="object-cover z-0 brightness-50"
           />
-          <div className="bg-[#212a2f]/60  h-full w-full absolute" />
+
           <div className="absolute z-50  left-8 bottom-16 px-1 lg:px-5 py-3">
-            <h1  className="lg:text-2xl text-[21px] capitalize tracking-wide font-medium text-[#fff]">
+            <h1 className="lg:text-2xl text-[21px] capitalize tracking-wide font-medium text-[#fff]">
               {" "}
               One hood for{" "}
               <span className="lg:text-5xl text-4xl lowercase">
